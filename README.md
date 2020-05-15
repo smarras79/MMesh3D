@@ -27,10 +27,7 @@ The developer indicates that MMesh3D has been installed
 without problems on Mac 10.5.4 and Ubuntu 8.10 with gcc version
 4.3.2. The other software products do not provide this information,
 so other developers or potential users cannot be certain that their
-results are reproductions of the creator’s original results. 
-Furthermore, there is no evidence of automated tools 
-to capture the experimental context so “works-on-my-computer” issues cannot be
-easily diagnosed" Smith et al. 2016
+results are reproductions of the creator’s original results" [Smith et al. 2016]
 ```
 
 @article{meierbachtolEtAl2017,
