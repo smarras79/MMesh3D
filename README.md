@@ -1,19 +1,7 @@
----
-title: ""
-date: ""
-author: "S. Marras"
----
 
-# Abstract
+#MMesh3D: an elliptic, structured grid generator for simpl;y-connected domains with real topography:
 
- (@pizza2000identification) 
-# Diagram
+![MMesh3D](https://user-images.githubusercontent.com/46322845/82098023-1f42ee00-96d2-11ea-86af-8262ef667e66.png)
 
-![It's Pizza](https://gist.github.com/maxogden/97190db73ac19fc6c1d9beee1a6e4fc8/raw/adaaa9b5c19460d3be42021ef0c1b8e11a8d38fe/pizza.png)
+# Used or mentioned in:
 
-# Algorithm
-
-$$f(x)=pizza^2$$
-
-# References
-@meierbachtolEtAl2017
