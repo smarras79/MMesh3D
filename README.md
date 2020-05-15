@@ -8,8 +8,8 @@ Tested on Mac OS X and multiple versions of Ubuntu using gcc-4* and later and if
 *Compile:
 ```
 cd MMesh3D/src
- >> make
- ```
+>> make
+```
 
 *Run
 ```
