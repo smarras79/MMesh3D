@@ -2,11 +2,17 @@ MMesh3D
 --------
 Elliptic, structured grid generator for simply connected domains with real topography:
 
-![MMesh3D](https://user-images.githubusercontent.com/46322845/82098023-1f42ee00-96d2-11ea-86af-8262ef667e66.png)
+## Used or mentioned in:
+@article{meierbachtolEtAl2017,
+  author = {Meierbachtol, C.S. and Svyatskiy, D. and Delzanno, G.L. and Vernon, L. and Moulton, J.D.},
+  title = {An electrostatic Particle-In-Cell code on multi-block structured meshes},
+  journal = {J. Comput. Phys.},
+  year = {2017},
+  volume = {350},
+  pages = {796-823},
+},
 
-# Used or mentioned in:
-
-@ARTICLE{,
+@article{luEtAl2017,
   author = {Lu, F. and Pang, Y. and Jiang, X. and Sun, J. and Huang, Y. and Wang, Z. and Ju, J.},
   title = {Automatic generation of structured multiblock boundary layer mesh for aircrafts},
   journal = {Advances in Engineering Software},
@@ -16,7 +22,7 @@ Elliptic, structured grid generator for simply connected domains with real topog
   doi = {https://doi.org/10.1016/j.advengsoft.2017.10.003},
 },
 
-@ARTICLE{smithEtAl201,
+@article{smithEtAl201,
   author = {Smith, W.C. and Lazzarato, D.A. and Carette, J.},
   title = {State of the practice for mesh generation and mesh processing software},
   journal = {Advances in Engineering Software},
@@ -46,23 +52,13 @@ Elliptic, structured grid generator for simply connected domains with real topog
    doi={http://dx.doi.org/10.3998/mpub.9873254},
 },
 
-@ARTICLE{horgueEtAl2018,
+@article{horgueEtAl2018,
   author = {Horgue, P. and Franc, J. and Guibert, R. and Debenest, G.},
   title = {{An extension of the open-source porousMultiphaseFoam toolbox dedicated to groundwater flows solving the Richards equation}},
   journal = {arXiv:1510.01364v1 [cs.CE]},
   year = {2018},
   volume = {},
   pages = {},
-},
-
-
-@ARTICLE{meierbachtolEtAl2017,
-  author = {Meierbachtol, C.S. and Svyatskiy, D. and Delzanno, G.L. and Vernon, L. and Moulton, J.D.},
-  title = {An electrostatic Particle-In-Cell code on multi-block structured meshes},
-  journal = {J. Comput. Phys.},
-  year = {2017},
-  volume = {350},
-  pages = {796-823},
 },
 
 @misc{robertschneidersWeb
