@@ -8,7 +8,7 @@ LD = gcc #Linker is gcc also
 #LD = mpicc #Linker is mpicc also
 
 
-CFALGS = -Wall
+CFALGS = -Wall -Wunused-value
 CDEBUG = -g
 
 MPI_COMPILE_FLAGS = $(shell mpicc --showme:compile)
@@ -31,7 +31,6 @@ SRCS = \
 	READ_INPUT.c \
 	READ_TOPOGRAPHY.c \
 	BUILD_GRID.c \
-	BUILD_GRID_SPHERE.c \
 	BUILD_CONN.c \
 	GRID_COORD.c \
 	PRINT.c \
@@ -58,7 +57,6 @@ OBJS = \
 	READ_INPUT.o \
 	READ_TOPOGRAPHY.o \
 	BUILD_GRID.o \
-	BUILD_GRID_SPHERE.c \
 	BUILD_CONN.o \
 	GRID_COORD.o \
 	PRINT.o \
@@ -108,10 +106,6 @@ MEMORY.o: MEMORY.c
 # Rule for the file "BUILD_GRID.o":
 BUILD_GRID.o: BUILD_GRID.c
 	$(CC) $(CFLAGS) $(MPI_COMPILE_FLAGS) $(CDEBUG) -I/usr/include -c BUILD_GRID.c
-
-# Rule for the file "BUILD_GRID_SPHERE.o":
-BUILD_GRID_SPHERE.o: BUILD_GRID_SPHERE.c
-	$(CC) $(CFLAGS) $(MPI_COMPILE_FLAGS) $(CDEBUG) -I/usr/include -c BUILD_GRID_SPHERE.c
 
 # Rule for the file "BUILD_CONN.o":
 BUILD_CONN.o: BUILD_CONN.c

@@ -64,11 +64,10 @@ void elliptic_solver(double **COORDS, int **CONN, int *ELTYPE,		\
   xbl = dvector(1,nnodesy), ybl = dvector(1,nnodesy);
 
   //Domain height:
-  H = ybt[1,1];
+  //H = ybt[1,1];
   //reminder:	bottomSide = dmatrix(1,nnodesx,1,2);
 
   //Build connectivity matrix:
-
   GRID2CONN(0, 0, nnodesx, nnodesy, CONN, ELTYPE, 1);
 
   /*

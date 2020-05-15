@@ -12,6 +12,7 @@
  *
  ***********************************************************************/
 #include<stdio.h>
+#include<stdlib.h>
 #include<math.h>
 
 #include "BUILD_LGL.h"
@@ -47,7 +48,7 @@ void legendre_gauss_lobatto(int ngl, double *xgl, double *wgl)
 	  dx=-(1.0-x*x)*p0_1/(-2.*x*p0_1 + (1.0-x*x)*p0_2);
 	  
 	  x=x + dx;
-          if (abs(dx) < 1.0e-20)
+          if (fabs(dx) < 1.0e-20)
 	    continue;
 	
 	}//K loop

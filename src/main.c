@@ -22,7 +22,7 @@
 #include "mydefine.h"
 #include "global_vars.h"
 
-main(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
   /* Declare local variables */
   int irank;
@@ -138,7 +138,7 @@ main(int argc, char *argv[])
   
   /*************************************************************************************
    * Dynamic memory allocation of U,V,P,G,F and coordinates on the grid
-  /*************************************************************************************/
+   *************************************************************************************/
   MEMORY_ALLOCATE(1);
 
   /*************************************************************************************

@@ -13,8 +13,11 @@
 #include "nrutil.h"
 #include "PRINT.h"
 #include "READ_INPUT.h"
+#include "WRITE_OUTPUT.h"
+#include "READ_TOPOGRAPHY.h"
 #include "BUILD_GRID.h"
 #include "BUILD_CONN.h"
+#include "BUILD_GRID_SPHERE.h"
 #include "GRID_COORD.h"
 #include "GRID2CONN.h"
 #include "linspace.h"
@@ -30,7 +33,4 @@
 #include "elliptic_solver.h"
 #include "mympi_init.h"
 #include "DOMAIN_DECOMP.h"
-
-
-
 
