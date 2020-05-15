@@ -2,10 +2,10 @@
 
 # Varialble Definitions and Flags:
 
-#CC = gcc #Compiler is gcc
-#LD = gcc #Linker is gcc also
-CC = mpicc #Compiler is mpicc    NOTE: you need to have an MPI implementation installed on your computer
-LD = mpicc #Linker is mpicc also
+CC = gcc #Compiler is gcc
+LD = gcc #Linker is gcc also
+#CC = mpicc #Compiler is mpicc    NOTE: you need to have an MPI implementation installed on your computer
+#LD = mpicc #Linker is mpicc also
 
 
 CFALGS = -Wall

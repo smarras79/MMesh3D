@@ -801,7 +801,7 @@ void wrt2VTK(char *file_name)
 	fprintf(file_id, "POINTS %d float\n", nnodes);
 	for(i=1; i<=nnodes; i++)
 	  {
-	    fprintf(file_id, " %f %f %f\n", COORDS[i][2], COORDS[i][3], 0.0);
+	    fprintf(file_id, " %lf %lf %lf\n", COORDS[i][2], COORDS[i][3], 0.0);
 	  }
 	
 	//Write coonectivity
@@ -825,7 +825,7 @@ void wrt2VTK(char *file_name)
 	fprintf(file_id, "POINTS %d float\n", nnodes);
 	for(i=1; i<=nnodes; i++)
 	  {
-	    fprintf(file_id, " %f %f %f\n", COORDS[i][2], COORDS[i][3], COORDS[i][4]);
+	    fprintf(file_id, " %lf %lf %lf\n", COORDS[i][2], COORDS[i][3], COORDS[i][4]);
 	  }
 	
 	//Write coonectivity
@@ -912,7 +912,7 @@ void dwrt2VTK(char *file_name)
 	  for (v=1; v<=nnodesy; v++){
 	    for (u=1; u<=nnodesx; u++){
 	    
-	      fprintf(file_id, " %.12f %.12f %.12f", COORDS[i][2], COORDS[i][3], COORDS[i][4]);
+	      fprintf(file_id, " %.12f %.12f %.12f\n", COORDS[i][2], COORDS[i][3], COORDS[i][4]);
 	      
 	      i++;
 	    }
