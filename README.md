@@ -17,6 +17,9 @@ cd MMesh3D/runs
 >> ./MMesh3D-V2.a Input_meshparam.inp
 ```
 
+NOTICE: The PDF manual is for V1.0 and still works with the current V2.0 that is in this repo. However, it does not contain information on the elliptic smoothing. 
+I will post instructions as soon as I have some spare time. 
+
 
 ## Used or mentioned in:
 Some mention of MMesh3D:
