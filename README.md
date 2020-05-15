@@ -6,12 +6,16 @@ Elliptic, structured grid generator for simply connected domains with real topog
 Tested on Mac OS X and multiple versions of Ubuntu using gcc-4* and later and ifort 8.1
 
 *Compile:
-`cd MMesh3D/src
- >> make`
+```
+cd MMesh3D/src
+ >> make
+ ```
 
 *Run
-`cd MMesh3D/runs
- >> ./MMesh3D-V2.a Input_meshparam.inp`
+```
+cd MMesh3D/runs
+>> ./MMesh3D-V2.a Input_meshparam.inp
+```
 
 
 ## Used or mentioned in:
