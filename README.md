@@ -22,7 +22,7 @@ cd MMesh3D/runs
 Some mention of MMesh3D:
 
 ```
-Only MMesh3D provides development and testing setup information. 
+"Only MMesh3D provides development and testing setup information. 
 The developer indicates that MMesh3D has been installed
 without problems on Mac 10.5.4 and Ubuntu 8.10 with gcc version
 4.3.2. The other software products do not provide this information,
@@ -30,10 +30,8 @@ so other developers or potential users cannot be certain that their
 results are reproductions of the creator’s original results. 
 Furthermore, there is no evidence of automated tools 
 to capture the experimental context so “works-on-my-computer” issues cannot be
-easily diagnosed
+easily diagnosed" Smith et al. 2016
 ```
-@smithEtAl201
-
 
 @article{meierbachtolEtAl2017,
   author = {Meierbachtol, C.S. and Svyatskiy, D. and Delzanno, G.L. and Vernon, L. and Moulton, J.D.},
@@ -54,7 +52,7 @@ easily diagnosed
   doi = {https://doi.org/10.1016/j.advengsoft.2017.10.003},
 },
 
-@article{smithEtAl201,
+@article{smithEtAl2016,
   author = {Smith, W.C. and Lazzarato, D.A. and Carette, J.},
   title = {State of the practice for mesh generation and mesh processing software},
   journal = {Advances in Engineering Software},
