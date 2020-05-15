@@ -16,4 +16,4 @@ author: "S. Marras"
 $$f(x)=pizza^2$$
 
 # References
-\cite{meierbachtolEtAl2017}
+@meierbachtolEtAl2017
