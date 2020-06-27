@@ -20,9 +20,31 @@ cd MMesh3D/runs
 NOTICE: The PDF manual is for V1.0 and still works with the current V2.0 that is in this repo. However, it does not contain information on the elliptic smoothing. 
 I will post instructions as soon as I have some spare time. 
 
+## License
+MMesh3D is a free software according to the Free Software Foundation under a GPL license which permits any use or modification of MMesh3D as long as any derived work is open-source and preserves the same terms. For commercial, closed-source use, such as distributing a binary executable without the source, contact me directly to discuss options.
+
+## Citing MMesh3D
+Please, cite MMesh3D by citing:
+```
+@phdthesis{marras2012variational,
+  title={Variational multiscale stabilization of finite and spectral elements for dry and moist atmospheric problems},
+  author={Marras, Simone},
+  year={2012},
+  school={PhD thesis, Universitat Polit{\'e}cnica de Catalunya}
+},
+
+@article{marras2016review,
+  title={A review of element-based Galerkin methods for numerical weather prediction: Finite elements, spectral elements, and discontinuous Galerkin},
+  author={Marras, Simone and Kelly, James F and Moragues, Margarida and M{\"u}ller, Andreas and Kopera, Michal A and V{\'a}zquez, Mariano and Giraldo, Francis X and Houzeaux, Guillaume and Jorba, Oriol},
+  journal={Archives of Computational Methods in Engineering},
+  volume={23},
+  number={4},
+  pages={673--722},
+  year={2016},
+},
+```
 
 ## Used or mentioned in:
-Some mention of MMesh3D:
 
 ```
 "Only MMesh3D provides development and testing setup information. 
