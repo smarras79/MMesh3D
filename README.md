@@ -2,7 +2,7 @@ MMesh3D
 --------
 Elliptic, structured grid generator for simply connected domains with real topography:
 
-##Compile and run
+## Compile and run
 Tested on Mac OS X and multiple versions of Ubuntu using gcc-4* and later and ifort 8.1
 
 *Compile:
