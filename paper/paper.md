@@ -1,19 +1,13 @@
 ---
-title: 'Gala: A Python package for galactic dynamics'
+title: 'MMesh3D: structured, elliptic mesh generator for 
 tags:
-  - Python
-  - astronomy
-  - dynamics
-  - galactic dynamics
-  - milky way
+  - Numerical Weather Prediction
+  - mesh generation
+  - orthogonal boundary layer mesh generator
 authors:
-  - name: Adrian M. Price-Whelan^[Custom footnotes for e.g. denoting who the corresspoinding author is can be included like this.]
-    orcid: 0000-0003-0872-7098
-    affiliation: "1, 2" # (Multiple affiliations must be quoted)
-  - name: Author Without ORCID
-    affiliation: 2
-  - name: Author with no affiliation
-    affiliation: 3
+  - name: Simone Marras^[Custom footnotes for e.g. denoting who the corresspoinding author is can be included like this.]
+    orcid: 0000-0002-7498-049X
+    affiliation: "New Jersey Institute of Technology, California Institute of Technology" # (Multiple affiliations must be quoted)
 affiliations:
  - name: Lyman Spitzer, Jr. Fellow, Princeton University
    index: 1
@@ -31,20 +25,12 @@ aas-journal: Astrophysical Journal <- The name of the AAS journal.
 ---
 
 # Summary
-
-The forces on stars, galaxies, and dark matter under external gravitational
-fields lead to the dynamical evolution of structures in the universe. The orbits
-of these bodies are therefore key to understanding the formation, history, and
-future state of galaxies. The field of "galactic dynamics," which aims to model
-the gravitating components of galaxies to study their structure and evolution,
-is now well-established, commonly taught, and frequently used in astronomy.
-Aside from toy problems and demonstrations, the majority of problems require
-efficient numerical tools, many of which require the same base code (e.g., for
-performing numerical orbit integration).
+Grid generation has seem tremendous advances in the past 40 years. Massively paralleel computing, curved elements
 
 # Statement of need 
 
-`Gala` is an Astropy-affiliated Python package for galactic dynamics. Python
+`MMesh3D` is a simple, automatic, numerical grid generation tool designed
+to buuld volumeteric grids 
 enables wrapping low-level languages (e.g., C) for speed without losing
 flexibility or ease-of-use in the user-interface. The API for `Gala` was
 designed to provide a class-based and user-friendly interface to fast (C or
@@ -55,14 +41,7 @@ interfaces well with the implementations of physical units and astronomical
 coordinate systems in the `Astropy` package [@astropy] (`astropy.units` and
 `astropy.coordinates`).
 
-`Gala` was designed to be used by both astronomical researchers and by
-students in courses on gravitational dynamics or astronomy. It has already been
-used in a number of scientific publications [@Pearson:2017] and has also been
-used in graduate courses on Galactic dynamics to, e.g., provide interactive
-visualizations of textbook material [@Binney:2008]. The combination of speed,
-design, and support for Astropy functionality in `Gala` will enable exciting
-scientific explorations of forthcoming data releases from the *Gaia* mission
-[@gaia] by students and experts alike.
+`MMesh3D` have been used for electrostatic simulations that required a free multi-block structured grid generator easy to modify [@meierbachtolEtAl2017], as well as porous medium flows using OpenFOAM [@horgueEtAl2018] and boundary layer grids for aircrafts [@luEtAl2017]. It can also be found the following studies and reviews [@joque2017],[@ICMEhandbook], [@smithEtAl2016], [@robertschneidersWeb].
 
 # Mathematics
 
