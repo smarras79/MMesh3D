@@ -1,0 +1,50 @@
+ #INPUT_FILE.inp
+
+PROBLEM:  
+    name:             topography
+END_PROBLEM
+
+PROBLEM_DEFINITION:
+ Space_dimensions:    3
+ Meshing_scheme:      TFI
+ Element_types:       HEXA
+ Number_blocks:       1
+ nelemx:              105
+ nelemy:              105
+ nelemz:              61
+ nop:                 1
+ PERIODICX:           Off
+ PERIODICY:           Off
+ PERIODICZ:           Off
+END_PROBLEM_DEFINITION
+
+BDY_NODES:
+node#   x   y   z
+  1           0.0       0.0       0.0
+  2       12800.0       0.0       0.0
+  3       12800.0      12800.0       0.0
+  4           0.0      12800.0       0.0
+  5           0.0       0.0      3000.0
+  6       12800.0       0.0      3000.0
+  7       12800.0      12800.0   3000.0
+  8           0.0      12800.0   3000.0
+END_BDY_NODES
+
+TOPOGRAPHY:          
+  Type:               FUNCTION 0 all
+
+  hm:                  0.0
+  a_c:	               0.0
+  b_c:                 0.0
+  lambda:              0.0
+END_TOPOGRAPHY
+
+OUTPUT_FILEs:
+ALYA:      no
+VTK:       yes
+ABAQUS:    yes
+BDY_FILE:  no
+
+END_OUTPUT_FILESs
+
+#END_INPUT_FILE.inp
