@@ -1,5 +1,5 @@
 ---
-title: 'MMesh3D: structured, elliptic mesh generator for 
+title: 'MMesh3D: structured, elliptic mesh generator for Geophysical applications (and beyond)'
 tags:
   - Numerical Weather Prediction
   - mesh generation
