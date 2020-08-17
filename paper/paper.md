@@ -9,12 +9,9 @@ authors:
     orcid: 0000-0002-7498-049X
     affiliation: "New Jersey Institute of Technology, California Institute of Technology" # (Multiple affiliations must be quoted)
 affiliations:
- - name: Lyman Spitzer, Jr. Fellow, Princeton University
+ - name: Simone Marras, Assistant Professor, NJIT
    index: 1
- - name: Institution Name
-   index: 2
- - name: Independent Researcher
-   index: 3
+
 date: 13 August 2017
 bibliography: paper.bib
 
