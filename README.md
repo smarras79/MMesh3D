@@ -23,7 +23,11 @@ NOTICE: The PDF manual is for V1.0 and still works with the current V2.0 that is
 I will post instructions as soon as I have some spare time. 
 
 ## License
-MMesh3D is a free software according to the Free Software Foundation under a GPL license which permits any use or modification of MMesh3D as long as any derived work is open-source and preserves the same terms. For commercial, closed-source use, such as distributing a binary executable without the source, contact me directly to discuss options.
+MMesh3D is a free and open source software according to the Free Software Foundation under a GPL license which permits any use or modification of MMesh3D as long as any derived work is open-source and preserves the same terms. For commercial, closed-source use, such as distributing a binary executable without the source, contact me directly to discuss options.
+
+It fulfills the definition of Open Source as per the OSI definition: https://opensource.org/osd
+
+
 
 ## Citing MMesh3D
 Please, cite MMesh3D by citing:
