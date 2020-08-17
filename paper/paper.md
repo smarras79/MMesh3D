@@ -27,7 +27,24 @@ Grid generation has seem tremendous advances in the past 40 years. Massively par
 # Statement of need 
 
 `MMesh3D` is a simple, automatic, numerical grid generation tool designed
-to buuld volumeteric grids 
+to build logically structured volumeteric grids made of both hexahedra and tringual base prisms.
+The code is written in C, commented throughout, and can be easily modified
+or enhanced by the user’s own functions. I wrote this code for my own purposes but
+tried to write it in such a way that it could be re-usable or changed by other users. The
+code is free and can be modified and redistributed under the GNU GENERAL PUBLIC
+LICENSE.
+The visit_writer library to write the visualization output file is included with the package.
+It was written by Hank Childs at the Lawrence Livermore National Laboratory
+for the visualization software VisIt [6], and writes grids and data into the Visualization
+ToolKit format VTK. The license of this library is reproduced in the header of the library
+itself and in the function wrt2plotfile.c that calls it.
+The dynamic allocation of the arrays is done on a 1-index base through functions from
+the library nrutil.c. This function is part of the NR library and is can be freely redistributed.
+The NR library is a numerical library that comes with the successful volume
+Numerical Recipes in C: the Art of Scientific Computing [3].
+
+
+
 enables wrapping low-level languages (e.g., C) for speed without losing
 flexibility or ease-of-use in the user-interface. The API for `Gala` was
 designed to provide a class-based and user-friendly interface to fast (C or
