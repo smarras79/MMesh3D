@@ -1,9 +1,5 @@
 ---
 title: 'MMesh3D: structured, elliptic mesh generator for Geophysical applications (and beyond)'
-tags:
-  - Numerical Weather Prediction
-  - mesh generation
-  - orthogonal boundary layer mesh generator
 authors:
   - name: Simone Marras^[smarras@njit.edu]
     orcid: 0000-0002-7498-049X
