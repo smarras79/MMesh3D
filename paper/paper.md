@@ -1,15 +1,12 @@
 ---
-title: 'MMesh3D: structured, elliptic mesh generator for Geophysical applications (and beyond)'
+title: 'MMesh3D: structured, elliptic mesh generator for geophysical applications (and beyond)'
 authors:
   - name: Simone Marras^[smarras@njit.edu]
     orcid: 0000-0002-7498-049X
-    affiliation: "New Jersey Institute of Technology, California Institute of Technology" # (Multiple affiliations must be quoted)
+    affiliation: "New Jersey Institute of Technology" # (Multiple affiliations must be quoted)
 affiliations:
  - name: Simone Marras, Assistant Professor, NJIT
    index: 1
-
-date: 13 August 2017
-bibliography: paper.bib
 
 # Optional fields if submitting to a AAS journal too, see this blog post:
 # https://blog.joss.theoj.org/2018/12/a-new-collaboration-with-aas-publishing
