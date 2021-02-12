@@ -5,7 +5,7 @@ tags:
   - mesh generation
   - orthogonal boundary layer mesh generator
 authors:
-  - name: Simone Marras^[Custom footnotes for e.g. denoting who the corresspoinding author is can be included like this.]
+  - name: Simone Marras^[smarras@njit.edu]
     orcid: 0000-0002-7498-049X
     affiliation: "New Jersey Institute of Technology, California Institute of Technology" # (Multiple affiliations must be quoted)
 affiliations:
@@ -22,7 +22,7 @@ aas-journal: Astrophysical Journal <- The name of the AAS journal.
 ---
 
 # Summary
-Grid generation has seem tremendous advances in the past 40 years. Massively paralleel computing, curved elements
+
 
 # Statement of need 
 
@@ -44,18 +44,7 @@ The NR library is a numerical library that comes with the successful volume
 Numerical Recipes in C: the Art of Scientific Computing [3].
 
 
-
-enables wrapping low-level languages (e.g., C) for speed without losing
-flexibility or ease-of-use in the user-interface. The API for `Gala` was
-designed to provide a class-based and user-friendly interface to fast (C or
-Cython-optimized) implementations of common operations such as gravitational
-potential and force evaluation, orbit integration, dynamical transformations,
-and chaos indicators for nonlinear dynamics. `Gala` also relies heavily on and
-interfaces well with the implementations of physical units and astronomical
-coordinate systems in the `Astropy` package [@astropy] (`astropy.units` and
-`astropy.coordinates`).
-
-`MMesh3D` have been used for electrostatic simulations that required a free multi-block structured grid generator easy to modify [@meierbachtolEtAl2017], as well as porous medium flows using OpenFOAM [@horgueEtAl2018] and boundary layer grids for aircrafts [@luEtAl2017]. It can also be found the following studies and reviews [@joque2017],[@ICMEhandbook], [@smithEtAl2016], [@robertschneidersWeb].
+`MMesh3D` was used for different applications that go beyond atmospheric flows for which it was originally designed. We find it used to build boundary layer girds in [@luEtAl2017], for electrostatic simulations that required a free multi-block structured grid generator easy to modify [@meierbachtolEtAl2017], as well as porous medium flows using OpenFOAM [@horgueEtAl2018]. It is mentioned in the following studies and review papers [@joque2017],[@ICMEhandbook], [@smithEtAl2016], [@robertschneidersWeb].
 
 # Mathematics
 
@@ -102,7 +91,5 @@ for n in range(10):
 
 # Acknowledgements
 
-We acknowledge contributions from Brigitta Sipocz, Syrtis Major, and Semyeong
-Oh, and support from Kathryn Johnston during the genesis of this project.
 
 # References
