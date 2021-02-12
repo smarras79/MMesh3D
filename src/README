@@ -3,9 +3,9 @@ directory in order to be compiled.
 Furthermore, remember to include them into each code that uses them:
 
 e.g.:
-#include"$HOME/my/path/to/myCFD_library/PRINT.h"
+#include "$HOME/my/path/to/myCFD_library/PRINT.h"
 
 
 Write me if you need help
-simone.marras@bsc.es
+smarras@njit.edu
 
