@@ -1,21 +1,12 @@
-# Makefile for the code PanelMethod.c
-
 # Varialble Definitions and Flags:
+CC = /Users/simone/mylibs/openmpi-4.1.0/build_gcc9/bin/mpicc #Compiler is mpicc    NOTE: you need to have an MPI implementation installed on your computer
+LD = /Users/simone/mylibs/openmpi-4.1.0/build_gcc9/bin/mpicc #Linker is mpicc also
 
-CC = gcc #Compiler is gcc
-LD = gcc #Linker is gcc also
-#CC = mpicc #Compiler is mpicc    NOTE: you need to have an MPI implementation installed on your computer
-#LD = mpicc #Linker is mpicc also
-
-
-CFALGS = -Wall -Wunused-value
+CFALGS = -Wall -Wunused-value -fcommon
 CDEBUG = -g
 
-MPI_COMPILE_FLAGS = $(shell mpicc --showme:compile)
-MPI_LINK_FLAGS = $(shell mpicc --showme:link)
-
-#MPI_COMPILE_FLAGS = -I/usr/local/include
-#MPI_LINK_FLAGS = -L/usr/local/lib -lmpi -lm
+MPI_COMPILE_FLAGS = $(bash mpicc --showme:compile)
+MPI_LINK_FLAGS = $(bash mpicc --showme:link)
 
 #LNETCFD = -lnetcdf
 
@@ -85,7 +76,7 @@ all: $(EXE)
 
 # Rule to Link the program
 $(EXE): $(OBJS)
-	$(LD) $(CFLAGS) $(MPI_LINK_FLAGS) -L/usr/include $(LNETCDF) $(OBJS) -o $(EXE)
+	$(LD) $(CFLAGS) $(MPI_LINK_FLAGS) -L/usr/include $(OBJS) -o $(EXE)
 
 # Rule for the file "main.o":
 main.o: main.c
