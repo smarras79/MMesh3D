@@ -1104,6 +1104,9 @@ int PRINT_INFO(void)
   printf(" # Periodicity x:    %s\n", problem[3]);
   printf(" # Periodicity y:    %s\n", problem[4]);
   printf(" # Periodicity z:    %s\n", problem[8]);
+  printf(" # BDY NODES: (x,y,z)\n");
+  for(i=1; i<=NBDY_NODES; i++)
+    printf(" #               %lf %lf %lf\n", BDY_COORDS[i][1],BDY_COORDS[i][2],BDY_COORDS[i][3]);
   printf(" # Topography:       %s %s %s\n", problem[9],problem[5],problem[11]);
   if( !strncmp(problem[9],"FUNCTION", 4) || !strncmp(problem[9],"function", 4) || !strncmp(problem[9],"Function", 4) || \
       !strncmp(problem[9],"user", 4)     || !strncmp(problem[9],"USER", 4)     || !strncmp(problem[9],"User", 4))
@@ -1114,9 +1117,6 @@ int PRINT_INFO(void)
       printf(" #   -Lambda:        %f\n", parameters[6]);
     }
   printf(" #\n");
-  printf(" # BDY NODES: (x,y,z)\n");
-  for(i=1; i<=NBDY_NODES; i++)
-    printf(" #               %lf %lf %lf\n", BDY_COORDS[i][1],BDY_COORDS[i][2],BDY_COORDS[i][3]);
   
   printf(" # VTK OUTPUT:   %s\n", problem[7]);
   printf(" # GMSH OUTPUT:  %s\n", problem[13]);

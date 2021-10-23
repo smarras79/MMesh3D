@@ -9,9 +9,9 @@ PROBLEM_DEFINITION:
  Meshing_scheme:      TFI
  Element_types:       HEXA
  Number_blocks:       1
- nelemx:              105
- nelemy:              105
- nelemz:              61
+ nelemx:              20
+ nelemy:              30
+ nelemz:              10
  nop:                 1
  PERIODICX:           Off
  PERIODICY:           Off
@@ -31,18 +31,18 @@ node#   x   y   z
 END_BDY_NODES
 
 TOPOGRAPHY:          
-  Type:               FUNCTION 0 all
+  Type:               FUNCTION 1 all
 
-  hm:                  0.0
-  a_c:	               0.0
-  b_c:                 0.0
-  lambda:              0.0
+  hm:                 400.0
+  a_c:               1000.0
+  b_c:               1000.0
+  lambda:               1.0
 END_TOPOGRAPHY
 
 OUTPUT_FILEs:
 ALYA:      no
 VTK:       yes
-ABAQUS:    yes
+ABAQUS:    no
 BDY_FILE:  no
 
 END_OUTPUT_FILESs

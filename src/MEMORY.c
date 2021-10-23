@@ -23,12 +23,12 @@ int MEMORY_ALLOCATE(int flag)
       inputfile  = (char*) malloc(32 * sizeof(char *));
       print_alya = (char*) malloc(3 * sizeof(char *));
       print_vtk  = (char*) malloc(3 * sizeof(char *));
-      print_gmsh  = (char*) malloc(3 * sizeof(char *));
+      print_gmsh = (char*) malloc(3 * sizeof(char *));
       fname      = (char*) malloc(23 * sizeof(char));
       input_inp  = (char*) malloc(8 * sizeof(char));
   
       outfile_msh_vtk  = (char*) malloc(96 * sizeof(char *));
-      outfile_msh_gmsh  = (char*) malloc(96 * sizeof(char *));
+      outfile_msh_gmsh = (char*) malloc(96 * sizeof(char *));
       outfile_msh_alya = (char*) malloc(96 * sizeof(char *));
   
       parameters = dvector(1,NUMBER_OF_PARAMETERS);

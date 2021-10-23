@@ -4,6 +4,15 @@ Elliptic, structured grid generator for simply connected domains with real topog
 
 (Created in 2011. Posted on GitHub in 2020)
 
+##MPI version:
+Open-MPI 4.1.0 compiled from source with gcc-9
+
+```
+>> ./configure --prefix=/MY/PATH/TO/openmpi-4.1.0/build_gcc9/ CC=gcc-9 CXX=g++-9 F77=gfortran-9 FC=gfortran-9
+>> make -j 6 all
+>> make install
+```
+
 ## Compile and run
 Tested on Mac OS X and multiple versions of Ubuntu using gcc-4* and later and ifort 8.1
 
@@ -16,7 +25,7 @@ cd MMesh3D/src
 *Run
 ```
 cd MMesh3D/runs
->> ./MMesh3D-V2.a Input_meshparam.inp
+>> mpirun -np 4 ./MMesh3D-V2.a Input_meshparam.inp
 ```
 
 NOTICE: The PDF manual is for V1.0 and still works with the current V2.0 that is in this repo. However, it does not contain information on the elliptic smoothing. 
