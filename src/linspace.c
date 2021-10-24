@@ -48,7 +48,7 @@ void ilinspace(int vmin, int vmax, int n, int *VECT)
 	float dv;
 	
 	VECT[1] = vmin;
-	for (i=2; i<=n; i++){
+	for (i=1; i<=n; i++){
 		dv = (vmax - vmin)/(n-1);
 		dv = (int)dv;
 		VECT[i] = VECT[i-1] + dv;

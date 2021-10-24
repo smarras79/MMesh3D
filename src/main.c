@@ -1,5 +1,6 @@
 #include <mpi.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "myinclude.h"
 #include "mydefine.h"
@@ -7,11 +8,11 @@
 
 int main(int argc, char** argv) {
     // Initialize the MPI environment
-    MPI_Init(NULL, NULL);
+    //MPI_Init(NULL, NULL);
     /*************************************************************************************
      *Initialize MPI and get the process' rank
      *************************************************************************************/
-    //MPI_Init(&argc, &argv);
+    MPI_Init(&argc, &argv);
     
     // Get the number of processes
     int world_size;
@@ -57,9 +58,6 @@ int main(int argc, char** argv) {
 	    }
 	}
     
-	printf(" INPUT: %s %s\n", inputfile, print_alya);
-
-	
 	/*************************************************************************************
 	 *Some more allocation after input arguments (nsd):
 	 *************************************************************************************/
@@ -68,7 +66,6 @@ int main(int argc, char** argv) {
 	/*************************************************************************************
 	 *READ INPUT FILE
 	 *************************************************************************************/
-	//READ INPUT FILE:
 	READ_INPUT(inputfile);
 
 	PRINT_INFO();
@@ -77,13 +74,40 @@ int main(int argc, char** argv) {
 	 * READ THE TOPOGRAPHY FILE or BUILD THE BOTTOM BOUNDARY BY A USER-DEFINED FUNCTION:
 	 *************************************************************************************/
 	READ_TOPOGRAPHY();
+	double L;
+	int ix;
+	int nx;
+	double *x;
 
+	st_legendre Legendre;
+	
+	FILE *file_id;
+	nx = 100;
+	/*file_id = fopen("LEGENDRE.dat", "w");       
+	x = dvector(1,nx);
+	dlinspace(-1, 1, nx, x, "n");
+	
+	for (ix=1; ix<=nx; ix++) {
+	    
+	   Legendre = LegendrePolynomialAndDerivative(nop, x[ix]);
+	   fprintf(file_id, "%.8f %.8f %f\n", x[ix], Legendre.legendre, Legendre.dlegendre);
+	}
+	free_dvector(x, 1, nx);
+  	fclose(file_id);
+	*/
+	
+	st_lgl lgl;
+	lgl.size    = ngl;
+	lgl.coords  = (double*) malloc( sizeof(double) * lgl.size);
+	lgl.weights = (double*) malloc( sizeof(double) * lgl.size);
+	
+	LegendreGaussLobattoNodesAndWeights(lgl);
 	
 	/*************************************************************************************
 	 * Dynamic memory allocation of U,V,P,G,F and coordinates on the grid
 	 *************************************************************************************/
 	MEMORY_ALLOCATE(1);
-
+	
 	/*************************************************************************************
 	 * Build GRID coordinates and connectivity matrix:
 	 *************************************************************************************/	
@@ -92,7 +116,7 @@ int main(int argc, char** argv) {
 	/*************************************************************************************
 	 * Split the initial domain into 'mpiprocs' processors:
 	 *************************************************************************************/
-	//DOMAIN_DECOMP(rank);
+	////DOMAIN_DECOMP(rank);
   
 	/*************************************************************************************
 	 * Build the Connectivity matrix

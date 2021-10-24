@@ -3,7 +3,7 @@ CC = /Users/simone/mylibs/openmpi-4.1.0/build_gcc9/bin/mpicc #Compiler is mpicc 
 LD = /Users/simone/mylibs/openmpi-4.1.0/build_gcc9/bin/mpicc #Linker is mpicc also
 
 CFALGS = -Wall -Wunused-value -fcommon
-CDEBUG = -g
+CDEBUG = -g -backtrace
 
 MPI_COMPILE_FLAGS = $(bash mpicc --showme:compile)
 MPI_LINK_FLAGS = $(bash mpicc --showme:link)
@@ -69,6 +69,8 @@ OBJS = \
 	./src/DOMAIN_DECOMP.o
 
 BIN=./bin
+SRC=./src
+OBJ=./obj
 
 # ProgRam executable file name:
 EXE = $(BIN)/MMesh3D-V2.a
@@ -184,6 +186,6 @@ destroy:
 	rm -rf $(OBJ) $(BIN)/*
 
 clean:
-	rm -rf $(OBJ) $(BIN)/* *~ *.o *.msh *.dom.dat
+	rm -rf $(OBJ) $(BIN)/* *~ $(SRC)/*.o
 	clear
 
