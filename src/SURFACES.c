@@ -894,7 +894,7 @@ int SURFACES(int isurface, int nnodesu, int nnodesv, int nnodesw, int nelem, \
 
 /*
  * HIGH-ORDER (nop > 1)
- */
+ *
 
 int SURFACES_HIGH_ORDER(int isurface, int nnodesu, int nnodesv, int nnodesw, int nop, int ngl, \
 			int nelem, double **BDY_COORDS, char *problem[], double *parameters,   \
@@ -959,22 +959,22 @@ int SURFACES_HIGH_ORDER(int isurface, int nnodesu, int nnodesv, int nnodesw, int
   
   /*****************************************************************************
    * Dynamic allocation where needed:
-   *****************************************************************************/
+   *****************************************************************************
   inode = i3tensor(1,nnodesu,1,nnodesv,1,nnodesw);
   ele_col = ivector(1,nelem);
 
-  /*EPS,ETA,XSI*/
+  /*EPS,ETA,XSI*
   eps = dvector(1,nnodesu);
   eta = dvector(1,nnodesv);
   xsi = dvector(1,nnodesw);
 
-  /*xgl and wgl: LGL points and weights: */
+  /*xgl and wgl: LGL points and weights: *
   xgl = dvector(1,ngl);
   wgl = dvector(1,ngl);
   
   /*****************************************************************************
    * Begin insertion of high-order nodes:
-   *****************************************************************************/
+   *****************************************************************************
   //Compute the LGL points:
   legendre_gauss_lobatto(ngl, xgl, wgl);
 
@@ -1088,7 +1088,7 @@ int SURFACES_HIGH_ORDER(int isurface, int nnodesu, int nnodesv, int nnodesw, int
    
     /*****************************************************************************
      * Free memory where needed:
-     *****************************************************************************/
+     *****************************************************************************
     free_i3tensor(inode, 1,nnodesu,1,nnodesv,1,nnodesw);
     free_ivector(ele_col, 1,nelem);
 

@@ -3,4 +3,5 @@
  ***********************************************************************/
 int LegendreGaussNodesAndWeights(st_lgl lgl);
 int LegendreGaussLobattoNodesAndWeights(st_lgl lgl);
-st_legendre legendre_dlegendre_polynomial(int p, double x);
+st_legendre LegendreAndDerivative(int p, double x);
+st_legendre LegendreAndDerivativeAndQ(int p, double x);

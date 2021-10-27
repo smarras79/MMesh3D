@@ -83,19 +83,18 @@ int main(int argc, char** argv) {
 	
 	FILE *file_id;
 	nx = 100;
-	/*file_id = fopen("LEGENDRE.dat", "w");       
+	file_id = fopen("LEGENDRE.dat", "w");       
 	x = dvector(1,nx);
 	dlinspace(-1, 1, nx, x, "n");
 	
 	for (ix=1; ix<=nx; ix++) {
-	    
-	   Legendre = LegendrePolynomialAndDerivative(nop, x[ix]);
-	   fprintf(file_id, "%.8f %.8f %f\n", x[ix], Legendre.legendre, Legendre.dlegendre);
+
+	    Legendre = LegendreAndDerivativeAndQ(nop, x[ix]);
+	    fprintf(file_id, "%.8f %.8f %f\n", x[ix], Legendre.legendre, Legendre.dlegendre);
 	}
 	free_dvector(x, 1, nx);
   	fclose(file_id);
-	*/
-	
+	/*
 	st_lgl lgl;
 	lgl.size    = ngl;
 	lgl.coords  = (double*) malloc( sizeof(double) * lgl.size);

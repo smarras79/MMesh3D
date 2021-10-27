@@ -34,7 +34,7 @@
  * Simone Marras, October 2021
  *
  ***********************************************************************/   
-st_legendre LegendrePolynomialAndDerivative(int p, double x)
+st_legendre LegendreAndDerivative(int p, double x)
 {
     st_legendre Legendre;
     
@@ -85,7 +85,7 @@ st_legendre LegendrePolynomialAndDerivative(int p, double x)
  * Simone Marras, October 2021
  *
  ***********************************************************************/
-st_legendre qandLEvaluation(int p, double x)
+st_legendre LegendreAndDerivativeAndQ(int p, double x)
 {
     st_legendre Legendre;
     
@@ -121,8 +121,8 @@ st_legendre qandLEvaluation(int p, double x)
     Lp1  = a*x*L - b*Lm1;
     dLp1 = dLm1 + (2*k - 1)*L;
 
-    Legendre.legendre  = Lp1;
-    Legendre.dlegendre = dLp1;
+    Legendre.legendre  = L;
+    Legendre.dlegendre = dL;
     
     Legendre.q  = Lp1  - Lm1;
     Legendre.dq = dLp1 - dLm1;
@@ -170,13 +170,13 @@ int LegendreGaussNodesAndWeights(st_lgl lgl)
 		
 		for (int k=0; k<=NITER; k++)
 		    {
-			Legendre =LegendrePolynomialAndDerivative(p + 1, xj);
+			Legendre =LegendreAndDerivative(p + 1, xj);
 			Delta         = -Legendre.legendre/Legendre.dlegendre;
 			xj            = xj + Delta;
 			if (fabs(Delta) <= TOL*fabs(xj)) break;
 		    }
 		lgl.coords[j] = xj;
-		Legendre =LegendrePolynomialAndDerivative(p + 1, xj);
+		Legendre =LegendreAndDerivative(p + 1, xj);
 		lgl.coords[p - j] = -xj;
 		
 		double xj2 = xj*xj;
@@ -188,7 +188,7 @@ int LegendreGaussNodesAndWeights(st_lgl lgl)
     }
 
     if ((p % 2) == 0){
-	Legendre = LegendrePolynomialAndDerivative(p + 1, 0.0);
+	Legendre = LegendreAndDerivative(p + 1, 0.0);
 	lgl.coords[p/2] = 0.0;
 
 	double dL2 = Legendre.dlegendre*Legendre.dlegendre;
@@ -242,13 +242,13 @@ int LegendreGaussLobattoNodesAndWeights(st_lgl lgl)
 		
 		for (int k=0; k<=NITER; k++)
 		    {
-			Legendre = qandLEvaluation(p, xj);
+			Legendre = LegendreAndDerivativeAndQ(p, xj);
 			Delta         = Legendre.q/Legendre.dq;
 			xj            = xj + Delta;
 			if (fabs(Delta) <= TOL*fabs(xj)) break;
 		    }
 		lgl.coords[j] = xj;
-		Legendre = qandLEvaluation(p, xj);
+		Legendre = LegendreAndDerivativeAndQ(p, xj);
 		lgl.coords[p - j] = -xj;
 		
 		double xj2 = xj*xj;
@@ -259,7 +259,7 @@ int LegendreGaussLobattoNodesAndWeights(st_lgl lgl)
     }
 	
     if ((p % 2) == 0){
-	Legendre        = qandLEvaluation(p, 0.0);
+	Legendre        = LegendreAndDerivativeAndQ(p, 0.0);
 	lgl.coords[p/2] = 0.0;
 	    
 	double L2        = Legendre.legendre*Legendre.legendre;
