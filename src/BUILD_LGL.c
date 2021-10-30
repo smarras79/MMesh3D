@@ -14,12 +14,13 @@
 #include<math.h>
 #include<float.h>
 
-#include "mystructs.h"
+#include "myinclude.h"
+//#include "mystructs.h"
 #include "global_vars.h"
 #include "BUILD_LGL.h"
 
 #define TOL 4*DBL_EPSILON
-#define NITER 20
+#define NITER 100
 
 
 /***********************************************************************
@@ -117,7 +118,10 @@ st_legendre LegendreAndDerivativeAndQ(int p, double x)
 	dLm1 = dL;
     }
     k = p + 1;
-
+    
+    a = (double)(2*k - 1)/k;
+    b = (double)(k - 1)/k;
+      
     Lp1  = a*x*L - b*Lm1;
     dLp1 = dLm1 + (2*k - 1)*L;
 
@@ -136,68 +140,70 @@ st_legendre LegendreAndDerivativeAndQ(int p, double x)
  * Algorithm 23 of Kopriva's book
  *
  * Simone Marras, October 2021
- *
+ * OK
  ***********************************************************************/
-int LegendreGaussNodesAndWeights(st_lgl lgl)
+int LegendreGaussNodesAndWeights(st_lgl lgl, size_t p)
 {
     st_legendre Legendre;
-    
-    int p;
+
+    int i, j, k;
     double x0, x1;
     double w0, w1;
-    double xj;
+    double xj, wj;
     double Delta;
-    
-    //Polynomial order
-    p = nop;
-    
-    printf(" NOP = %d\n", p);
+
+    double xj2, dL2;
     
     if (p == 0) {
 	x0 = 0.0;
 	w0 = 2.0;
+	lgl.coords[p]  = x0;
+	lgl.weights[p] = w0;
     } else if (p == 1) {
 	x0 = -sqrt(1.0/3.0);
 	w0 = 1.0;
 	x1 = -x0;
 	w1 =  w0;
+	lgl.coords[0]  = x0;
+	lgl.weights[0] = w0;
+	lgl.coords[p]  = x1;
+	lgl.weights[p] = w1;
     } else {
-	for (int j=0; j<=((p + 1)/2) - 1; j++)
+	
+	for (j=0; j<(int)(p + 1)/2+1; j++)
 	    {
-		
-		xj = -cos((2*j + 1)/(2*p + 2)*PI);
+		xj = -cos(PI*(2.0*j + 1.0)/(2.0*p + 2.0));
 		lgl.coords[j] = xj;
-		
-		for (int k=0; k<=NITER; k++)
+		for (k=0; k<=NITER; k++)
 		    {
-			Legendre =LegendreAndDerivative(p + 1, xj);
-			Delta         = -Legendre.legendre/Legendre.dlegendre;
-			xj            = xj + Delta;
+			Legendre =  LegendreAndDerivative(p+1, xj);
+			Delta    = -Legendre.legendre/Legendre.dlegendre;
+			xj       = xj + Delta;
+		
 			if (fabs(Delta) <= TOL*fabs(xj)) break;
 		    }
-		lgl.coords[j] = xj;
-		Legendre =LegendreAndDerivative(p + 1, xj);
-		lgl.coords[p - j] = -xj;
-		
-		double xj2 = xj*xj;
-		double dL2 = Legendre.dlegendre*Legendre.dlegendre;
-		lgl.weights[j]     = 2/((1 - xj2)*dL2);
-		lgl.weights[p - j] = lgl.weights[j];
-		
+		Legendre      = LegendreAndDerivative(j + 1, xj);
+			
+		lgl.coords[j]      = xj;
+		lgl.coords[p - j]  = -xj;
+		xj2                = xj*xj;
+		dL2                = Legendre.dlegendre*Legendre.dlegendre;
+		lgl.weights[j]     = 2.0/((1 - xj2) * (dL2));
+		lgl.weights[p - j] = wj;
 	    }
     }
-
+    
     if ((p % 2) == 0){
 	Legendre = LegendreAndDerivative(p + 1, 0.0);
 	lgl.coords[p/2] = 0.0;
 
-	double dL2 = Legendre.dlegendre*Legendre.dlegendre;
+	dL2 = Legendre.dlegendre*Legendre.dlegendre;
 	lgl.weights[p/2] = 2.0/dL2;
     }
 
-    for (int j=0; j<p+1; j++){
-	printf("TOL = %.16e. X,W: %d, %.8f %.8f\n", TOL, j, lgl.coords[j], lgl.weights[j]);
-    }
+     for (int j=0; j<=p; j++){
+	 printf("LG:  X,W: %.8f %.8f\n", lgl.coords[j], lgl.weights[j]);
+     }
     
     return 0;
 }
@@ -212,28 +218,38 @@ int LegendreGaussNodesAndWeights(st_lgl lgl)
  * Simone Marras, October 2021
  *
  ***********************************************************************/
-int LegendreGaussLobattoNodesAndWeights(st_lgl lgl)
+int LegendreGaussLobattoNodesAndWeights(st_lgl lgl, size_t p)
 {
     st_legendre Legendre;
     
-    int p;
     double x0, x1, xP;
     double w0, w1, wP;
-    double xj;
+    double xj, xj2, L2;
     double Delta;
 
-    p = nop;
-
+    for (int j=0; j<=p; j++) {
+	lgl.coords[j]  = 0.0;
+	lgl.weights[j] = 33.0;
+    }
+    
     if (p == 1) {
 	x0 = -1.0;
 	w0 =  1.0;
 	x1 =  1.0;
 	w1 =  w0;
+	lgl.coords[0]  = x0;
+	lgl.coords[p]  = x1;
+	lgl.weights[0] = w0;
+	lgl.weights[p] = w1;
     } else {	
 	x0 = -1.0;
-	w0 =  2.0/(p*(p+1));
+	w0 =  2.0/(p*(p + 1));
 	xP =  1.0;
 	wP =  w0;
+	lgl.coords[0]  = x0;
+	lgl.coords[p]  = xP;
+	lgl.weights[0] = w0;
+	lgl.weights[p] = wP;
 	
 	for (int j=1; j<=((p + 1)/2) - 1; j++)
 	    {		
@@ -242,32 +258,130 @@ int LegendreGaussLobattoNodesAndWeights(st_lgl lgl)
 		
 		for (int k=0; k<=NITER; k++)
 		    {
-			Legendre = LegendreAndDerivativeAndQ(p, xj);
+			Legendre      = LegendreAndDerivativeAndQ(p, xj);
 			Delta         = Legendre.q/Legendre.dq;
-			xj            = xj + Delta;
+			xj            = xj - Delta;
 			if (fabs(Delta) <= TOL*fabs(xj)) break;
 		    }
-		lgl.coords[j] = xj;
-		Legendre = LegendreAndDerivativeAndQ(p, xj);
+		Legendre          = LegendreAndDerivativeAndQ(p, xj);
 		lgl.coords[p - j] = -xj;
 		
-		double xj2 = xj*xj;
-		double L2  = Legendre.legendre*Legendre.legendre;
+		xj2 = xj*xj;
+		L2  = Legendre.legendre*Legendre.legendre;
 		lgl.weights[j]     = 2/(p*(p + 1)*L2);
 		lgl.weights[p - j] = lgl.weights[j];
+		//printf("j: %d: X, %.8f\n", j, xj);
 	    }
     }
-	
+    
     if ((p % 2) == 0){
 	Legendre        = LegendreAndDerivativeAndQ(p, 0.0);
 	lgl.coords[p/2] = 0.0;
 	    
-	double L2        = Legendre.legendre*Legendre.legendre;
+	L2        = Legendre.legendre*Legendre.legendre;
 	lgl.weights[p/2] = 2/(p*(p + 1)*L2);
     }
 	
-    for (int j=0; j<lgl.size+1; j++){
-	printf("TOL = %.16e. X,W: %d, %.8f %.8f\n", TOL, j, lgl.coords[j], lgl.weights[j]);
+    for (int j=0; j<=p; j++){
+	printf("j: %d: X, W: %.8f %.8f\n", j, lgl.coords[j], lgl.weights[j]);
     }
+
+    return 0;
 }
 
+
+/***********************************************************************
+ * Calculate the Legendre-Gauss nodes and weights
+ *
+ * Algorithm 3.3 of Giraldo's book
+ *
+ * Simone Marras, October 2021
+ *
+ ***********************************************************************/
+int LegendreGaussNodesAndWeights_giraldo(st_lgl lgl, size_t p)
+{
+    st_legendre Legendre;
+    
+    double x0, x1;
+    double w0, w1;
+    double xj, wj;
+    double xkp1;
+    double Delta;
+
+    double xj2, dL2;
+    
+    for (int j=0; j<=p; j++){
+	xj = -cos((2*j + 1)/(2*p + 2)*PI);
+
+	for (int k=0; k<=NITER; k++)
+	    {
+		Legendre = LegendreAndDerivative(p, xj);
+		xkp1     = xj - Legendre.legendre/Legendre.dlegendre;
+	
+		if (fabs(xj - xkp1) <= TOL) break;
+		
+		xj = xkp1;
+	    }
+	printf( " xj = %f %f %f\n",  xj, Legendre.legendre, Legendre.dlegendre);
+	lgl.coords[j] = xj;
+
+    }
+    
+
+    return 0;
+}
+
+int LegendreGaussNodesAndWeights_ks_appendixB2(st_lgl lgl, size_t p)
+{
+    st_legendre Legendre;
+
+    int i, j, k, ii, jj;
+    
+    double x0, x1;
+    double w0, w1;
+    double xj, wj;
+    double xkp1;
+    double Delta;
+    double s, r;
+
+    double xjm1, xj2, dL2;
+
+    double xlgl[nop + 1];
+    
+    for (j=0; j<=p-1; j++){	
+	xlgl[j] = -cos((2*j + 1)/(2*p)*PI);
+    }
+
+    xlgl[0] = -1;
+    xlgl[p] =  1;
+    
+    for (j=0; j<=p-1; j++){
+	
+	r = xlgl[j];
+	
+	if (j > 0) {
+	    r = (r + xlgl[j-1])/2;
+	}
+	
+	for (k=0; k<=NITER; k++)
+	    {
+		s = 0;
+		for (i=0; i<=j-1; i++)
+		    {
+			s = s + 1.0/(r - xlgl[i]);
+		    }
+
+		Legendre = LegendreAndDerivative(p, r);
+		Delta    = -Legendre.legendre/(Legendre.dlegendre - Legendre.legendre*s);
+		r        = r + Delta;
+		if (fabs(Delta) <= TOL){
+		    break;
+		}
+	    }
+	xlgl[j] = r;
+	printf(" Xlgl %.8f\n", xlgl[j]);
+    }
+    
+	
+    return 0;
+}

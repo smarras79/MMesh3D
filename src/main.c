@@ -89,18 +89,21 @@ int main(int argc, char** argv) {
 	
 	for (ix=1; ix<=nx; ix++) {
 
-	    Legendre = LegendreAndDerivativeAndQ(nop, x[ix]);
-	    fprintf(file_id, "%.8f %.8f %f\n", x[ix], Legendre.legendre, Legendre.dlegendre);
+	    Legendre = LegendreAndDerivative(nop, x[ix]);
+	    fprintf(file_id, "% - .8f %.8f %f\n", x[ix], Legendre.legendre, Legendre.dlegendre);
 	}
 	free_dvector(x, 1, nx);
   	fclose(file_id);
-	/*
+	
 	st_lgl lgl;
 	lgl.size    = ngl;
 	lgl.coords  = (double*) malloc( sizeof(double) * lgl.size);
 	lgl.weights = (double*) malloc( sizeof(double) * lgl.size);
-	
-	LegendreGaussLobattoNodesAndWeights(lgl);
+
+	//LegendreGaussNodesAndWeights_ks_appendixB2(lgl, nop);
+	//LegendreGaussLobattoNodesAndWeights(lgl, nop);
+	LegendreGaussNodesAndWeights(lgl, nop);
+	//LegendreGaussNodesAndWeights_giraldo(lgl, nop);
 	
 	/*************************************************************************************
 	 * Dynamic memory allocation of U,V,P,G,F and coordinates on the grid
