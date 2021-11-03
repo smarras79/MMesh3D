@@ -12,7 +12,7 @@ PROBLEM_DEFINITION:
  nelemx:              20
  nelemy:              30
  nelemz:              10
- nop:                 4
+ nop:                 6
  PERIODICX:           Off
  PERIODICY:           Off
  PERIODICZ:           Off

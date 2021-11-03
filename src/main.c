@@ -100,10 +100,8 @@ int main(int argc, char** argv) {
 	lgl.coords  = (double*) malloc( sizeof(double) * lgl.size);
 	lgl.weights = (double*) malloc( sizeof(double) * lgl.size);
 
-	//LegendreGaussNodesAndWeights_ks_appendixB2(lgl, nop);
-	//LegendreGaussLobattoNodesAndWeights(lgl, nop);
-	LegendreGaussNodesAndWeights(lgl, nop);
-	//LegendreGaussNodesAndWeights_giraldo(lgl, nop);
+	LegendreGaussLobattoNodesAndWeights(lgl, nop);
+	//LegendreGaussNodesAndWeights(lgl, nop);
 	
 	/*************************************************************************************
 	 * Dynamic memory allocation of U,V,P,G,F and coordinates on the grid
