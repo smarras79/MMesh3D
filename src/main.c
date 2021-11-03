@@ -23,9 +23,9 @@ int main(int argc, char** argv) {
     MPI_Comm_rank(MPI_COMM_WORLD, &irank);
 
     // Get the name of the processor
-    char processor_name[MPI_MAX_PROCESSOR_NAME];
-    int name_len;
-    MPI_Get_processor_name(processor_name, &name_len);
+    //char processor_name[MPI_MAX_PROCESSOR_NAME];
+    //int name_len;
+    //MPI_Get_processor_name(processor_name, &name_len);
 
     if (irank == 0) {
 	/*****************************************************
@@ -70,24 +70,10 @@ int main(int argc, char** argv) {
 	    READ_INPUT(inputfile);
 	    PRINT_INFO();
 
-	
 	    /*************************************************************************************
-	     *COMPUTE HIGH-ORDER NODES and WEIGHTS
+	     *COMPUTE HIGH-ORDER NODES and WEIGHTS. Stored in struct: lgl.coords and lgl.weights
 	     *************************************************************************************/
-	    if (irank == 0) {
-		
-		BUILD_LGL(nop);
-		/*
-		st_legendre Legendre;
-		st_lgl lgl;
-		
-		lgl.size    = ngl;
-		lgl.coords  = (double*) malloc( sizeof(double) * lgl.size);
-		lgl.weights = (double*) malloc( sizeof(double) * lgl.size);
-		
-		//LegendreGaussLobattoNodesAndWeights(lgl, nop);
-		LegendreGaussNodesAndWeights(lgl, nop);*/
-	    }
+	    BUILD_LGL(nop);
 	}
 	    
 	/*************************************************************************************

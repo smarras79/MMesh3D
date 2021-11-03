@@ -272,7 +272,7 @@ int LegendreGaussNodesAndWeights(st_lgl lgl, size_t p)
     
     
     for (int j=0; j<=p; j++){
-	printf("# LG nodes: X_LG[%d] = %.16f, w_LG[%d] = %.16f\n", j, lgl.coords[j], j, lgl.weights[j]);
+	printf(" # LG nodes: X_LG[%d] = %.16f, w_LG[%d] = %.16f\n", j, lgl.coords[j], j, lgl.weights[j]);
     }
     
     return 0;
@@ -353,7 +353,7 @@ int LegendreGaussLobattoNodesAndWeights(st_lgl lgl, size_t p)
     }
 
     for (int j=0; j<=p; j++){
-	printf("# LGL nodes: X_LG[%d] = %.16f, w_LG[%d] = %.16f\n", j, lgl.coords[j], j, lgl.weights[j]);
+	printf(" # LGL nodes: X_LG[%d] = %.16f, w_LG[%d] = %.16f\n", j, lgl.coords[j], j, lgl.weights[j]);
     }
     
     return 0;
