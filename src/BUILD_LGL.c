@@ -15,8 +15,8 @@
 #include<float.h>
 
 #include "myinclude.h"
-//#include "mystructs.h"
 #include "global_vars.h"
+
 #include "BUILD_LGL.h"
 
 #define TOL 4*DBL_EPSILON
@@ -30,12 +30,52 @@
  * L_{p}  --> legendre of order p
  * L'_{p} --> dlegendr of order p
  * 
- * Algorithm 24 of Kopriva's book
+ * and
+ *
+ * q  = L_{p+1}  -  L_{p-1}
+ * q' = L'_{p+1} -  L'_{p-1} 
+ * 
+ * Algorithm 22+24 of Kopriva's book
  *
  * Simone Marras, October 2021
  *OK
  ***********************************************************************/
-st_legendre LegendreAndDerivative(int p, double x)
+int BUILD_LGL(size_t p)
+{
+    st_legendre Legendre;
+    st_lgl lgl;
+		
+    lgl.size    = ngl;
+    lgl.coords  = (double*) malloc( sizeof(double) * lgl.size);
+    lgl.weights = (double*) malloc( sizeof(double) * lgl.size);
+    
+    //LGL nodes
+    LegendreGaussLobattoNodesAndWeights(lgl, nop);
+    
+    //LG nodes
+    //LegendreGaussNodesAndWeights(lgl, nop);
+    
+    return 0;
+}
+
+/***********************************************************************
+ * Evaluate by recursion, the Legendre polynomial of order p
+ * and its Derivatives at coordinate x
+ *
+ * L_{p}  --> legendre of order p
+ * L'_{p} --> dlegendr of order p
+ * 
+ * and
+ *
+ * q  = L_{p+1}  -  L_{p-1}
+ * q' = L'_{p+1} -  L'_{p-1} 
+ * 
+ * Algorithm 22+24 of Kopriva's book
+ *
+ * Simone Marras, October 2021
+ *OK
+ ***********************************************************************/
+st_legendre LegendreAndDerivative(size_t p, double x)
 {
     st_legendre Legendre;
     
@@ -108,7 +148,7 @@ st_legendre LegendreAndDerivative(int p, double x)
  * Simone Marras, October 2021
  *
  ***********************************************************************/
-st_legendre LegendreAndDerivativeAndQ(int p, double x)
+st_legendre LegendreAndDerivativeAndQ(size_t p, double x)
 {
     st_legendre Legendre;
     
@@ -141,10 +181,12 @@ st_legendre LegendreAndDerivativeAndQ(int p, double x)
       
 		L  = a*x*Lm1 - b*Lm2;
 		dL = dLm2 + (2.0*k - 1.0)*Lm1;
-
+		
+		a = (double)(2.0*(k+1) - 1.0)/(k+1);
+		b = (double)(k+1 - 1.0)/(k+1);
 		Lp1  = a*x*L - b*Lm1;
 		dLp1 = dLm1 + (2.0*k - 1.0)*L;
-    
+		
 		Lm2 = Lm1;
 		Lm1 = L;
 
@@ -153,17 +195,12 @@ st_legendre LegendreAndDerivativeAndQ(int p, double x)
 	    }
 	}
     
-    k = p + 1;
-    
-    a = (double)(2.0*k - 1.0)/k;
-    b = (double)(k - 1.0)/k;
-    
     Legendre.legendre  = L;
     Legendre.dlegendre = dL;
     
     Legendre.q  =  Lp1 -  Lm2;
     Legendre.dq = dLp1 - dLm2;
-      
+		
     return Legendre;
 }
 
@@ -208,7 +245,6 @@ int LegendreGaussNodesAndWeights(st_lgl lgl, size_t p)
 		
 		for (int k=0; k<=NITER; k++)
 		    {
-			//Legendre =  LegendreAndDerivativeAndQ(p+1, xj);
 			Legendre =  LegendreAndDerivative(p+1, xj);
 			Delta    = -Legendre.legendre/Legendre.dlegendre;
 			xj       = xj + Delta;
@@ -221,10 +257,8 @@ int LegendreGaussNodesAndWeights(st_lgl lgl, size_t p)
 		lgl.coords[p - j]  = -xj;
 		xj2                =  xj*xj;
 		dL2                = Legendre.dlegendre*Legendre.dlegendre;
-		lgl.weights[j]     = 2.0/((1 - xj2) * (dL2));
-		lgl.weights[p - j] = wj;
-
-		printf("- LG: %d X,W: %.8f %.8f\n", j, lgl.coords[j], lgl.weights[j]);
+		lgl.weights[j]     = 2.0/((1 - xj2)*dL2);
+		lgl.weights[p - j] = lgl.weights[j];
 	    }
     }
     
@@ -238,7 +272,7 @@ int LegendreGaussNodesAndWeights(st_lgl lgl, size_t p)
     
     
     for (int j=0; j<=p; j++){
-	printf(" X_LG[%d] = %.8f, w_LG[%d] = %.8f\n", j, lgl.coords[j], j, lgl.weights[j]);
+	printf("# LG nodes: X_LG[%d] = %.16f, w_LG[%d] = %.16f\n", j, lgl.coords[j], j, lgl.weights[j]);
     }
     
     return 0;
@@ -318,12 +352,9 @@ int LegendreGaussLobattoNodesAndWeights(st_lgl lgl, size_t p)
 	lgl.weights[p/2] = 2/(p*(p + 1)*L2);
     }
 
-    
-    
     for (int j=0; j<=p; j++){
-	printf(" X_LG[%d] = %.8f, w_LG[%d] = %.8f\n", j, lgl.coords[j], j, lgl.weights[j]);
+	printf("# LGL nodes: X_LG[%d] = %.16f, w_LG[%d] = %.16f\n", j, lgl.coords[j], j, lgl.weights[j]);
     }
-    
     
     return 0;
 }

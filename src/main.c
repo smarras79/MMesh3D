@@ -63,46 +63,38 @@ int main(int argc, char** argv) {
 	 *************************************************************************************/
 	MEMORY_ALLOCATE(2);
 
-	/*************************************************************************************
-	 *READ INPUT FILE
-	 *************************************************************************************/
-	READ_INPUT(inputfile);
+	if (irank == 0) {
+	    /*************************************************************************************
+	     *READ INPUT FILE
+	     *************************************************************************************/
+	    READ_INPUT(inputfile);
+	    PRINT_INFO();
 
-	PRINT_INFO();
-
+	
+	    /*************************************************************************************
+	     *COMPUTE HIGH-ORDER NODES and WEIGHTS
+	     *************************************************************************************/
+	    if (irank == 0) {
+		
+		BUILD_LGL(nop);
+		/*
+		st_legendre Legendre;
+		st_lgl lgl;
+		
+		lgl.size    = ngl;
+		lgl.coords  = (double*) malloc( sizeof(double) * lgl.size);
+		lgl.weights = (double*) malloc( sizeof(double) * lgl.size);
+		
+		//LegendreGaussLobattoNodesAndWeights(lgl, nop);
+		LegendreGaussNodesAndWeights(lgl, nop);*/
+	    }
+	}
+	    
 	/*************************************************************************************
 	 * READ THE TOPOGRAPHY FILE or BUILD THE BOTTOM BOUNDARY BY A USER-DEFINED FUNCTION:
 	 *************************************************************************************/
 	READ_TOPOGRAPHY();
-	double L;
-	int ix;
-	int nx;
-	double *x;
 
-	st_legendre Legendre;
-	
-	FILE *file_id;
-	nx = 100;
-	file_id = fopen("LEGENDRE.dat", "w");       
-	x = dvector(1,nx);
-	dlinspace(-1, 1, nx, x, "n");
-	
-	for (ix=1; ix<=nx; ix++) {
-
-	    Legendre = LegendreAndDerivative(nop, x[ix]);
-	    fprintf(file_id, "% - .8f %.8f %f\n", x[ix], Legendre.legendre, Legendre.dlegendre);
-	}
-	free_dvector(x, 1, nx);
-  	fclose(file_id);
-	
-	st_lgl lgl;
-	lgl.size    = ngl;
-	lgl.coords  = (double*) malloc( sizeof(double) * lgl.size);
-	lgl.weights = (double*) malloc( sizeof(double) * lgl.size);
-
-	LegendreGaussLobattoNodesAndWeights(lgl, nop);
-	//LegendreGaussNodesAndWeights(lgl, nop);
-	
 	/*************************************************************************************
 	 * Dynamic memory allocation of U,V,P,G,F and coordinates on the grid
 	 *************************************************************************************/
