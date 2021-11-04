@@ -1,7 +1,7 @@
 /***********************************************************************
  * BUILD_LGL.h
  ***********************************************************************/
-int BUILD_LGL(size_t p);
+int BUILD_LGL(size_t p, st_lgl lgl);
 
 int LegendreGaussNodesAndWeights(st_lgl lgl, size_t p);
 

@@ -7,8 +7,10 @@
 #include "global_vars.h"
 
 int main(int argc, char** argv) {
-    // Initialize the MPI environment
-    //MPI_Init(NULL, NULL);
+    
+    st_lgl lgl;
+    
+    // Initialize the MPI environment    
     /*************************************************************************************
      *Initialize MPI and get the process' rank
      *************************************************************************************/
@@ -73,7 +75,7 @@ int main(int argc, char** argv) {
 	    /*************************************************************************************
 	     *COMPUTE HIGH-ORDER NODES and WEIGHTS. Stored in struct: lgl.coords and lgl.weights
 	     *************************************************************************************/
-	    BUILD_LGL(nop);
+	    BUILD_LGL(nop, lgl);
 	}
 	    
 	/*************************************************************************************
@@ -116,6 +118,9 @@ int main(int argc, char** argv) {
 	 MEMORY_DEALLOCATE(1);
 	 MEMORY_DEALLOCATE(2);
 	 MEMORY_DEALLOCATE(0);
+
+	 free(lgl.coords);
+	 free(lgl.weights);
      }
     
     

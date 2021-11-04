@@ -13,9 +13,8 @@
 /*
  * Allocate memory
  */
-int MEMORY_ALLOCATE(int flag)
+int MEMORY_ALLOCATE(int flag, ...)
 {
-
   int inode, iel;
 
   if(flag == 0)
@@ -36,10 +35,6 @@ int MEMORY_ALLOCATE(int flag)
       //Allocation of the strings of the above lines:
       for(i=0; i<PROB_ENTRIES; i++)
 	problem[i] = (char *) malloc(32 * sizeof(char *));
-      
-      /*XGL and WGL*/
-      xgl = dvector(1,ngl);
-      wgl = dvector(1,ngl);
       
     }
   
@@ -89,10 +84,12 @@ int MEMORY_ALLOCATE(int flag)
 }
 
 
+
+
 /*
  * Free memory
  */
-int MEMORY_DEALLOCATE(int flag)
+int MEMORY_DEALLOCATE(int flag, ...)
 {
   if(flag == 0)
     {
@@ -107,10 +104,6 @@ int MEMORY_DEALLOCATE(int flag)
   
       for(i=0; i<PROB_ENTRIES; i++)
 	free(problem[i]);
-
-      
-      free_dvector(xgl, 1,ngl);
-      free_dvector(wgl, 1,ngl);
     }
   if(flag == 1)
     {
@@ -136,4 +129,3 @@ int MEMORY_DEALLOCATE(int flag)
 
 return 0;    
 }
-

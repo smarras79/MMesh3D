@@ -40,16 +40,15 @@
  * Simone Marras, October 2021
  *OK
  ***********************************************************************/
-int BUILD_LGL(size_t p)
+int BUILD_LGL(size_t p, st_lgl lgl)
 {
     st_legendre Legendre;
-    st_lgl lgl;
-		
-    lgl.size    = ngl;
-    //    lgl.coords  = (double*) malloc( sizeof(double) * lgl.size);
-    //    lgl.weights = (double*) malloc( sizeof(double) * lgl.size);
-    
-    
+    size_t size;
+
+    size = nop + 1;
+    lgl.coords  = (double*) malloc( sizeof(double) * size);
+    lgl.weights = (double*) malloc( sizeof(double) * size);
+
     //LG nodes
     //LegendreGaussNodesAndWeights(lgl, nop);
     

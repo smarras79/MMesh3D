@@ -1,13 +1,9 @@
 /*
  * Allocate memory
  */
-int MEMORY_ALLOCATE(int flag);
-void lgl_allocate(int flag, st_lgl lgl, size_t sz);
-
+int MEMORY_ALLOCATE(int flag, ...);
 
 /*
  * Free memory
  */
-int MEMORY_DEALLOCATE(int flag);
-void lgl_deallocate(int flag, st_lgl lgl, size_t sz);
-
+int MEMORY_DEALLOCATE(int flag, ...);
