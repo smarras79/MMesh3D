@@ -1,3 +1,6 @@
+#ifndef MYDEFINE_H
+#define MYDEFINE_H
+
 /*
  * Here the parameters are defined
  */
@@ -26,3 +29,5 @@
 
 /* Physical quantities */
 #define earth_radius        6.37122e+6
+
+#endif

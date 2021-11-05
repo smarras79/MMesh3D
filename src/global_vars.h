@@ -1,3 +1,6 @@
+#ifndef GLOBAL_VARS_H
+#define GLOBAL_VARS_H
+
 //Variables declarations:
 #include "mydefine.h"
 
@@ -172,3 +175,5 @@ FILE						\
 *input_id,					\
     *vtk_file_id,				\
     *gmsh_file_id;
+
+#endif
