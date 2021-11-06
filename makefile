@@ -18,7 +18,9 @@ BOUND_FLAG =
 # List of source codes and generated object files:
 SRCS = \
 	./src/main.c \
+	./src/ALMOST_EQUAL.c \
 	./src/BUILD_LGL.c \
+	./src/INTERPOLATE.c \
 	./src/MEMORY.c \
 	./src/NRUTIL.c \
 	./src/PRINT.c \
@@ -36,7 +38,6 @@ SRCS = \
 	./src/parabola.c \
 	./src/READ_TOPOGRAPHY.c \
 	./src/TOPOfromTXT.c \
-	./src/INTERPOLATE.c \
 	./src/MINMAXVAL.c \
 	./src/topo_user_function.c \
 	./src/WRITE_OUTPUT.c \
@@ -45,7 +46,9 @@ SRCS = \
 
 OBJS = \
 	./src/main.o \
+	./src/ALMOST_EQUAL.o \
 	./src/BUILD_LGL.o \
+	./src/INTERPOLATE.o \
 	./src/MEMORY.o \
 	./src/NRUTIL.o \
 	./src/PRINT.o \
