@@ -9,16 +9,23 @@
  * [2] F. X. Giraldo "An introduction to element0-based Galerkin ..." Springer
  *
  ***********************************************************************/
-#include<stdio.h>
-#include<stdlib.h>
-#include<math.h>
-#include<float.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <float.h>
 
-#include "myinclude.h"
-#include "global_vars.h"
+//User defined structures
+#include "MYSTRUCTS.h"
 
+//Global variable declarations
+#include "GLOBAL_VARS.h"
+
+//Function headers
+#include "ALMOST_EQUAL.h"
 #include "BUILD_LGL.h"
+#include "PRINT.h"
 
+//Local constants
 #define TOL 4*DBL_EPSILON
 #define NITER 100
 
@@ -40,8 +47,9 @@
  * Simone Marras, October 2021
  *OK
  ***********************************************************************/
-int BUILD_LGL(size_t p)
+st_lgl BUILD_LGL(size_t p)
 {
+    int ivalue;
     st_legendre Legendre;
     st_lgl lgl;
 		
@@ -50,12 +58,12 @@ int BUILD_LGL(size_t p)
     lgl.weights = (double*) malloc( sizeof(double) * lgl.size);
     
     //LGL nodes
-    LegendreGaussLobattoNodesAndWeights(lgl, nop);
+    ivalue = LegendreGaussLobattoNodesAndWeights(lgl, nop);
     
     //LG nodes
-    //LegendreGaussNodesAndWeights(lgl, nop);
+    //ivalue = LegendreGaussNodesAndWeights(lgl, nop);
     
-    return 0;
+    return lgl;
 }
 
 /***********************************************************************
@@ -297,11 +305,13 @@ int LegendreGaussLobattoNodesAndWeights(st_lgl lgl, size_t p)
     double xj, xj2, L2;
     double Delta;
 
+    printf(" # Compute LGL nodes ... \n");
+    
     for (int j=0; j<=p; j++) {
 	lgl.coords[j]  = 0.0;
 	lgl.weights[j] = 2.0;
     }
-
+    
     if (p == 1) {
 	x0 = -1.0;
 	w0 =  1.0;
@@ -353,8 +363,51 @@ int LegendreGaussLobattoNodesAndWeights(st_lgl lgl, size_t p)
     }
 
     for (int j=0; j<=p; j++){
-	printf(" # LGL nodes: X_LG[%d] = %.16f, w_LG[%d] = %.16f\n", j, lgl.coords[j], j, lgl.weights[j]);
+	printf(" #\t LGL nodes: X_LG[%d] = %.16f; w_LG[%d] = %.16f\n", j, lgl.coords[j], j, lgl.weights[j]);
+    }
+
+    printf(" # Compute LGL nodes           ... DONE\n");
+    return 0;
+}
+
+
+/***********************************************************************
+ * BarycentricWeights
+ * 
+ * Algorithm 30 of Kopriva's book
+ *
+ * Simone Marras, October 2021
+ ***********************************************************************/
+int BarycentricWeights(st_lgl lgl, size_t p)
+{
+    //VIEW_dVECT("LGL.WEIGHTS", lgl.weights, 0, lgl.size-1);
+    
+    printf(" # Compute barycentric weights ... \n");
+    for (int j = 0; j <= p;  j++)
+	lgl.weights[j] = 1.0;
+
+    for (int j = 1; j <= p;  j++) {
+	for (int k = 0; k <= j - 1;  k++) {
+	    double xk = lgl.coords[k];
+	    double xj = lgl.coords[j];
+
+	    double wk = lgl.weights[k];
+	    double wj = lgl.weights[j];
+	    
+	    wk = wk*(xk - xj);
+	    wj = wj*(xj - xk);
+	    
+	    lgl.weights[k] = wk;
+	    lgl.weights[j] = wj;
+	}	
     }
     
-    return 0;
+    for (int j = 0; j <= p;  j++)
+	lgl.weights[j] = 1.0/lgl.weights[j];
+    
+    for (int j=0; j<=p; j++){
+	printf(" #\t Barycentryc weights: w_LGL[%d] = %.16f\n", j, lgl.weights[j]);
+    }
+    printf(" # Compute barycentric weights ... DONE\n");
+    return 0; 
 }

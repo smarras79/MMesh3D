@@ -1,14 +1,50 @@
+#include <stdbool.h>
+#include <errno.h>
+#include <time.h>
+#include <math.h>
 #include <mpi.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
-#include "myinclude.h"
-#include "mydefine.h"
-#include "global_vars.h"
+//User-defined structs and variables
+#include "MYSTRUCTS.h"
+#include "GLOBAL_VARS.h" //GLOBAL VARIABLES
+#include "MYDEFINE.h"    //GLOBAL CONSTANTS
+
+//Functions headers
+#include "ALMOST_EQUAL.h"
+#include "BUILD_LGL.h"
+#include "MEMORY.h"
+#include "NRUTIL.h"
+#include "PRINT.h"
+#include "READ_INPUT.h"
+
+//#include "WRITE_OUTPUT.h"
+//#include "READ_TOPOGRAPHY.h"
+//#include "BUILD_GRID.h"
+//#include "BUILD_CONN.h"
+//#include "BUILD_GRID_SPHERE.h"
+//#include "GRID_COORD.h"
+//#include "GRID2CONN.h"
+//#include "linspace.h"
+//#include "parabola.h"
+//#include "GAUSSJ.h"
+//#include "INTERPOLATE.h"
+//#include "MINMAXVAL.h"
+//#include "topo_user_function.h"
+//#include "SURFACES.h"
+//#include "TOPOfromTXT.h"
+//#include "elliptic_solver.h"
+//#include "mympi_init.h"
+//#include "DOMAIN_DECOMP.h"
+//#include "visit_writer.h"
+
+
 
 int main(int argc, char** argv) {
-    // Initialize the MPI environment
-    //MPI_Init(NULL, NULL);
+
+    st_lgl lgl;
     /*************************************************************************************
      *Initialize MPI and get the process' rank
      *************************************************************************************/
@@ -73,22 +109,24 @@ int main(int argc, char** argv) {
 	    /*************************************************************************************
 	     *COMPUTE HIGH-ORDER NODES and WEIGHTS. Stored in struct: lgl.coords and lgl.weights
 	     *************************************************************************************/
-	    BUILD_LGL(nop);
+	    lgl = BUILD_LGL(nop);
+
+	    BarycentricWeights(lgl, nop);
 	}
 	    
 	/*************************************************************************************
 	 * READ THE TOPOGRAPHY FILE or BUILD THE BOTTOM BOUNDARY BY A USER-DEFINED FUNCTION:
-	 *************************************************************************************/
+	 *************************************************************************************
 	READ_TOPOGRAPHY();
 
 	/*************************************************************************************
 	 * Dynamic memory allocation of U,V,P,G,F and coordinates on the grid
-	 *************************************************************************************/
+	 *************************************************************************************
 	MEMORY_ALLOCATE(1);
 	
 	/*************************************************************************************
 	 * Build GRID coordinates and connectivity matrix:
-	 *************************************************************************************/	
+	 *************************************************************************************	
 	BUILD_GRID();
   
 	/*************************************************************************************
@@ -98,25 +136,25 @@ int main(int argc, char** argv) {
   
 	/*************************************************************************************
 	 * Build the Connectivity matrix
-	 *************************************************************************************/
+	 *************************************************************************************
 	BUILD_CONN();
   
 	/*************************************************************************************
 	 * Write output to file (VTK, ALYA, etc.)
-	 *************************************************************************************/
+	 *************************************************************************************
 	//apply_smoothing();
 	WRITE_OUTPUT(irank);
-	
+	*/
     }
-
-     if (irank == 0) {
-	 /*****************************************************
-	  * Free memory
-	  *****************************************************/
-	 MEMORY_DEALLOCATE(1);
-	 MEMORY_DEALLOCATE(2);
-	 MEMORY_DEALLOCATE(0);
-     }
+    
+    if (irank == 0) {
+	/*****************************************************
+	 * Free memory
+	 *****************************************************/
+	//MEMORY_DEALLOCATE(1);
+	MEMORY_DEALLOCATE(2);
+	MEMORY_DEALLOCATE(0);
+    }
     
     
     // Finalize the MPI environment.

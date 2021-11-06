@@ -1,5 +1,9 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
 //Variables declarations:
-#include "mydefine.h"
+#include "MYDEFINE.h"
 
 /*
  * Scalars

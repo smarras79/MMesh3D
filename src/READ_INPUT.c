@@ -6,9 +6,13 @@ Function to read in the user input file for the Cartesian Mesh Generator:
 
 *****************************************************************************/
 
-#include "myinclude.h"
-#include "mydefine.h"
-#include "global_vars.h"
+#include <errno.h>
+#include <mpi.h>
+#include <stdio.h>
+#include <string.h>
+
+#include "MYDEFINE.h"
+#include "GLOBAL_VARS.h"
 
 #define SEPARATOR " \t"
 

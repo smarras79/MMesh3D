@@ -3,19 +3,76 @@
  * INTERPOLATE.c 
  *
  * This file collects different functions used for the
- * interpolation of data points by means of an
- * interpolating surface.
- *
- * 1) LATTICE()
- *     Based on the algorithm BA, p. 231, of Lee et al.
- *     1997, IEEE Trans. Visualiz. Comput. Graphics, Vol 3
+ * interpolation of data points
  *
  *
  ***********************************************************/
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <float.h>
 
-#include<stdlib.h>
-#include<stdio.h>
-#include<math.h>
+//User defined structures
+#include "MYSTRUCTS.h"
+
+//Global variable declarations
+#include "GLOBAL_VARS.h"
+
+//Function headers
+#include "ALMOST_EQUAL.h"
+#include "INTERPOLATE.h"
+#include "PRINT.h"
+
+//Local constants
+#define TOL 4*DBL_EPSILON
+#define NITER 100
+
+/***********************************************************************
+ * Lagrange interpolant from barycentric form (see Algorithm 30)
+ * 
+ * Algorithm 31 of Kopriva's book
+ *
+ * Simone Marras, October 2021
+ ***********************************************************************/
+double LagrangeInterpolation(double x, st_lgl lgl, double *f, size_t p)
+{
+    printf(" # Lagrange interpolation      ...\n");
+    double numerator   = 0.0;
+    double denominator = 0.0;
+    
+    for (int j = 0; j <= p;  j++) {
+	
+	double xj = lgl.coords[j];
+	if ( AlmostEqual(x, xj) ) {
+	    return f[j];
+	}
+	double wj = lgl.weights[j];
+	double t = wj/(x - xj);
+	numerator   = numerator   + t * f[j];
+	denominator = denominator + t;
+    }
+    printf(" # Lagrange interpolation      ... DONE\n");
+    
+    return numerator/denominator; 
+}
+
+/***********************************************************************
+ * Matrix for Interpolation Be- tween Two Sets of Points
+ * 
+ * Algorithm 32 of Kopriva's book
+ *
+ * Simone Marras, October 2021
+ ***********************************************************************/
+double PolynomialInterpolationMatrix(st_lgl lgl, st_vector xnew)
+{
+    printf(" # Compute interpolation matrix ... \n");
+    
+    
+
+    
+    printf(" # Compute interpolation matrix ...DONE\n");
+
+}
 
 void LATTICE(int m, int n, int nnodesx, int nnodesy, double **Q, float **PHI)
 {
@@ -27,6 +84,10 @@ void LATTICE(int m, int n, int nnodesx, int nnodesy, double **Q, float **PHI)
    *
    * Output:
    * Lattice coordinates: PHI[1:m+3][1:n+3]
+   *
+   * LATTICE(): algorithm BA, p. 231, of Lee et al.
+   * 1997, IEEE Trans. Visualiz. Comput. Graphics, Vol 3
+   *
    ********************************************************/
 
   int i,j,k,l,ipoin;

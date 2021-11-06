@@ -5,10 +5,17 @@
  *
  * Simone Marras, Aug 2012
  */
+#include <errno.h>
+#include <time.h>
+#include <math.h>
+#include <mpi.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
-#include "myinclude.h"
-#include "mydefine.h"
-#include "global_vars.h"
+#include "NRUTIL.h"
+#include "MYDEFINE.h"
+#include "GLOBAL_VARS.h"
 
 /*
  * Allocate memory
