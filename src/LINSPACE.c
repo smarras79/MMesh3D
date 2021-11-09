@@ -8,9 +8,11 @@
  * WARNING: THESE FUNCTIONS ARE WRITTEN TO ACCEPT 1-indexed arrays (instead of the 0-indexed as in standard C arrays)!!!
  */
 
-#include<stdio.h>
-#include<string.h>
-#include"nrutil.h"
+#include <stdio.h>
+#include <string.h>
+
+#include "LINSPACE.h"
+#include "NRUTIL.h"
 
 //Floats
 void flinspace(float vmin, float vmax, int n, float *VECT, char *force_flag)

@@ -4,11 +4,6 @@
  * This file contains all the structs definitions
  * S. Marras, April 2014
  */
-typedef struct {
-    double *coords;
-    double *weights;
-    size_t size;
-} st_lgl;
 
 typedef struct  {
     double legendre;

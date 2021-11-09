@@ -14,6 +14,7 @@
 
 //User defined structures
 #include "MYSTRUCTS.h"
+#include "MESH.h"
 
 //Global variable declarations
 #include "GLOBAL_VARS.h"
@@ -42,12 +43,12 @@ double LagrangeInterpolation(double x, st_lgl lgl, double *f, size_t p)
     
     for (int j = 0; j <= p;  j++) {
 	
-	double xj = lgl.coords[j];
+	double xj = lgl.ksi[j];
 	if ( AlmostEqual(x, xj) ) {
 	    return f[j];
 	}
-	double wj = lgl.weights[j];
-	double t = wj/(x - xj);
+	double wj   = lgl.weights[j];
+	double t    = wj/(x - xj);
 	numerator   = numerator   + t * f[j];
 	denominator = denominator + t;
     }

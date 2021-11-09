@@ -3,9 +3,14 @@
  *
  * Simone Marras, Aug 2012
  */
-#include "myinclude.h"
-#include "mydefine.h"
-#include "global_vars.h"
+
+#include <stdlib.h>
+
+#include "BUILD_CONN.h"
+#include "GRID2CONN.h"
+#include "GLOBAL_VARS.h"
+#include "MYDEFINE.h"
+#include "SURFACES.h"
 
 int BUILD_CONN(void)
 {

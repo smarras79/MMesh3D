@@ -1126,3 +1126,9 @@ int PRINT_INFO(void)
 
   return 0;
 }
+
+void PRINT_ERROR(char *message)
+{
+    printf(" %s\n", message);
+    exit(1);
+}

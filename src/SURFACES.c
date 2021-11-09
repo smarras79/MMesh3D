@@ -5,9 +5,23 @@
  * This function builds volume grid:
  *
  **********************************************************************/
+#include <math.h>
+#include <mpi.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
-#include "myinclude.h"
-#include "mydefine.h"
+//User-defined structs and variables
+#include "GLOBAL_VARS.h" //GLOBAL VARIABLES
+#include "MYDEFINE.h"    //GLOBAL CONSTANTS
+
+//Functions headers
+#include "LINSPACE.h"
+#include "NRUTIL.h"
+#include "PARABOLA.h"
+#include "SURFACES.h"
+#include "TOPOfromTXT.h"
+#include "TOPO_USER_FUNCTION.h"
 
 int SURFACES(int isurface, int nnodesu, int nnodesv, int nnodesw, int nelem, \
 	     double **BDY_COORDS, char *problem[], double *parameters, double **COORDS, double *topo_surface, double deltaLon, double deltaLat)

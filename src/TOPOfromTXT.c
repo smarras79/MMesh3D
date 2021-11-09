@@ -17,7 +17,18 @@
  * READTOPO_DEM()       reads a DEM file from NOAA page (file extension: *.asc)
  *
  ********************************************************************************/
-#include "myinclude.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+//User-defined structs and variables
+#include "GLOBAL_VARS.h" //GLOBAL VARIABLES
+#include "MYDEFINE.h"    //GLOBAL CONSTANTS
+
+//Functions headers
+#include "PRINT.h"
+#include "READ_TOPOGRAPHY.h"
+
 
 int READTOPOtxt_header(char *txt_inputfile, 
 		       int *nlon, int *nlat,

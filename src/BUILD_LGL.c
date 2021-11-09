@@ -16,6 +16,7 @@
 
 //User defined structures
 #include "MYSTRUCTS.h"
+#include "MESH.h"
 
 //Global variable declarations
 #include "GLOBAL_VARS.h"
@@ -54,7 +55,7 @@ st_lgl BUILD_LGL(size_t p)
     st_lgl lgl;
 		
     lgl.size    = ngl;
-    lgl.coords  = (double*) malloc( sizeof(double) * lgl.size);
+    lgl.ksi     = (double*) malloc( sizeof(double) * lgl.size);
     lgl.weights = (double*) malloc( sizeof(double) * lgl.size);
     
     //LGL nodes
@@ -233,23 +234,23 @@ int LegendreGaussNodesAndWeights(st_lgl lgl, size_t p)
     if (p == 0) {
 	x0 = 0.0;
 	w0 = 2.0;
-	lgl.coords[p]  = x0;
+	lgl.ksi[p]  = x0;
 	lgl.weights[p] = w0;
     } else if (p == 1) {
 	x0 = -sqrt(1.0/3.0);
 	w0 = 1.0;
 	x1 = -x0;
 	w1 =  w0;
-	lgl.coords[0]  = x0;
+	lgl.ksi[0]  = x0;
 	lgl.weights[0] = w0;
-	lgl.coords[p]  = x1;
+	lgl.ksi[p]  = x1;
 	lgl.weights[p] = w1;
     } else {
 	
 	for (int j=0; j<(int)(p + 1)/2 + 1; j++)
 	    {
 		xj = -cos(PI*(2.0*j + 1.0)/(2.0*p + 2.0));
-		lgl.coords[j] = xj;
+		lgl.ksi[j] = xj;
 		
 		for (int k=0; k<=NITER; k++)
 		    {
@@ -261,8 +262,8 @@ int LegendreGaussNodesAndWeights(st_lgl lgl, size_t p)
 		    }
 		Legendre      = LegendreAndDerivative(p + 1, xj);
 			
-		lgl.coords[j]      =  xj;
-		lgl.coords[p - j]  = -xj;
+		lgl.ksi[j]      =  xj;
+		lgl.ksi[p - j]  = -xj;
 		xj2                =  xj*xj;
 		dL2                = Legendre.dlegendre*Legendre.dlegendre;
 		lgl.weights[j]     = 2.0/((1 - xj2)*dL2);
@@ -272,7 +273,7 @@ int LegendreGaussNodesAndWeights(st_lgl lgl, size_t p)
     
     if ((p % 2) == 0){
 	Legendre = LegendreAndDerivative(p + 1, 0.0);
-	lgl.coords[p/2] = 0.0;
+	lgl.ksi[p/2] = 0.0;
 
 	dL2 = Legendre.dlegendre*Legendre.dlegendre;
 	lgl.weights[p/2] = 2.0/dL2;
@@ -280,7 +281,7 @@ int LegendreGaussNodesAndWeights(st_lgl lgl, size_t p)
     
     
     for (int j=0; j<=p; j++){
-	printf(" # LG nodes: X_LG[%d] = %.16f, w_LG[%d] = %.16f\n", j, lgl.coords[j], j, lgl.weights[j]);
+	printf(" # LG nodes: X_LG[%d] = %.16f, w_LG[%d] = %.16f\n", j, lgl.ksi[j], j, lgl.weights[j]);
     }
     
     return 0;
@@ -308,7 +309,7 @@ int LegendreGaussLobattoNodesAndWeights(st_lgl lgl, size_t p)
     printf(" # Compute LGL nodes ... \n");
     
     for (int j=0; j<=p; j++) {
-	lgl.coords[j]  = 0.0;
+	lgl.ksi[j]  = 0.0;
 	lgl.weights[j] = 2.0;
     }
     
@@ -317,8 +318,8 @@ int LegendreGaussLobattoNodesAndWeights(st_lgl lgl, size_t p)
 	w0 =  1.0;
 	x1 =  1.0;
 	w1 =  w0;
-	lgl.coords[0]  = x0;
-	lgl.coords[p]  = x1;
+	lgl.ksi[0]  = x0;
+	lgl.ksi[p]  = x1;
 	lgl.weights[0] = w0;
 	lgl.weights[p] = w1;
     } else {	
@@ -326,15 +327,15 @@ int LegendreGaussLobattoNodesAndWeights(st_lgl lgl, size_t p)
 	w0 =  (double)2.0/(p*(p + 1));
 	xP =  1.0;
 	wP =  w0;
-	lgl.coords[0]  = x0;
-	lgl.coords[p]  = xP;
+	lgl.ksi[0]  = x0;
+	lgl.ksi[p]  = xP;
 	lgl.weights[0] = w0;
 	lgl.weights[p] = wP;
 	
 	for (int j=1; j<(int)(p + 1)/2 + 1; j++)
 	    {		
 		xj            = -cos((j + 0.25)*PI/p - 3.0/(8.0*p*PI*(j + 0.25)));
-		lgl.coords[j] = xj;
+		lgl.ksi[j] = xj;
 		
 		for (int k=0; k<=NITER; k++)
 		    {
@@ -345,8 +346,8 @@ int LegendreGaussLobattoNodesAndWeights(st_lgl lgl, size_t p)
 			if (fabs(Delta) <= TOL) break;
 		    }
 		Legendre           = LegendreAndDerivativeAndQ(p, xj);
-		lgl.coords[j]      =  xj;
-		lgl.coords[p - j]  = -xj;
+		lgl.ksi[j]      =  xj;
+		lgl.ksi[p - j]  = -xj;
 		xj2                =  xj*xj;
 		L2                 = Legendre.legendre*Legendre.legendre;
 		lgl.weights[j]     = 2/(p*(p + 1)*L2);
@@ -356,14 +357,14 @@ int LegendreGaussLobattoNodesAndWeights(st_lgl lgl, size_t p)
     
     if ((p % 2) == 0){
 	Legendre        = LegendreAndDerivative(p, 0.0);
-	lgl.coords[p/2] = 0.0;
+	lgl.ksi[p/2] = 0.0;
 	    
 	L2        = Legendre.legendre*Legendre.legendre;
 	lgl.weights[p/2] = 2/(p*(p + 1)*L2);
     }
 
     for (int j=0; j<=p; j++){
-	printf(" #\t LGL nodes: X_LG[%d] = %.16f; w_LG[%d] = %.16f\n", j, lgl.coords[j], j, lgl.weights[j]);
+	printf(" #\t LGL nodes: X_LG[%d] = %.16f; w_LG[%d] = %.16f\n", j, lgl.ksi[j], j, lgl.weights[j]);
     }
 
     printf(" # Compute LGL nodes           ... DONE\n");
@@ -388,8 +389,8 @@ int BarycentricWeights(st_lgl lgl, size_t p)
 
     for (int j = 1; j <= p;  j++) {
 	for (int k = 0; k <= j - 1;  k++) {
-	    double xk = lgl.coords[k];
-	    double xj = lgl.coords[j];
+	    double xk = lgl.ksi[k];
+	    double xj = lgl.ksi[j];
 
 	    double wk = lgl.weights[k];
 	    double wj = lgl.weights[j];

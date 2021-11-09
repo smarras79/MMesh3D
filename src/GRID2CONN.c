@@ -7,7 +7,8 @@
  */
 
 #include <stdio.h>
-#include "nrutil.h"
+
+#include "NRUTIL.h"
 
 /* global variables */
 int kstrt, jstrt, istrt;

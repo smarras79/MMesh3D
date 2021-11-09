@@ -1,6 +1,17 @@
 // parabola.c
 
-#include"myinclude.h"
+#include <math.h>
+#include <mpi.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+//User-defined structs and variables
+#include "GAUSSJ.h"
+#include "GLOBAL_VARS.h" //GLOBAL VARIABLES
+#include "MYDEFINE.h"    //GLOBAL CONSTANTS
+#include "NRUTIL.h"
+#include "PARABOLA.h"
 
 void parabola(double *point1, double *point2, double *point3, char *function_type, double *a, double *b, double *c)
 {

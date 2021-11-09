@@ -5,9 +5,14 @@
   simone.marras@gmail.com
   April 29, 2008
 */
-#include "myinclude.h"
-#include "mydefine.h"
-#include "global_vars.h"
+#include <stdlib.h>
+#include <string.h>
+
+#include "GRID_COORD.h"
+#include "GLOBAL_VARS.h"
+#include "MYDEFINE.h"
+#include "NRUTIL.h"
+
 
 //void GRID_COORD(double **COORDS, int *grd_type, float xlength, float ylength, float zlength, float xmin_obs, float xmax_obs, float ymin_obs, float ymax_obs, float zmin_obs, float zmax_obs, int nnodesx, int nnodesy, int nnodesz, int iup, int nnodesx_obs, int idwn, int jup, int nnodesy_obs, int jdwn, int kup, int nnodesz_obs, int kdwn)
 void GRID_COORD(void)

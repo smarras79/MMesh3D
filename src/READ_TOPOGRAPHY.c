@@ -3,9 +3,24 @@
  * 
  * Simone Marras, Aug 2012
  */
-#include "myinclude.h"
-#include "mydefine.h"
-#include "global_vars.h"
+
+#include <errno.h>
+#include <time.h>
+#include <math.h>
+#include <mpi.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+//my headers
+#include "MEMORY.h"
+#include "MESH.h"
+#include "READ_TOPOGRAPHY.h"
+#include "TOPOfromTXT.h"
+
+//Variables and constants
+#include "MYDEFINE.h"
+#include "GLOBAL_VARS.h"
 
 int READ_TOPOGRAPHY(void)
 {

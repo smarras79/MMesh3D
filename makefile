@@ -19,58 +19,54 @@ BOUND_FLAG =
 SRCS = \
 	./src/main.c \
 	./src/ALMOST_EQUAL.c \
-	./src/BUILD_LGL.c \
-	./src/INTERPOLATE.c \
-	./src/MEMORY.c \
-	./src/NRUTIL.c \
-	./src/PRINT.c \
-	./src/READ_INPUT.c
-
-
-#	./src/BUILD_GRID.c \
 	./src/BUILD_CONN.c \
-	./src/DOMAIN_DECOMP.c \
+	./src/BUILD_GRID.c \
+	./src/BUILD_LGL.c \
 	./src/GAUSSJ.c \
-	./src/GRID_COORD.c \
 	./src/GRID2CONN.c \
-	./src/SURFACES.c \
-	./src/linspace.c \
-	./src/parabola.c \
+	./src/GRID_COORD.c \
+	./src/INTERPOLATE.c \
+	./src/LINSPACE.c \
+	./src/MEMORY.c \
+	./src/MESH.c \
+	./src/NRUTIL.c \
+	./src/PARABOLA.c \
+	./src/PRINT.c \
+	./src/READ_INPUT.c \
 	./src/READ_TOPOGRAPHY.c \
+	./src/SURFACES.c \
 	./src/TOPOfromTXT.c \
+	./src/TOPO_USER_FUNCTION.c \
+	./src/WRITE_OUTPUT.c
+
+#	./src/DOMAIN_DECOMP.c \
 	./src/MINMAXVAL.c \
-	./src/topo_user_function.c \
-	./src/WRITE_OUTPUT.c \
 	./src/elliptic_solver.c \
 	./src/mympi_init.c \
 
 OBJS = \
 	./src/main.o \
 	./src/ALMOST_EQUAL.o \
+	./src/BUILD_CONN.o \
+	./src/BUILD_GRID.o \
 	./src/BUILD_LGL.o \
+	./src/GAUSSJ.o \
+	./src/GRID2CONN.o \
+	./src/GRID_COORD.o \
 	./src/INTERPOLATE.o \
+	./src/LINSPACE.o \
 	./src/MEMORY.o \
+	./src/MESH.o \
 	./src/NRUTIL.o \
+	./src/PARABOLA.o \
 	./src/PRINT.o \
-	./src/READ_INPUT.o
+	./src/READ_INPUT.o \
+	./src/READ_TOPOGRAPHY.o \
+	./src/SURFACES.o \
+	./src/TOPOfromTXT.o \
+	./src/TOPO_USER_FUNCTION.o \
+	./src/WRITE_OUTPUT.o
 
-#	./src/BUILD_GRID.c \
-	./src/BUILD_CONN.c \
-	./src/DOMAIN_DECOMP.c \
-	./src/GAUSSJ.c \
-	./src/GRID_COORD.c \
-	./src/GRID2CONN.c \
-	./src/SURFACES.c \
-	./src/linspace.c \
-	./src/parabola.c \
-	./src/READ_TOPOGRAPHY.c \
-	./src/TOPOfromTXT.c \
-	./src/INTERPOLATE.c \
-	./src/MINMAXVAL.c \
-	./src/topo_user_function.c \
-	./src/WRITE_OUTPUT.c \
-	./src/elliptic_solver.c \
-	./src/mympi_init.c \
 
 BIN=./bin
 SRC=./src

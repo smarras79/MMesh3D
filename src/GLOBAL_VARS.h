@@ -1,3 +1,6 @@
+#ifndef GLOBAL_VARS_H
+#define GLOBAL_VARS_H
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -45,7 +48,7 @@ xlength,						\
     scalefactor;
 
 int									\
-nnodesx_obs,								\
+    nnodesx_obs,							\
     nnodesy_obs,							\
     nnodesz_obs,							\
     wW,									\
@@ -176,3 +179,5 @@ FILE						\
 *input_id,					\
     *vtk_file_id,				\
     *gmsh_file_id;
+
+#endif

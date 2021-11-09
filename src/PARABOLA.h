@@ -1,6 +1,9 @@
-// parabola.h
+#ifndef PARABOLA_H
+#define PARABOLA_H
 
 void parabola(double *point1, double *point2, double *point3, char *function_type, double *a, double *b, double *c);
 
-void parabola2pts(double *point1, double *point3, char *function_type, \
+void parabola2pts(double *point1, double *point3, char *function_type,	\
 		  double *a, double *b, double *c);
+
+#endif

@@ -9,21 +9,24 @@
 
 //User-defined structs and variables
 #include "MYSTRUCTS.h"
+#include "MESH.h"
 #include "GLOBAL_VARS.h" //GLOBAL VARIABLES
 #include "MYDEFINE.h"    //GLOBAL CONSTANTS
 
 //Functions headers
 #include "ALMOST_EQUAL.h"
+#include "BUILD_CONN.h"
+#include "BUILD_GRID.h"
 #include "BUILD_LGL.h"
 #include "MEMORY.h"
 #include "NRUTIL.h"
 #include "PRINT.h"
 #include "READ_INPUT.h"
+#include "READ_TOPOGRAPHY.h"
+#include "WRITE_OUTPUT.h"
 
 //#include "WRITE_OUTPUT.h"
-//#include "READ_TOPOGRAPHY.h"
-//#include "BUILD_GRID.h"
-//#include "BUILD_CONN.h"
+
 //#include "BUILD_GRID_SPHERE.h"
 //#include "GRID_COORD.h"
 //#include "GRID2CONN.h"
@@ -112,21 +115,40 @@ int main(int argc, char** argv) {
 	    lgl = BUILD_LGL(nop);
 
 	    BarycentricWeights(lgl, nop);
+
+	    /* //Linked list
+	    
+	    st_Record *head;
+	    st_Record *tail;
+	    st_Record *current;
+	    
+	    Construct();
+	    //st_Record *newRecord;
+	    for (int i = 1; i<=9; i++){
+		Add(current, i*33);
+		printf(" -- %d) \n",current->listData);
+	    }
+	    
+	    //PrintList(current);
+	    //}
+	    //END linkedList
+	    */
+
 	}
 	    
 	/*************************************************************************************
 	 * READ THE TOPOGRAPHY FILE or BUILD THE BOTTOM BOUNDARY BY A USER-DEFINED FUNCTION:
-	 *************************************************************************************
+	 *************************************************************************************/
 	READ_TOPOGRAPHY();
 
 	/*************************************************************************************
 	 * Dynamic memory allocation of U,V,P,G,F and coordinates on the grid
-	 *************************************************************************************
+	 *************************************************************************************/
 	MEMORY_ALLOCATE(1);
 	
 	/*************************************************************************************
 	 * Build GRID coordinates and connectivity matrix:
-	 *************************************************************************************	
+	 *************************************************************************************/	
 	BUILD_GRID();
   
 	/*************************************************************************************
@@ -136,22 +158,22 @@ int main(int argc, char** argv) {
   
 	/*************************************************************************************
 	 * Build the Connectivity matrix
-	 *************************************************************************************
+	 *************************************************************************************/
 	BUILD_CONN();
   
 	/*************************************************************************************
 	 * Write output to file (VTK, ALYA, etc.)
-	 *************************************************************************************
+	 *************************************************************************************/
 	//apply_smoothing();
 	WRITE_OUTPUT(irank);
-	*/
+	
     }
     
     if (irank == 0) {
 	/*****************************************************
 	 * Free memory
 	 *****************************************************/
-	//MEMORY_DEALLOCATE(1);
+	MEMORY_DEALLOCATE(1);
 	MEMORY_DEALLOCATE(2);
 	MEMORY_DEALLOCATE(0);
     }
