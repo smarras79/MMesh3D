@@ -18,26 +18,25 @@
 #include "BUILD_CONN.h"
 #include "BUILD_GRID.h"
 #include "BUILD_LGL.h"
+#include "GRID_COORD.h"
+#include "GRID2CONN.h"
+#include "INTERPOLATE.h"
 #include "MEMORY.h"
 #include "NRUTIL.h"
 #include "PRINT.h"
 #include "READ_INPUT.h"
 #include "READ_TOPOGRAPHY.h"
+#include "SURFACES.h"
 #include "WRITE_OUTPUT.h"
-
-//#include "WRITE_OUTPUT.h"
+#include "TOPOfromTXT.h"
+#include "TOPO_USER_FUNCTION.h"
 
 //#include "BUILD_GRID_SPHERE.h"
-//#include "GRID_COORD.h"
-//#include "GRID2CONN.h"
+
 //#include "linspace.h"
 //#include "parabola.h"
 //#include "GAUSSJ.h"
-//#include "INTERPOLATE.h"
 //#include "MINMAXVAL.h"
-//#include "topo_user_function.h"
-//#include "SURFACES.h"
-//#include "TOPOfromTXT.h"
 //#include "elliptic_solver.h"
 //#include "mympi_init.h"
 //#include "DOMAIN_DECOMP.h"
@@ -112,78 +111,62 @@ int main(int argc, char** argv) {
 	    /*************************************************************************************
 	     *COMPUTE HIGH-ORDER NODES and WEIGHTS. Stored in struct: lgl.coords and lgl.weights
 	     *************************************************************************************/
-	    lgl = BUILD_LGL(nop);
+	    //lgl = BUILD_LGL(nop);
+	    //BarycentricWeights(lgl, nop);
 
-	    BarycentricWeights(lgl, nop);
+	    int lread_gmsh = 0;
+	    if (lread_gmsh == 0) {
 
-	    /* //Linked list
-	    
-	    st_Record *head;
-	    st_Record *tail;
-	    st_Record *current;
-	    
-	    Construct();
-	    //st_Record *newRecord;
-	    for (int i = 1; i<=9; i++){
-		Add(current, i*33);
-		printf(" -- %d) \n",current->listData);
-	    }
-	    
-	    //PrintList(current);
-	    //}
-	    //END linkedList
-	    */
+		/*************************************************************************************
+		 * READ THE TOPOGRAPHY FILE or BUILD THE BOTTOM BOUNDARY BY A USER-DEFINED FUNCTION:
+		 *************************************************************************************/
+		READ_TOPOGRAPHY();
 
-	}
-
-	int lread_gmsh = 1;
-	if (lread_gmsh == 0) {
-
-	    /*************************************************************************************
-	     * READ THE TOPOGRAPHY FILE or BUILD THE BOTTOM BOUNDARY BY A USER-DEFINED FUNCTION:
-	     *************************************************************************************/
-	    READ_TOPOGRAPHY();
-
-	    /*************************************************************************************
-	     * Dynamic memory allocation of U,V,P,G,F and coordinates on the grid
-	     *************************************************************************************/
-	    MEMORY_ALLOCATE(1);
+		/*************************************************************************************
+		 * Dynamic memory allocation of U,V,P,G,F and coordinates on the grid
+		 *************************************************************************************/
+		MEMORY_ALLOCATE(1);
 	
-	    /*************************************************************************************
-	     * Build GRID coordinates and connectivity matrix:
-	     *************************************************************************************/	
-	    BUILD_GRID();
+		/*************************************************************************************
+		 * Build GRID coordinates and connectivity matrix:
+		 *************************************************************************************/	
+		BUILD_GRID();
   
-	    /*************************************************************************************
-	     * Split the initial domain into 'mpiprocs' processors:
-	     *************************************************************************************/
-	    ////DOMAIN_DECOMP(rank);
+		/*************************************************************************************
+		 * Split the initial domain into 'mpiprocs' processors:
+		 *************************************************************************************/
+		////DOMAIN_DECOMP(rank);
   
-	    /*************************************************************************************
-	     * Build the Connectivity matrix
-	     *************************************************************************************/
-	    BUILD_CONN();
+		/*************************************************************************************
+		 * Build the Connectivity matrix
+		 *************************************************************************************/
+		BUILD_CONN();
 
 
-	    /*****************************************************
-	     * Free memory
-	     *****************************************************/
-	    MEMORY_DEALLOCATE(1);
+		/*****************************************************
+		 * Free memory
+		 *****************************************************/
+		MEMORY_DEALLOCATE(1);
 	    
-	} else {
-	    /*
-	     * READ external *.gmsh file
-	     */
-	    //READ_GMSH();
+	    } else {
+		/*
+		 * READ external *.gmsh file
+		 */
+		//READ_GMSH();
 	   
+	    }
+
+	    //SOLVER de calor VA AQUI
+	    
+	    /*************************************************************************************
+	     * Write output to file (VTK, ALYA, etc.)
+	     *************************************************************************************/
+	    //apply_smoothing();
+	    WRITE_OUTPUT(irank);	    
 	}
-	/*************************************************************************************
-	 * Write output to file (VTK, ALYA, etc.)
-	 *************************************************************************************/
-	//apply_smoothing();
-	//WRITE_OUTPUT(irank);
-	
     }
+
+
     
     if (irank == 0) {
 	
