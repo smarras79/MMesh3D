@@ -29,7 +29,9 @@ cd MMesh3D/runs
 ```
 
 *Visualization
+```
 MMesh3D generates a VTK file that can be visualized with ParaView or VisIt.
+```
 
 NOTICE: The PDF manual is for V1.0 and still works with the current V2.0 that is in this repo. However, it does not contain information on the elliptic smoothing. 
 I will post instructions as soon as I have some spare time. 
