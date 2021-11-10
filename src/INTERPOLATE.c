@@ -72,6 +72,8 @@ double PolynomialInterpolationMatrix(st_lgl lgl, st_vector xnew)
 
     
     printf(" # Compute interpolation matrix ...DONE\n");
+    
+    return 0;
 
 }
 

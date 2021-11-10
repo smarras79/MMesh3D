@@ -7,6 +7,7 @@
 #include "PRINT.h"
 
 #define P4EST_CHILDREN 4
+#define P4_TO_P8 1
 
 /*
  * Procedure of Algorithm 145
@@ -63,7 +64,8 @@ int Add(st_Record *newRecord, int data) {
     newRecord->next = NULL;
     newRecord->listData = data;
     //printf(" -- %d) \n",newRecord->listData);
-    
+
+    return 0;
 }
 
 /*
@@ -103,7 +105,43 @@ void PrintList(st_Record *newRecord) {
 /*
  * Read GMSH grids
  */
-static char READ_GMSH(FILE *stream)
+int READ_GMSH(void)
+{ 
+    int *refine_coarsen_elements;
+    refine_coarsen_elements = (int *)malloc(1*sizeof(int *));
+    int read_external_grid_flg = 1;
+    int xperiodic_flg = 0;
+    int yperiodic_flg = 0;
+    int zperiodic_flg = 0;
+    int is_cube;
+    int nnx, nny, nnz;
+    int orient = 0;
+    int nref_levs = 0;
+    int refinement_levels_h = 0;
+
+    printf(" XXX\n");
+    is_cube = 1;
+    nnx = 19;
+    nny = 19;
+    nnz = 19;
+    p8esttonuma_init(is_cube, nnx, nny, nnz, nref_levs,		\
+		     read_external_grid_flg,			\
+		     xperiodic_flg, yperiodic_flg, zperiodic_flg);
+
+    printf(" YYY\n");
+    /* ! TODO: fix to use xglx, xgly, xglz
+       call p8esttonuma_fill_data(nop, xgl, is_dg, iboundary, read_external_grid_flg, p2n, lrestoring_sponge)
+
+       call p8esttonuma_get_mesh_scalars(p2n, npoin_cg, nelem, num_nbh, &
+       num_send_recv_total, nbsido, nface, nboun, nNC)
+    */
+    free(refine_coarsen_elements);
+
+    return 0;
+}
+
+ /*
+char* READ_GMSH(FILE *stream)
 {
 
     char *line = (char*) malloc(1024 * sizeof(char *)), *linep = line;
@@ -145,7 +183,7 @@ static char READ_GMSH(FILE *stream)
     *line = '\0';
     return linep;
 }
-
+*/
 /* This function reads the mesh file and fills bc info*
 static int read_inp_stream(FILE *stream,int *num_bc,
 			   int *num_elem,
@@ -154,8 +192,8 @@ static int read_inp_stream(FILE *stream,int *num_bc,
 			   int *bc_to_vertex,
 			   int *vc_el_type,
 			   int *vc_el_label)
-*/
-static int read_inp_stream(FILE *stream, int *num_bc, int *num_elem)
+*
+int read_inp_stream(FILE *stream, int *num_bc, int *num_elem)
 {
     int reading_elements = 0;
     int reading_elsets = 0;
@@ -177,7 +215,7 @@ static int read_inp_stream(FILE *stream, int *num_bc, int *num_elem)
     int ibc = 0;
     int ivc = 0;
 
-    /* P4EST_ASSERT((bc_physical_type == NULL && bc_to_vertex == NULL) ||
+     P4EST_ASSERT((bc_physical_type == NULL && bc_to_vertex == NULL) ||
 		 (bc_physical_type != NULL && bc_to_vertex != NULL));
 
     if (fill_bc_data)
@@ -186,7 +224,7 @@ static int read_inp_stream(FILE *stream, int *num_bc, int *num_elem)
 	    element_label = malloc(*num_bc * sizeof(int));
 	    vc_el_label_list = malloc(*num_elem * sizeof(int));
 	}
-    */
+    
     for (;;)
 	{
 	    line = (stream);
@@ -198,7 +236,7 @@ static int read_inp_stream(FILE *stream, int *num_bc, int *num_elem)
 
 	    ++lines_read;
 
-	    /* check for control line */
+	    // check for control line 
 	    if (line[0] == '*')
 		{
 		    reading_elements = reading_elsets = reading_elsets_volume =
@@ -231,7 +269,7 @@ static int read_inp_stream(FILE *stream, int *num_bc, int *num_elem)
 				    continue;
 				}
 			}
-		    /*else if (strstr(line, "*ELSET") &&
+		    else if (strstr(line, "*ELSET") &&
 			     strstr(line, ":BC_")) // boundary conditions (faces)
 			{
 
@@ -255,12 +293,12 @@ static int read_inp_stream(FILE *stream, int *num_bc, int *num_elem)
 			    free(line);
 			    continue;
 			}
-		    */
+		    
 		}
 
 	    if (reading_elements)
 		{
-		    /*if (fill_bc_data)
+		    if (fill_bc_data)
 			{
 			    long long int v[P4EST_CHILDREN / 2];
 			    long long int n;
@@ -317,12 +355,12 @@ static int read_inp_stream(FILE *stream, int *num_bc, int *num_elem)
 				    for (n = 0; n < P4EST_CHILDREN / 2; ++n)
 					bc_to_vertex[P4EST_CHILDREN / 2 * num_elements + n] = v[n] - 1;
 				}
-				}*/
+				}
 		    ++num_elements;
 		}
 	    else if (reading_elsets)
 		{
-		    /* if (fill_bc_data)
+		     if (fill_bc_data)
 			{
 
 			    char *p = line;
@@ -348,13 +386,13 @@ static int read_inp_stream(FILE *stream, int *num_bc, int *num_elem)
 				    free(line);
 				    return 1;
 				}
-			}*/
+			}
 
 		    ++num_elsets;
 		}
 	    else if (reading_elsets_volume)
 		{
-		    /* if (fill_bc_data)
+		    if (fill_bc_data)
 			{
 
 			    char *p = line;
@@ -381,12 +419,12 @@ static int read_inp_stream(FILE *stream, int *num_bc, int *num_elem)
 				    return 1;
 				}
 			}
-		    */
+		    
 		    ++num_elsets_volume;
 		}
 	    else if (reading_elements_volume)
 		{
-		    /*if (fill_bc_data)
+		    if (fill_bc_data)
 			{
 			    long long int v[P4EST_CHILDREN];
 			    long long int el_num;
@@ -412,7 +450,7 @@ static int read_inp_stream(FILE *stream, int *num_bc, int *num_elem)
 				}
 
 			    vc_el_label_list[num_elements_volume] = el_num;
-			}*/
+			}
 
 		    ++num_elements_volume;
 		}
@@ -421,7 +459,7 @@ static int read_inp_stream(FILE *stream, int *num_bc, int *num_elem)
 	    free(line);
 	}
 
-    /*if (fill_bc_data)
+    if (fill_bc_data)
 	{
 	    for (int i = 0; i < *num_bc; i++)
 		{
@@ -446,7 +484,7 @@ static int read_inp_stream(FILE *stream, int *num_bc, int *num_elem)
 				}
 			}
 		}
-		}*/
+		}
     *num_bc = num_elements;
     *num_elem = num_elements_volume;
 
@@ -460,3 +498,4 @@ static int read_inp_stream(FILE *stream, int *num_bc, int *num_elem)
 	    return 0;
 	}
 }
+*/

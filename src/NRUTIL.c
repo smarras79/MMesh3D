@@ -35,7 +35,7 @@ void locate(float xx[], unsigned long n, float x, unsigned long *j)
    ascnd=(xx[n] >= xx[1]);
    while (ju-jl > 1) { /* If we are not yet done, */
       jm=(ju+jl) >> 1; /* compute a midpoint, */
-      if (x >= xx[jm] == ascnd)
+      if ((x >= xx[jm]) == ascnd)
          jl=jm; /* and replace either the lower limit */
       else
          ju=jm; /* or the upper limit, as appropriate. */

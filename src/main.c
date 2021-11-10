@@ -174,7 +174,8 @@ int main(int argc, char** argv) {
 	    /*
 	     * READ external *.gmsh file
 	     */
-	    //READ_GMSH("./gmsh/small.inp");
+	    //READ_GMSH();
+	   
 	}
 	/*************************************************************************************
 	 * Write output to file (VTK, ALYA, etc.)
