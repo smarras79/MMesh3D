@@ -1,22 +1,38 @@
-# Varialble Definitions and Flags:
-CC = /Users/simone/mylibs/openmpi-4.1.0/build_gcc9/bin/mpicc #Compiler is mpicc    NOTE: you need to have an MPI implementation installed on your computer
-LD = /Users/simone/mylibs/openmpi-4.1.0/build_gcc9/bin/mpicc #Linker is mpicc also
+#
+# 'make depend' uses makedepend to automatically generate dependencies 
+#               (dependencies are added to end of Makefile)
+# 'make'        build executable file 'mycc'
+# 'make clean'  removes all .o and executable files
+#
 
-CFALGS = -Wall -Wunused-value -fcommon
-CDEBUG = -g -backtrace
+# define the C compiler to use
+CC = /Users/simone/mylibs/openmpi-4.1.0/build_gcc9/bin/mpicc
 
 MPI_COMPILE_FLAGS = $(bash mpicc --showme:compile)
 MPI_LINK_FLAGS = $(bash mpicc --showme:link)
 
-#LNETCFD = -lnetcdf
+# define any compile-time flags
+CFLAGS = -Wall -g -fbacktrace -Wunused-value -fcommon
 
-# Linker flags go here. Currently there aren't any, but if we'll switch to
-# code optimization, we might add "-s" here to strip debug info and symbols.
-LDFLAGS =
-BOUND_FLAG =
+# define any directories containing header files other than /usr/include
+#
 
-# List of source codes and generated object files:
-SRCS = \
+P4EST_DIR := /Users/simone/Work/Codes/mmesh3d/github/MMesh3D/p4est/local
+
+INCLUDES = $(MPI_COMPILE_FLAGS) -I/usr/include -I$(P4EST_DIR)/include 
+
+# define library paths in addition to /usr/lib
+#   if I wanted to include libraries not in /usr/lib I'd specify
+#   their path using -Lpath, something like:
+LFLAGS = -L/usr/local/lib -L$(P4EST_DIR)/lib
+
+# define any libraries to link into executable:
+#   if I want to link in libraries (libx.so or libx.a) I use the -llibname 
+#   option, something like (this will link in libmylib.so and libm.so:
+LIBS = -lp4est -lsc -lz
+
+# define the C source files
+SRCS =  \
 	./src/main.c \
 	./src/ALMOST_EQUAL.c \
 	./src/BUILD_CONN.c \
@@ -31,6 +47,7 @@ SRCS = \
 	./src/MESH.c \
 	./src/NRUTIL.c \
 	./src/PARABOLA.c \
+	./src/p4est.c \
 	./src/PRINT.c \
 	./src/READ_INPUT.c \
 	./src/READ_TOPOGRAPHY.c \
@@ -39,54 +56,43 @@ SRCS = \
 	./src/TOPO_USER_FUNCTION.c \
 	./src/WRITE_OUTPUT.c
 
-#	./src/DOMAIN_DECOMP.c \
-	./src/MINMAXVAL.c \
-	./src/elliptic_solver.c \
-	./src/mympi_init.c \
 
-OBJS = \
-	./src/main.o \
-	./src/ALMOST_EQUAL.o \
-	./src/BUILD_CONN.o \
-	./src/BUILD_GRID.o \
-	./src/BUILD_LGL.o \
-	./src/GAUSSJ.o \
-	./src/GRID2CONN.o \
-	./src/GRID_COORD.o \
-	./src/INTERPOLATE.o \
-	./src/LINSPACE.o \
-	./src/MEMORY.o \
-	./src/MESH.o \
-	./src/NRUTIL.o \
-	./src/PARABOLA.o \
-	./src/PRINT.o \
-	./src/READ_INPUT.o \
-	./src/READ_TOPOGRAPHY.o \
-	./src/SURFACES.o \
-	./src/TOPOfromTXT.o \
-	./src/TOPO_USER_FUNCTION.o \
-	./src/WRITE_OUTPUT.o
+# define the C object files 
+#
+# This uses Suffix Replacement within a macro:
+#   $(name:string1=string2)
+#         For each word in 'name' replace 'string1' with 'string2'
+# Below we are replacing the suffix .c of all words in the macro SRCS
+# with the .o suffix
+#
+OBJS = $(SRCS:.c=.o)
 
-
+# define the executable file
 BIN=./bin
-SRC=./src
-OBJ=./obj
+EXE = $(BIN)/superLES.a
 
-# ProgRam executable file name:
-EXE = $(BIN)/MMesh3D-V2.a
+#
+# The following part of the makefile is generic; it can be used to 
+# build any executable just by changing the definitions above and by
+# deleting dependencies appended to the file from 'make depend'
+#
+.PHONY: depend clean
 
-# Top-level rule, to compile everything
 all: $(EXE)
+	@echo  Simple compiler named $(EXE) has been compiled
 
-# Rule to Link the program
 $(EXE): $(OBJS)
-	$(LD) $(CFLAGS) $(MPI_LINK_FLAGS) -L/usr/include $(OBJS) -o $(EXE)
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(EXE) $(OBJS) $(LFLAGS) $(LIBS)
 
-# Rule for the file "main.o":
-main.o: main.c
-	$(CC) $(CFLAGS) $(MPI_COMPILE_FLAGS) $(CDEBUG) -I/usr/include -c ./src/main.c
+# this is a suffix replacement rule for building .o's from .c's
+# it uses automatic variables $<: the name of the prerequisite of
+# the rule(a .c file) and $@: the name of the target of the rule (a .o file) 
+# (see the gnu make manual section about automatic variables)
+.c.o:
+	$(CC) $(CFLAGS) $(INCLUDES) -c $<  -o $@
 
 clean:
-	rm -rf  $(BIN)/* *~ $(SRC)/*.o
-	clear
+	$(RM) *.o *~ $(EXE)
 
+depend: $(SRCS)
+	makedepend $(INCLUDES) $^
