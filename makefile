@@ -12,14 +12,15 @@ MPI_COMPILE_FLAGS = $(bash mpicc --showme:compile)
 MPI_LINK_FLAGS = $(bash mpicc --showme:link)
 
 # define any compile-time flags
-CFLAGS = -Wall -g -fbacktrace -Wunused-value -fcommon
+CFLAGS = -Wall -g -Wno-unused-variable -Wno-unused-but-set-variable -Wno-comment -Wno-unused-function
+#CFLAGS = -Wall -g -fbacktrace -Wunused-value -fcommon
 
 # define any directories containing header files other than /usr/include
 #
 
 P4EST_DIR := /Users/simone/Work/Codes/mmesh3d/github/MMesh3D/p4est/local
 
-INCLUDES = $(MPI_COMPILE_FLAGS) -I/usr/include -I$(P4EST_DIR)/include 
+INCLUDES = $(MPI_COMPILE_FLAGS) -I/usr/include -isystem$(P4EST_DIR)/include 
 
 # define library paths in addition to /usr/lib
 #   if I wanted to include libraries not in /usr/lib I'd specify
@@ -44,10 +45,8 @@ SRCS =  \
 	./src/INTERPOLATE.c \
 	./src/LINSPACE.c \
 	./src/MEMORY.c \
-	./src/MESH.c \
 	./src/NRUTIL.c \
 	./src/PARABOLA.c \
-	./src/p4est.c \
 	./src/PRINT.c \
 	./src/READ_INPUT.c \
 	./src/READ_TOPOGRAPHY.c \
@@ -56,6 +55,8 @@ SRCS =  \
 	./src/TOPO_USER_FUNCTION.c \
 	./src/WRITE_OUTPUT.c
 
+#	./src/MESH.c \
+#	./src/P4EST_API.c \
 
 # define the C object files 
 #
@@ -80,7 +81,9 @@ EXE = $(BIN)/superLES.a
 .PHONY: depend clean
 
 all: $(EXE)
-	@echo  Simple compiler named $(EXE) has been compiled
+	@echo "---------------------------------------------"
+	@echo  COMPILATION of $(BIN)/$(EXE) was SUCCESSFUL. 
+	@echo "---------------------------------------------"
 
 $(EXE): $(OBJS)
 	$(CC) $(CFLAGS) $(INCLUDES) -o $(EXE) $(OBJS) $(LFLAGS) $(LIBS)
@@ -94,6 +97,8 @@ $(EXE): $(OBJS)
 
 clean:
 	$(RM) $(SRC)/*.o *~ $(EXE)
+	clear
 
 depend: $(SRCS)
 	makedepend $(INCLUDES) $^
+
