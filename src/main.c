@@ -7,11 +7,11 @@
 #include <stdlib.h>
 #include <string.h>
 
-//User-defined structs and variables
-#include "MYSTRUCTS.h"
-#include "MESH.h"
 #include "GLOBAL_VARS.h" //GLOBAL VARIABLES
 #include "MYDEFINE.h"    //GLOBAL CONSTANTS
+#include "MYSTRUCTS.h"
+#include "MESH.h"
+
 
 //Functions headers
 #include "ALMOST_EQUAL.h"
@@ -135,45 +135,60 @@ int main(int argc, char** argv) {
 	    */
 
 	}
-	    
-	/*************************************************************************************
-	 * READ THE TOPOGRAPHY FILE or BUILD THE BOTTOM BOUNDARY BY A USER-DEFINED FUNCTION:
-	 *************************************************************************************/
-	READ_TOPOGRAPHY();
 
-	/*************************************************************************************
-	 * Dynamic memory allocation of U,V,P,G,F and coordinates on the grid
-	 *************************************************************************************/
-	MEMORY_ALLOCATE(1);
+	int lread_gmsh = 1;
+	if (lread_gmsh == 0) {
+
+	    /*************************************************************************************
+	     * READ THE TOPOGRAPHY FILE or BUILD THE BOTTOM BOUNDARY BY A USER-DEFINED FUNCTION:
+	     *************************************************************************************/
+	    READ_TOPOGRAPHY();
+
+	    /*************************************************************************************
+	     * Dynamic memory allocation of U,V,P,G,F and coordinates on the grid
+	     *************************************************************************************/
+	    MEMORY_ALLOCATE(1);
 	
-	/*************************************************************************************
-	 * Build GRID coordinates and connectivity matrix:
-	 *************************************************************************************/	
-	BUILD_GRID();
+	    /*************************************************************************************
+	     * Build GRID coordinates and connectivity matrix:
+	     *************************************************************************************/	
+	    BUILD_GRID();
   
-	/*************************************************************************************
-	 * Split the initial domain into 'mpiprocs' processors:
-	 *************************************************************************************/
-	////DOMAIN_DECOMP(rank);
+	    /*************************************************************************************
+	     * Split the initial domain into 'mpiprocs' processors:
+	     *************************************************************************************/
+	    ////DOMAIN_DECOMP(rank);
   
-	/*************************************************************************************
-	 * Build the Connectivity matrix
-	 *************************************************************************************/
-	BUILD_CONN();
-  
+	    /*************************************************************************************
+	     * Build the Connectivity matrix
+	     *************************************************************************************/
+	    BUILD_CONN();
+
+
+	    /*****************************************************
+	     * Free memory
+	     *****************************************************/
+	    MEMORY_DEALLOCATE(1);
+	    
+	} else {
+	    /*
+	     * READ external *.gmsh file
+	     */
+	    //READ_GMSH("./gmsh/small.inp");
+	}
 	/*************************************************************************************
 	 * Write output to file (VTK, ALYA, etc.)
 	 *************************************************************************************/
 	//apply_smoothing();
-	WRITE_OUTPUT(irank);
+	//WRITE_OUTPUT(irank);
 	
     }
     
     if (irank == 0) {
+	
 	/*****************************************************
 	 * Free memory
 	 *****************************************************/
-	MEMORY_DEALLOCATE(1);
 	MEMORY_DEALLOCATE(2);
 	MEMORY_DEALLOCATE(0);
     }

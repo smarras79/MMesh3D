@@ -68,6 +68,7 @@ SRCS =  \
 OBJS = $(SRCS:.c=.o)
 
 # define the executable file
+SRC=./src
 BIN=./bin
 EXE = $(BIN)/superLES.a
 
@@ -92,7 +93,7 @@ $(EXE): $(OBJS)
 	$(CC) $(CFLAGS) $(INCLUDES) -c $<  -o $@
 
 clean:
-	$(RM) *.o *~ $(EXE)
+	$(RM) $(SRC)/*.o *~ $(EXE)
 
 depend: $(SRCS)
 	makedepend $(INCLUDES) $^
