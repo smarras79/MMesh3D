@@ -18,22 +18,22 @@ CFLAGS = -Wall -g -Wno-unused-variable -Wno-unused-but-set-variable -Wno-comment
 # define any directories containing header files other than /usr/include
 #
 
-P4EST_DIR := 
-#P4EST_DIR := /Users/simone/Work/Codes/mmesh3d/github/MMesh3D/p4est/local
+#P4EST_DIR := 
+P4EST_DIR := /Users/simone/Work/Codes/mmesh3d/github/MMesh3D/p4est/local
 
-INCLUDES = $(MPI_COMPILE_FLAGS) -I/usr/include
-#INCLUDES = $(MPI_COMPILE_FLAGS) -I/usr/include -isystem$(P4EST_DIR)/include 
+#INCLUDES = $(MPI_COMPILE_FLAGS) -I/usr/include
+INCLUDES = $(MPI_COMPILE_FLAGS) -I/usr/include -isystem$(P4EST_DIR)/include 
 
 # define library paths in addition to /usr/lib
 #   if I wanted to include libraries not in /usr/lib I'd specify
 #   their path using -Lpath, something like:
-LFLAGS = -L/usr/local/lib
+LFLAGS = -L/usr/local/lib -L$(P4EST_DIR)/lib
 
 # define any libraries to link into executable:
 #   if I want to link in libraries (libx.so or libx.a) I use the -llibname 
 #   option, something like (this will link in libmylib.so and libm.so:
-LIBS =
-#LIBS = -lp4est -lsc -lz
+#LIBS =
+LIBS = -lp4est -lsc -lz
 
 # define the C source files
 SRCS =  \
