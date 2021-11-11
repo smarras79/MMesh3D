@@ -16,16 +16,21 @@ Open-MPI 4.1.0 compiled from source with gcc-9
 ## Compile and run
 Tested on Mac OS X and multiple versions of Ubuntu using gcc-4* and later and ifort 8.1
 
-*Compile:
+*Compile
 ```
-cd MMesh3D/src
+cd MMesh3D
 >> make
 ```
 
 *Run
 ```
 cd MMesh3D/runs
->> mpirun -np 4 ./MMesh3D-V2.a Input_meshparam.inp
+>> mpirun -np 4 ./superLES.a Input_meshparam.inp
+```
+
+*Visualization
+```
+MMesh3D generates a VTK file that can be visualized with ParaView or VisIt.
 ```
 
 NOTICE: The PDF manual is for V1.0 and still works with the current V2.0 that is in this repo. However, it does not contain information on the elliptic smoothing. 
