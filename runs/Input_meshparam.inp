@@ -11,7 +11,7 @@ PROBLEM_DEFINITION:
  Number_blocks:       1
  nelemx:              24
  nelemy:              10
- nelemz:              10
+ nelemz:              4
  nop:                 1
  PERIODICX:           Off
  PERIODICY:           Off
