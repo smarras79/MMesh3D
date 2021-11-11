@@ -71,7 +71,7 @@ OBJS = $(SRCS:.c=.o)
 # define the executable file
 SRC=./src
 BIN=./bin
-EXE = $(BIN)/superLES.a
+EXE = $(BIN)/MMesh3D.a
 
 #
 # The following part of the makefile is generic; it can be used to 
