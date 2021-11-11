@@ -25,7 +25,7 @@ cd MMesh3D
 *Run
 ```
 cd MMesh3D/runs
->> mpirun -np 4 ./superLES.a Input_meshparam.inp
+>> mpirun -np 4 ./MMesh3D.a Input_meshparam.inp
 ```
 
 *Visualization
