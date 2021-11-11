@@ -9,8 +9,8 @@ PROBLEM_DEFINITION:
  Meshing_scheme:      TFI
  Element_types:       HEXA
  Number_blocks:       1
- nelemx:              20
- nelemy:              30
+ nelemx:              24
+ nelemy:              10
  nelemz:              10
  nop:                 1
  PERIODICX:           Off
