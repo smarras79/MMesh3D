@@ -6,9 +6,13 @@ Function to read in the user input file for the Cartesian Mesh Generator:
 
 *****************************************************************************/
 
-#include "myinclude.h"
-#include "mydefine.h"
-#include "global_vars.h"
+#include <errno.h>
+#include <mpi.h>
+#include <stdio.h>
+#include <string.h>
+
+#include "MYDEFINE.h"
+#include "GLOBAL_VARS.h"
 
 #define SEPARATOR " \t"
 
@@ -43,6 +47,9 @@ int READ_INPUT(char *input_file)
    * Definition strings:
    *   problem[0]           // Problem name: agnesi, schar, airfoil, etc.
    *   problem[1]           // Meshing scheme: mountain, TFI, etc. followed by two parameters s1 and s2 (double) stored in parameters[7:8]
+   *    parameters[7,8]     // --- scheme parameters s1, s2 (used for sleve and hybrid) THESE can be left blank
+   * 
+   *
    *   problem[2]           // Elements type: QUAD, TRI
    *   problem[3]           // periodicity in X: On/Off
    *   problem[4]           // periodicity in Y: On/Off

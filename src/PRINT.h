@@ -42,6 +42,6 @@ void dwrt2GMSH(char *file_name);
 
 void dwrt2CONN(char *file_name);
 
-
-
 int PRINT_INFO(void);
+
+void PRINT_ERROR(char *);

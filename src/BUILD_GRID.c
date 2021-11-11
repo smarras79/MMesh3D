@@ -4,9 +4,15 @@
  * Simone Marras, Aug 2012
  *
  */
-#include "myinclude.h"
-#include "mydefine.h"
-#include "global_vars.h"
+#include <stdlib.h>
+#include <string.h>
+
+#include "BUILD_GRID.h"
+#include "GLOBAL_VARS.h"
+#include "GRID_COORD.h"
+#include "MEMORY.h"
+#include "MYDEFINE.h"
+#include "SURFACES.h"
 
 int BUILD_GRID(void)
 {

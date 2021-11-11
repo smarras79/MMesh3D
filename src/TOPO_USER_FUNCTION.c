@@ -14,7 +14,7 @@
 #include<stdio.h>
 #include<math.h>
 
-#include "global_vars.h"
+#include "GLOBAL_VARS.h"
 
 double topo_user_3Dfunction(char *fun_type, double x, double y, float a, float b, float height, float coeff)
 {
