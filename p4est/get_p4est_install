@@ -1,0 +1,47 @@
+#!/bin/bash
+
+#following will configure and install p4est
+
+
+if [ $# -eq 0 ]
+then
+	version=v2.2 #latest stable release
+else
+	version=$1 #alternate user-def release
+fi
+
+
+
+if [ -f "p4est_$version.tar.bj" ]; then
+    tar -xjf p4est_$version.tar.bj
+else
+
+	if [ -f "p4est_$version.tar.bj-backup" ]; then
+    tar -xjf p4est_$version.tar.bj-backup	
+	else
+	
+    echo "---> p4est_$version.tar.bj missing! To get the tarfile run ./get_p4est_tar"
+    exit
+    
+  fi
+  
+fi
+
+#MIRA
+if [ "$1" = "mira" ]; then
+./configure CC=mpixlc_r CXX=mpixlcxx_r FC=mpixlf90_r F77=mpixlf77_r --enable-p6est --enable-mpi --without-lapack --without-blas --disable-shared CPPFLAGS="-I/soft/libraries/alcf/current/xl/ZLIB/include" LDFLAGS="-L/soft/libraries/alcf/current/xl/ZLIB/lib"
+
+#HAMMING
+elif [ "$1" = "hamming" ]; then
+    ./configure CC=mpicc CXX=mpicxx FC=mpif90 F77=mpif77 --enable-p6est --enable-mpi 
+#--without-lapack --without-blas --disable-shared
+    make
+    make install
+
+#DEFAULT
+else
+    ./configure CC=mpicc CXX=mpicxx FC=mpif90 F77=mpif77 --enable-p6est --enable-mpi 
+#--without-lapack --without-blas --disable-shared
+    make
+    make install
+fi
