@@ -403,12 +403,11 @@ int BarycentricWeights(st_lgl lgl, size_t p)
 	}	
     }
     
-    for (int j = 0; j <= p;  j++)
+    for (int j = 0; j <= p;  j++) {
 	lgl.weights[j] = 1.0/lgl.weights[j];
-    
-    for (int j=0; j<=p; j++){
 	printf(" #\t Barycentryc weights: w_LGL[%d] = %.16f\n", j, lgl.weights[j]);
     }
+    
     printf(" # Compute barycentric weights ... DONE\n");
     return 0; 
 }
