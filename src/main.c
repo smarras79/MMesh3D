@@ -1,3 +1,8 @@
+/*
+#ifndef P4_TO_P8
+#define P4_TO_P8
+#endif
+*/
 #include <stdbool.h>
 #include <errno.h>
 #include <time.h>
@@ -12,12 +17,12 @@
 #include "MYSTRUCTS.h"
 #include "MESH.h"
 
-
 //Functions headers
 #include "ALMOST_EQUAL.h"
 #include "BUILD_CONN.h"
 #include "BUILD_GRID.h"
 #include "BUILD_LGL.h"
+#include "GMSH_IO.h"
 #include "GRID_COORD.h"
 #include "GRID2CONN.h"
 #include "INTERPOLATE.h"
@@ -41,7 +46,6 @@
 //#include "mympi_init.h"
 //#include "DOMAIN_DECOMP.h"
 //#include "visit_writer.h"
-
 
 
 int main(int argc, char** argv) {
@@ -140,6 +144,28 @@ int main(int argc, char** argv) {
 	 *************************************************************************************/
 	BUILD_CONN();
 
+	int lread_external_grid=0;
+	if (lread_external_grid == 1){
+	    
+	    //GMSH_IO();
+	    
+	    int node_dim;
+	    int node_num;
+	    int element_order, element_order_dummy;
+	    int element_num;
+	    
+
+	    char inputfile[128];
+	    strcpy(inputfile,"./gmsh_grids/cube.msh");
+ 	    gmsh_size_read (inputfile, &node_num, &node_dim, &element_num, &element_order_dummy);
+
+	    element_order = 1;
+	    double node_x[node_dim*node_num];
+	    int    element_node[element_order*element_num];
+	    
+	    gmsh_data_read ("./gmsh_grids/cube.msh", node_dim, node_num, node_x, element_order, element_num, element_node);
+		
+	} //END reading external grid
 		 
 	/*************************************************************************************
 	 * Write output to file (VTK, ALYA, etc.)

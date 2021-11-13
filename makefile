@@ -56,10 +56,11 @@ SRCS =  \
 	./src/SURFACES.c \
 	./src/TOPOfromTXT.c \
 	./src/TOPO_USER_FUNCTION.c \
-	./src/WRITE_OUTPUT.c
+	./src/WRITE_OUTPUT.c \
+	./src/GMSH_IO.c
 
+#	./src/P4EST_API.c
 #	./src/MESH.c \
-#	./src/P4EST_API.c \
 
 # define the C object files 
 #

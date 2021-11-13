@@ -89,7 +89,7 @@ int  Add(st_Record *newRecord, int data);
 void PrintList(st_Record *newRecord);
 
 //Read abaqus (adapted from p4est reader)
-int READ_GMSH(void);
+//int READ_MESH(void);
 //char* READ_GMSH(FILE *stream);
 //int   read_inp_stream(FILE *stream, int *num_bc, int *num_elem);
 

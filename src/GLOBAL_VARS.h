@@ -87,6 +87,8 @@ int									\
     nboun_g,								\
     elem,								\
     EL_NODES,								\
+    NBDY_FACES,								\
+    NBDY_EDGES,								\
     i,									\
     j,									\
     k,									\
@@ -130,6 +132,8 @@ double						\
 
 int							\
 **CONN,							\
+    **CONN_BDY_EDGES,					\
+    **CONN_BDY_FACES,					\
     *ELTYPE;
 
 char									\

@@ -103,44 +103,6 @@ void PrintList(st_Record *newRecord) {
 }
 
 /*
- * Read GMSH grids
- */
-int READ_GMSH(void)
-{ 
-    int *refine_coarsen_elements;
-    refine_coarsen_elements = (int *)malloc(1*sizeof(int *));
-    int read_external_grid_flg = 1;
-    int xperiodic_flg = 0;
-    int yperiodic_flg = 0;
-    int zperiodic_flg = 0;
-    int is_cube;
-    int nnx, nny, nnz;
-    int orient = 0;
-    int nref_levs = 0;
-    int refinement_levels_h = 0;
-
-    printf(" XXX\n");
-    is_cube = 1;
-    nnx = 19;
-    nny = 19;
-    nnz = 19;
-    p8esttonuma_init(is_cube, nnx, nny, nnz, nref_levs,		\
-		     read_external_grid_flg,			\
-		     xperiodic_flg, yperiodic_flg, zperiodic_flg);
-
-    printf(" YYY\n");
-    /* ! TODO: fix to use xglx, xgly, xglz
-       call p8esttonuma_fill_data(nop, xgl, is_dg, iboundary, read_external_grid_flg, p2n, lrestoring_sponge)
-
-       call p8esttonuma_get_mesh_scalars(p2n, npoin_cg, nelem, num_nbh, &
-       num_send_recv_total, nbsido, nface, nboun, nNC)
-    */
-    free(refine_coarsen_elements);
-
-    return 0;
-}
-
- /*
 char* READ_GMSH(FILE *stream)
 {
 
@@ -182,8 +144,8 @@ char* READ_GMSH(FILE *stream)
 	}
     *line = '\0';
     return linep;
-}
-*/
+    }*/
+
 /* This function reads the mesh file and fills bc info*
 static int read_inp_stream(FILE *stream,int *num_bc,
 			   int *num_elem,
