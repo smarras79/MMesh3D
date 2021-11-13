@@ -11,6 +11,7 @@ Function to read in the user input file for the Cartesian Mesh Generator:
 #include <stdio.h>
 #include <string.h>
 
+#include "MEMORY.h"
 #include "MYDEFINE.h"
 #include "GLOBAL_VARS.h"
 
@@ -27,7 +28,6 @@ int READ_INPUT(char *input_file)
    *How the input is stored:
    *
    * Numeric variables:
-   *  INPUTVariables[7]    //Number of space dimension (nsd)
    *  INPUTVariables[0]    //Number of blocks
    *  INPUTVariables[1]    //Number of elements x block 1
    *  INPUTVariables[2]    //Number of elements x block 2
@@ -99,8 +99,8 @@ int READ_INPUT(char *input_file)
     //PROBLEM_DEFINITION:
     fscanf(file_ID, "%s\n", header);
     count = 0;
-    fscanf(file_ID, "%s %d\n", header, &INPUTVariables[7]); //number of space dimension (nsd)
-    count++;
+    //fscanf(file_ID, "%s %d\n", header, &INPUTVariables[7]); //number of space dimension (nsd)
+    //count++;
     fscanf(file_ID, "%s %s %lf %lf\n", header, header, &parameters[7], &parameters[8]);
     strcpy(problem[1], header);                             //Meshing_scheme and scheme parameters s1, s2 (used for sleve and hybrid)
     count++;
@@ -150,6 +150,8 @@ int READ_INPUT(char *input_file)
     fscanf(file_ID, "%s %s %s %s\n", header, header, header, header);
 
     //Start storing the boundary node coordinates x,y,z
+    MEMORY_ALLOCATE(2); //allocate BDY_COORDS
+    
     fscanf(file_ID, "%s %lf %lf %lf\n", header, &BDY_COORDS[1][1], &BDY_COORDS[1][2], &BDY_COORDS[1][3]);
     fscanf(file_ID, "%s %lf %lf %lf\n", header, &BDY_COORDS[2][1], &BDY_COORDS[2][2], &BDY_COORDS[2][3]);
     fscanf(file_ID, "%s %lf %lf %lf\n", header, &BDY_COORDS[3][1], &BDY_COORDS[3][2], &BDY_COORDS[3][3]);
@@ -332,15 +334,14 @@ int read_parameter_file(double *parameters, char *vertical_coords[])
     //Read in the numerical entries from the file
     fscanf(file_id, "%s %lf %lf\n", header, &parameters[1], &parameters[2]);
     fscanf(file_id, "%s %lf %lf\n", header, &parameters[10], &parameters[11]);
-    fscanf(file_id, "%s %lf\n", header, &parameters[3]);
-    fscanf(file_id, "%s %lf\n", header, &parameters[4]); //hm or r
-    fscanf(file_id, "%s %lf\n", header, &parameters[5]); //a_c, or xc
-    fscanf(file_id, "%s %lf\n", header, &parameters[9]); //b_c, or yc
-    fscanf(file_id, "%s %lf\n", header, &parameters[6]); //lambda or yc
-    fscanf(file_id, "%s %lf\n", header, &parameters[7]); //s1 or theta0
-    fscanf(file_id, "%s %lf\n", header, &parameters[8]); //s2 or theta1
-    
-    fscanf(file_id, "%s %s\n", header, vertical_coords[0]); //keyword for the vertical type of grid
+    fscanf(file_id, "%s %lf\n",     header, &parameters[3]);
+    fscanf(file_id, "%s %lf\n",     header, &parameters[4]); //hm or r
+    fscanf(file_id, "%s %lf\n",     header, &parameters[5]); //a_c, or xc
+    fscanf(file_id, "%s %lf\n",     header, &parameters[9]); //b_c, or yc
+    fscanf(file_id, "%s %lf\n",     header, &parameters[6]); //lambda or yc
+    fscanf(file_id, "%s %lf\n",     header, &parameters[7]); //s1 or theta0
+    fscanf(file_id, "%s %lf\n",     header, &parameters[8]); //s2 or theta1
+    fscanf(file_id, "%s %s\n",      header, vertical_coords[0]); //keyword for the vertical type of grid
     //END reading numerical values.
     
   }//End else.

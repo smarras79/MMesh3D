@@ -70,11 +70,7 @@ int main(int argc, char** argv) {
     //MPI_Get_processor_name(processor_name, &name_len);
 
     if (irank == 0) {
-	/*****************************************************
-	 * Allocate string pointers and vectors used in input:
-	 *****************************************************/
-	MEMORY_ALLOCATE(0);
-	
+
 	/*****************************************************************************
 	 * Command-line arguments:
 	 *****************************************************************************/
@@ -91,6 +87,14 @@ int main(int argc, char** argv) {
 	    return 1;
 	}
 	else{
+
+	    PRINT_WELCOME_MESSAGE();
+	    
+	    /*****************************************************
+	     * Allocate string pointers and vectors used in input:
+	     *****************************************************/
+	    MEMORY_ALLOCATE(0);
+	    
 	    if(argc == 2 ){
 		strcpy(inputfile, argv[1]);
 	    }
@@ -99,13 +103,7 @@ int main(int argc, char** argv) {
 		strcpy(print_alya, argv[2]);
 	    }
 	}
-
-	/*************************************************************************************
-	 *Some more allocation after input arguments (nsd):
-	 *************************************************************************************/
-	MEMORY_ALLOCATE(2);
-
-	    
+	
 	/*************************************************************************************
 	 *READ INPUT FILE
 	 *************************************************************************************/
@@ -119,52 +117,38 @@ int main(int argc, char** argv) {
 	//BarycentricWeights(lgl, nop);
 
 	   
-	/*************************************************************************************
-	 * READ THE TOPOGRAPHY FILE or BUILD THE BOTTOM BOUNDARY BY A USER-DEFINED FUNCTION:
-	 *************************************************************************************/
-	READ_TOPOGRAPHY();
-
-	/*************************************************************************************
-	 * Dynamic memory allocation of U,V,P,G,F and coordinates on the grid
-	 *************************************************************************************/
-	MEMORY_ALLOCATE(1);
-	
-	/*************************************************************************************
-	 * Build GRID coordinates and connectivity matrix:
-	 *************************************************************************************/	
-	BUILD_GRID();
-  
-	/*************************************************************************************
-	 * Split the initial domain into 'mpiprocs' processors:
-	 *************************************************************************************/
-	////DOMAIN_DECOMP(rank);
-  
-	/*************************************************************************************
-	 * Build the Connectivity matrix
-	 *************************************************************************************/
-	BUILD_CONN();
-
 	int lread_external_grid=0;
-	if (lread_external_grid == 1){
+	if (lread_external_grid == 0){
 	    
-	    //GMSH_IO();
-	    
-	    int node_dim;
-	    int node_num;
-	    int element_order, element_order_dummy;
-	    int element_num;
-	    
+	    /*************************************************************************************
+	     * READ THE TOPOGRAPHY FILE or BUILD THE BOTTOM BOUNDARY BY A USER-DEFINED FUNCTION:
+	     *************************************************************************************/
+	    READ_TOPOGRAPHY();
 
-	    char inputfile[128];
-	    strcpy(inputfile,"./gmsh_grids/cube.msh");
- 	    gmsh_size_read (inputfile, &node_num, &node_dim, &element_num, &element_order_dummy);
+	    /*************************************************************************************
+	     * Dynamic memory allocation of U,V,P,G,F and coordinates on the grid
+	     *************************************************************************************/
+	    MEMORY_ALLOCATE(1);
+	
+	    /*************************************************************************************
+	     * Build GRID coordinates and connectivity matrix:
+	     *************************************************************************************/	
+	    BUILD_GRID();
+  
+	    /*************************************************************************************
+	     * Split the initial domain into 'mpiprocs' processors:
+	     *************************************************************************************/
+	    ////DOMAIN_DECOMP(rank);
+  
+	    /*************************************************************************************
+	     * Build the Connectivity matrix
+	     *************************************************************************************/
+	    BUILD_CONN();
 
-	    element_order = 1;
-	    double node_x[node_dim*node_num];
-	    int    element_node[element_order*element_num];
-	    
-	    gmsh_data_read ("./gmsh_grids/cube.msh", node_dim, node_num, node_x, element_order, element_num, element_node);
-		
+    }else{
+
+	    GMSH_IO("./gmsh_grids/cube.msh");
+	   
 	} //END reading external grid
 		 
 	/*************************************************************************************
@@ -172,19 +156,15 @@ int main(int argc, char** argv) {
 	 *************************************************************************************/
 	//apply_smoothing();
 	WRITE_OUTPUT(irank);	   
-
+	
 	/*****************************************************
 	 * Free memory
 	 *****************************************************/
+	printf(" #------------------------------------------------------------------#\n");
 	MEMORY_DEALLOCATE(1);
-	    
-	//SOLVER de calor VA AQUI
-
-	/*****************************************************
-	 * Free memory
-	 *****************************************************/
 	MEMORY_DEALLOCATE(2);
 	MEMORY_DEALLOCATE(0);
+	printf(" #------------------------------------------------------------------#\n");
     }
     
     

@@ -1083,18 +1083,23 @@ void dwrt2CONN(char *file_name)
   return;
 }
 
-int PRINT_INFO(void)
+int PRINT_WELCOME_MESSAGE(void)
 {
-  
-  printf("\n #------------------------------------------------------------------#\n");
-  printf(" # \n" );
-  printf(" # Welcome to MMesh3D_M - V 2.0\n" );
-  printf(" # \n" );
-  printf(" # Author: Simone Marras, simone.marras@gmail.com\n" );
+    printf("\n #------------------------------------------------------------------#\n");
+    printf(" # \n" );
+    printf(" # Welcome to MMesh3D_M - V 2.0\n" );
+    printf(" # \n" );
+    printf(" # Author: Simone Marras, simone.marras@gmail.com\n" );
+    printf(" #------------------------------------------------------------------#\n");
+
+    return 0;
+}
+
+int PRINT_INFO(void)
+{ 
   printf(" #------------------------------------------------------------------#\n #\n");
   printf(" # Input Entries from input file: %s\n", inputfile);
   printf(" # problem name:     %s\n", problem[0]);
-  printf(" # nsd:              %d\n", INPUTVariables[7]);
   printf(" # meshing scheme:   %s %lf %lf\n", problem[1], parameters[7], parameters[8]);
   printf(" # element types:    %s\n", problem[2]);
   printf(" # nelx:             %d  %d\n", INPUTVariables[1], INPUTVariables[2]);

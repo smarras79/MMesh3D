@@ -86,7 +86,7 @@ EXE = $(BIN)/MMesh3D.a
 
 all: $(EXE)
 	@echo "---------------------------------------------"
-	@echo  COMPILATION of $(BIN)/$(EXE) was SUCCESSFUL. 
+	@echo  COMPILATION of $(BIN)/$(EXE) was COMPLETED. 
 	@echo "---------------------------------------------"
 
 $(EXE): $(OBJS)
@@ -100,7 +100,7 @@ $(EXE): $(OBJS)
 	$(CC) $(CFLAGS) $(INCLUDES) -c $<  -o $@
 
 clean:
-	$(RM) $(SRC)/*.o *~ $(EXE)
+	$(RM) $(SRC)/*.o $(SRC)/*~ $(EXE)
 	clear
 
 depend: $(SRCS)

@@ -1,3 +1,8 @@
+#ifndef GMSH_IO_H
+#define GMSH_IO_H
+
+int GMSH_IO(char *inputfile);
+
 char ch_cap ( char ch );
 int ch_eqi ( char ch1, char ch2 );
 int ch_to_digit ( char ch );
@@ -32,3 +37,5 @@ int s_len_trim ( char *s );
 int s_to_i4 ( char *s, int *last, int *error );
 double s_to_r8 ( char *s, int *lchar, int *error );
 void timestamp ( );
+
+#endif

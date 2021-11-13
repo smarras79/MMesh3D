@@ -1,7 +1,0 @@
-#!/bin/bash
-
-mv p4est_feature.tar.bj ../unused/.
-mv get_* ../unused/.
-rm -rf *
-mv ../unused/p4est_feature.tar.bj .
-mv ../unused/get_p4est* .

@@ -1,55 +1,41 @@
-# include <stdlib.h>
-# include <stdio.h>
-# include <math.h>
-# include <time.h>
-# include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <math.h>
+#include <time.h>
+#include <string.h>
 
-# include "GMSH_IO.h"
-# include "GLOBAL_VARS.h"
-
-int getLengthOfLine(FILE *df,int Ofline);
-
-int getLengthOfLine(FILE *df,int Ofline){
-
-    char cchar;
-    int line=1;
-    int  total =1;
-    int  atLine=0;
-    int  afterLine=0;
-     
-    while ((cchar=fgetc(df))!=EOF)
-	{
-	    if (feof(df)){
-		break ;
-	    }
-
-	    if (cchar == '\n' || cchar == '\0'){
-        
-		if(line==Ofline){
-		    // printf(" before %d ",total);
-		    atLine = total;
-		}
-
-		if(line==(Ofline+1)){
-		    // printf(" after %d ",total);
-		    afterLine = total-atLine;
-		}
-            
-		// printf(" line is %d ",line);
-		line++;
-	    }
-
-	    total++;
-	}
-
-    return 0;
-}
-
+#include "GMSH_IO.h"
+#include "GLOBAL_VARS.h"
+#include "MEMORY.h"
 
 /******************************************************************************/
+int GMSH_IO(char *inputfile) {
+    /*
+     * Driver to read GMSH file in "Version 2 ASCII" *.msh format
+     */
+    int node_dim;
+    int node_num;
+    int element_order, element_order_dummy;
+    int element_num;
+    //char inputfile[128];	    
+	    
+    gmsh_size_read (inputfile, &node_num, &node_dim, &element_num, &element_order_dummy);
+    nnodes = node_num;
+	    
+    MEMORY_ALLOCATE(1);	    
 
+    element_order = 1;
+    double node_x[node_dim*node_num];
+    int    element_node[element_order*element_num];
+	    
+    gmsh_data_read ("./gmsh_grids/cube.msh", node_dim, node_num, node_x, element_order, element_num, element_node);
+
+    return 0;
+}   
+/******************************************************************************/
+
+/******************************************************************************/
 char ch_cap ( char ch )
-
 /******************************************************************************/
 /*
   Purpose:
@@ -419,9 +405,10 @@ void gmsh_data_read ( char *gmsh_filename, int node_dim, int node_num,
       }
   
   fclose ( input );
-  
+
+  nelem = ielem3d;
   for (int i=0; i<nelem; i++){
-      printf(" # CONN[%d] = %d %d %d %d %d %d %d %d\n", i+1, CONN[i][0], CONN[i][1], CONN[i][2], CONN[i][3], \
+      printf(" nelem %d # CONN[%d] = %d %d %d %d %d %d %d %d\n", nelem, i+1, CONN[i][0], CONN[i][1], CONN[i][2], CONN[i][3], \
 	     CONN[i][4], CONN[i][5], CONN[i][6], CONN[i][7]);
   }
       
@@ -565,9 +552,85 @@ void gmsh_size_read ( char *gmsh_filename, int *node_num, int *node_dim, int *el
       *node_dim = 1;
     }
   }
+
+  /////SM
+  /*
+    Now read element information.
+  */
+  level = 0;
+  int auxi[10][8];
+  int auxn[255];
+  int total = 0;
+  int cont = 0;
+  int ret = 1;
+
+  char *token;
+
+  char *p = text, *q;
+  int count = 0;
+  
+  int ibdy_edge = 0;
+  int ibdy_face = 0;
+  int ielem3d   = 0;
+  
+  text_pointer = text;
+  while (fgets( text, 255, input )!= NULL)
+      {
+	  int offset = 0,  // offset in line for next sscanf() read 
+	      nchr = 0,    // number of char consumed by last read
+	      val,         // integer value read with sscanf() 
+	      nval = 0;   
+
+	  char *p = text_pointer, *q;
+	  text_pointer = text;
+	  
+	  if ( !error )
+	      {
+		  break;
+	      }
+
+	  if ( level == 0 )
+	      {
+		  if ( s_begin ( text_pointer, "$Elements" ) )
+		      {
+			  level = 1;
+			  j = 0;
+		      }
+	      }
+	  else if ( level == 1 )
+	      {
+		  s_to_i4 ( text_pointer, &length, &ierror );
+		  level = 2;
+	      }
+	  else if ( level == 2 )
+	      {
+		  if ( s_begin ( text_pointer, "$EndElements" ) )
+		      {
+			  break;
+		      }
+		  else
+		      {
+			  while (sscanf (text_pointer + offset, "%d%n", &val, &nchr) == 1) {
+			     			      
+			      offset += nchr;    // update offset with no. chars consumend
+			      nval++;            // increment value count
+			      
+			      if(nval == 13){
+				  // *
+				  // * HEXASof order 1: 8 nodes
+				  // * 
+				  ielem3d++;
+			      }
+			  }
+		      }
+	      }
+      }
+  printf(" NELELELELELELELE = %d\n", ielem3d);
+
+  /////END SM
 /*
   Now read element information.
-*/
+*
   level = 0;
 
   for ( ; ; )
@@ -615,7 +678,7 @@ void gmsh_size_read ( char *gmsh_filename, int *node_num, int *node_dim, int *el
         break;
       }
     }
-  }
+  }*/
 
   fclose ( input );
 

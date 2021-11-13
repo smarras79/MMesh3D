@@ -5,13 +5,12 @@ PROBLEM:
 END_PROBLEM
 
 PROBLEM_DEFINITION:
- Space_dimensions:    3
  Meshing_scheme:      TFI
  Element_types:       HEXA
  Number_blocks:       1
- nelemx:              20
- nelemy:              30
- nelemz:              5
+ nelemx:              23
+ nelemy:              50
+ nelemz:              8
  nop:                 1
  PERIODICX:           Off
  PERIODICY:           Off
