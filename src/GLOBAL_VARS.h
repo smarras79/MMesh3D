@@ -48,7 +48,7 @@ xlength,						\
     scalefactor;
 
 int									\
-    nnodesx_obs,							\
+nnodesx_obs,							\
     nnodesy_obs,							\
     nnodesz_obs,							\
     wW,									\
@@ -68,7 +68,7 @@ int									\
     ny,									\
     nz,									\
     nelem,								\
-    nelem_g,								\
+    nelem_g,							\
     nelx,								\
     nely,								\
     nelz,								\
@@ -84,28 +84,29 @@ int									\
     nopy,								\
     nopz,								\
     nboun,								\
-    nboun_g,								\
+    nboun_g,							\
     elem,								\
-    EL_NODES,								\
-    NBDY_FACES,								\
-    NBDY_EDGES,								\
+    EL_NODES,							\
+    NBDY_FACES,							\
+    NBDY_EDGES,							\
     i,									\
     j,									\
     k,									\
     iel,								\
     ipoin,								\
     status,								\
-    readgeo_flg,							\
-    line_cntr,								\
+    readgeo_flg,						\
+    line_cntr,							\
     cntr,								\
     count,								\
     len,								\
-    isigned,								\
+    isigned,							\
     endian,								\
-    mpiprocs,								\
-    wordsize,								\
+    mpiprocs,							\
+    wordsize,							\
     lMETIS,								\
-    lCART;
+    lCART,                              \
+    lread_external_grid;
 
 /*
  * Pointers
@@ -136,26 +137,29 @@ int							\
     **CONN_BDY_FACES,					\
     *ELTYPE;
 
-char									\
+char								    	\
 *inputfile,								\
+    *external_grid_file_name,               \
     *print_alya,							\
     *print_vtk,								\
     *print_gmsh,							\
-    *fname,								\
+    *fname,								    \
     *input_inp,								\
-    *outfile_msh_vtk,							\
-    *outfile_msh_gmsh,							\
-    *outfile_msh_alya,							\
+    *outfile_msh_vtk,						\
+    *outfile_msh_gmsh,						\
+    *outfile_msh_alya,						\
     *problem[PROB_ENTRIES];
 
 /*
  * Static arrays (used for small arrays only) 
  */
 char									\
-nodesx[5],								\
-    nodesy [5],								\
-    nodesz [5],								\
-    elorder[4],								\
+nodes  [6],								\
+    nodesx [6],								\
+    nodesy [6],								\
+    nodesz [6],								\
+    elorder[3],								\
+    nel[5],								\
 //NOTE: if you want to store 3 digits, you need 4 spaces because C stores "/0" as last. If you don't, you will get the Abort Trap error! 
     mpiprocess[5];
 
