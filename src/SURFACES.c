@@ -752,14 +752,14 @@ int SURFACES(int isurface, int nnodesu, int nnodesv, int nnodesw, int nelem, \
 	    b2 = sinh((H - sigma[w])/s2)/sinh(H/s2);
 	  }
 	
-	COORDS[ipoin][1] = ipoin;
-	COORDS[ipoin][2] = x1x + x2x + x3x - x12x - x13x - x23x + x123x;
-	COORDS[ipoin][3] = x1y + x2y + x3y - x12y - x13y - x23y + x123y;
-	COORDS[ipoin][4] = tfi_flg*(x1z + x2z + x3z - x12z - x13z - x23z + x123z)       \
+	COORDS[ipoin-1][0] = x1x + x2x + x3x - x12x - x13x - x23x + x123x;
+	COORDS[ipoin-1][1] = x1y + x2y + x3y - x12y - x13y - x23y + x123y;
+	COORDS[ipoin-1][2] = tfi_flg*(x1z + x2z + x3z - x12z - x13z - x23z + x123z)       \
 	  + sigma_flg  *(Rbott[u][v][3] + sigma[w]*(H - Rbott[u][v][3])/H)              \
 	  + hybrid_flg *(sigma[w] + Rbott[u][v][3]*sinh((H - sigma[w])/s1)/sinh(H/s1))  \
 	  + sleve_flg  *(sigma[w] + h1*b1 + h2*b2);
 
+	
 	//Assign the boundary flags:
 	//a) BOTTOM CORNERS:
 	if( u == 1 && v == 1 && w == 1){
@@ -857,7 +857,7 @@ int SURFACES(int isurface, int nnodesu, int nnodesv, int nnodesw, int nelem, \
 	
 	//Print boundary file:
 	if( !strcmp(problem[12],"yes"))
-	  fprintf(BDYFLAGf_ID, "%d %lf %lf %lf\n", BDYFLAG[0], COORDS[ipoin][2],COORDS[ipoin][3],COORDS[ipoin][4]);
+	  fprintf(BDYFLAGf_ID, "%d %lf %lf %lf\n", BDYFLAG[0], COORDS[ipoin-1][0],COORDS[ipoin-1][1],COORDS[ipoin-1][2]);
 
       }
     }
