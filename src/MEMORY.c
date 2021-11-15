@@ -36,15 +36,18 @@ int MEMORY_ALLOCATE(int flag)
 	    fname      = (char*) malloc(23 * sizeof(char));
 	    input_inp  = (char*) malloc(8 * sizeof(char));
   
+  	    
 	    outfile_msh_vtk  = (char*) malloc(96 * sizeof(char *));
 	    outfile_msh_gmsh = (char*) malloc(96 * sizeof(char *));
 	    outfile_msh_alya = (char*) malloc(96 * sizeof(char *));
-  
+  		external_grid_file_name = (char*) malloc(255 * sizeof(char *));
+  		*external_grid_file_name = 0;
+	    
 	    parameters = dvector(0,NUMBER_OF_PARAMETERS);
 
 	    //Allocation of the strings of the above lines:
 	    for(i=0; i<PROB_ENTRIES; i++)
-		problem[i] = (char *) malloc(32 * sizeof(char *));
+			problem[i] = (char *) malloc(32 * sizeof(char *));
       
 	    printf(" # Memory allocated (flag 0): various input-related strings\n");
 	}
@@ -120,6 +123,7 @@ int MEMORY_DEALLOCATE(int flag)
 	    free(fname);
 	    free(input_inp);
   
+  		free(external_grid_file_name);
 	    free(outfile_msh_vtk);
 	    free(outfile_msh_alya);
   

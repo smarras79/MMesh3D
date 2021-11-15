@@ -47,7 +47,7 @@ int READ_INPUT(char *input_file)
    * Definition strings:
    *   problem[0]           // Problem name: agnesi, schar, airfoil, etc.
    *   problem[1]           // Meshing scheme: mountain, TFI, etc. followed by two parameters s1 and s2 (double) stored in parameters[7:8]
-   *    parameters[7,8]     // --- scheme parameters s1, s2 (used for sleve and hybrid) THESE can be left blank
+   *      parameters[7,8]   // --- scheme parameters s1, s2 (used for sleve and hybrid) THESE can be left blank
    * 
    *
    *   problem[2]           // Elements type: QUAD, TRI
@@ -96,15 +96,23 @@ int READ_INPUT(char *input_file)
     fscanf(file_ID, "%s\n", header); 
     //END_PROBLEM
     
-    //PROBLEM_DEFINITION:
+
+    //READ_EXTERNAL_GRID:
     fscanf(file_ID, "%s\n", header);
+    if (!strcmp(header, "READ_EXTERNAL_GRID")) {
+	fscanf(file_ID, "%s %s\n", header, header); //External mesh name
+	strcpy(external_grid_file_name, header);
+	fscanf(file_ID, "%s\n", header);
+	fscanf(file_ID, "%s\n", header);
+	lread_external_grid = 1;
+    } else {lread_external_grid = 0;}
+    //END_READ_EXTERNAL_GRID
+
+    //PROBLEM_DEFINITION:    
     count = 0;
-    //fscanf(file_ID, "%s %d\n", header, &INPUTVariables[7]); //number of space dimension (nsd)
-    //count++;
     fscanf(file_ID, "%s %s %lf %lf\n", header, header, &parameters[7], &parameters[8]);
     strcpy(problem[1], header);                             //Meshing_scheme and scheme parameters s1, s2 (used for sleve and hybrid)
     count++;
-
     fscanf(file_ID, "%s %s\n", header, header);             //Element types
     strcpy(problem[2], header);
  

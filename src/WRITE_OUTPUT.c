@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <strings.h>
 
 #include "GLOBAL_VARS.h"
 #include "MYDEFINE.h"
@@ -15,13 +16,14 @@
 
 int WRITE_OUTPUT(int rank)
 {
-    //Call MPI rank:
-    
+	
     //Write scalars to strings:
     sprintf(nodesx, "%d", nnodesx);
     sprintf(nodesy, "%d", nnodesy);
     sprintf(nodesz, "%d", nnodesz); 
+    sprintf(nodes,  "%d", nnodes);
     sprintf(elorder,"%d", nop);
+    sprintf(nel,"%d", nelem);
     sprintf(mpiprocess,"%d", rank);
   
     if( !strcmp(print_alya, "yes") || !strcmp(print_alya,"y") || !strcmp(print_alya,"alya"))
@@ -45,8 +47,9 @@ int WRITE_OUTPUT(int rank)
 	    dGRID2ALYAFILE(outfile_msh_alya, COORDS, CONN, nnodes, nelem, 0);
 
 	    if(rank == 0){
+		printf(" #\n");
 		printf(" # The following file was created:\n");
-		printf(" # %s:\n\n", outfile_msh_alya);
+		printf(" # %s:\n", outfile_msh_alya);
 	    }
       
 	}
@@ -63,23 +66,19 @@ int WRITE_OUTPUT(int rank)
 	    strcat(outfile_msh_vtk,problem[2]);
 	    strcat(outfile_msh_vtk,"_");
 	    strcat(outfile_msh_vtk,mpiprocess);
-	    strcat(outfile_msh_vtk,"_");
-	    strcat(outfile_msh_vtk,nodesx);
-	    strcat(outfile_msh_vtk,"x");
-	    strcat(outfile_msh_vtk,nodesy);
-	    strcat(outfile_msh_vtk,"x");
-	    strcat(outfile_msh_vtk,nodesz);
-	    strcat(outfile_msh_vtk,"x");
+	    strcat(outfile_msh_vtk,"_npoints_");
+	    strcat(outfile_msh_vtk,nodes);
+	    strcat(outfile_msh_vtk,"_nop_");
 	    strcat(outfile_msh_vtk,elorder);
 	    strcat(outfile_msh_vtk, ".vtk");
-      
+	  
 	    dPRINT_UNSTRUCT_GRID_VTK(outfile_msh_vtk,  1, 1);
       
-	    if(rank == 0){
+	    if(rank == 0){		
+		printf(" #\n");
 		printf(" # The following file was created:\n");
-		printf(" # %s:\n\n", outfile_msh_vtk);
+		printf(" # %s:\n", outfile_msh_vtk);
 	    }
-
 	}
   
     /*****************************************************************************************
@@ -105,9 +104,10 @@ int WRITE_OUTPUT(int rank)
       
 	    dPRINT_UNSTRUCT_GRID_GMSH(outfile_msh_gmsh,  1, 1);
 
-	    if(rank == 0){
+	    if(rank == 0){		
+		printf(" #\n");
 		printf(" # The following file was created:\n");
-		printf(" # %s:\n\n", outfile_msh_gmsh);
+		printf(" # %s:\n", outfile_msh_gmsh);
 	    }
 	}
 
@@ -120,21 +120,18 @@ int WRITE_OUTPUT(int rank)
     strcat(outfile_msh_gmsh,problem[2]);
     strcat(outfile_msh_gmsh,"_");
     strcat(outfile_msh_gmsh,mpiprocess);
-    strcat(outfile_msh_gmsh,"_");
-    strcat(outfile_msh_gmsh,nodesx);
-    strcat(outfile_msh_gmsh,"x");
-    strcat(outfile_msh_gmsh,nodesy);
-    strcat(outfile_msh_gmsh,"x");
-    strcat(outfile_msh_gmsh,nodesz);
-    strcat(outfile_msh_gmsh,"x");
+    strcat(outfile_msh_gmsh,"_nelem_");
+    strcat(outfile_msh_gmsh,nel);
+    strcat(outfile_msh_gmsh,"_nop_");
     strcat(outfile_msh_gmsh,elorder);
     strcat(outfile_msh_gmsh, ".dat");
   
     dPRINT_UNSTRUCT_GRID_CONN(outfile_msh_gmsh,  1, 1);
 
-    if(rank == 0){
+    if(rank == 0){		
+	printf(" #\n");
 	printf(" # The following file was created:\n");
-	printf(" # %s:\n\n", outfile_msh_gmsh);
+	printf(" # %s:\n", outfile_msh_gmsh);
     }
 
     return 0;
