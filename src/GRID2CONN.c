@@ -18,6 +18,7 @@ int kstrt, jstrt, istrt;
 #define HEXA  8
 #define WEDGE 6
 
+#define INDX_OFFSET 1
 /********************************************************************************************
  *
  * QUADS
@@ -43,8 +44,8 @@ int GRID2CONN(unsigned int strting_node_number, unsigned int strting_elem_number
   }
 	
   //Initialize:
-  for (i = strting_elem_number+1; i<=nelem+strting_elem_number; i++){
-    for (j = 1; j<=5; j++){
+  for (i = strting_elem_number+1- INDX_OFFSET; i<=nelem+strting_elem_number- INDX_OFFSET; i++){
+    for (j = 1 - INDX_OFFSET; j<=5 - INDX_OFFSET; j++){
       CONN[i][j] = 0;
     }
   }
@@ -54,17 +55,17 @@ int GRID2CONN(unsigned int strting_node_number, unsigned int strting_elem_number
   if( iblock > 1)
     flag = 1;
 	
-  int iel = strting_elem_number+1;
-  for (j = 1+jstrt; j<=nnodesy-1+jstrt; j++){
-    for (i = 1; i<=nnodesx-1; i++){
+  int iel = strting_elem_number+1-INDX_OFFSET;
+  for (j = 1+jstrt-INDX_OFFSET; j<=nnodesy-1+jstrt-INDX_OFFSET; j++){
+    for (i = 1-INDX_OFFSET; i<=nnodesx-1-INDX_OFFSET; i++){
 
       //printf(" j = %d  i = %d iel = %d\n", j, i, iel);
 			
-      CONN[iel][1] = iel;
-      CONN[iel][2] = iel + (j - 1);
-      CONN[iel][3] = CONN[iel][2] + 1;
-      CONN[iel][4] = CONN[iel][3] + nnodesx;
-      CONN[iel][5] = CONN[iel][4] - 1;
+      CONN[iel][1-INDX_OFFSET] = iel;
+      CONN[iel][2-INDX_OFFSET] = iel + (j - 1);
+      CONN[iel][3-INDX_OFFSET] = CONN[iel][2-INDX_OFFSET] + 1;
+      CONN[iel][4-INDX_OFFSET] = CONN[iel][3-INDX_OFFSET] + nnodesx;
+      CONN[iel][5-INDX_OFFSET] = CONN[iel][4-INDX_OFFSET] - 1;
 			
       //Modify this if you add the option of creating triangular elements:
       ELTYPE[iel] = 4;
@@ -259,19 +260,20 @@ int GRID2CONNhex(unsigned int strting_node_number, unsigned int strting_elem_num
   for (j=1+jstrt; j<=nnodesy-1+jstrt; j++){
     for (i=1; i<=nnodesx-1; i++){
       
-      iel = iel + 1;
-      CONN[iel][1] = iel;
-      CONN[iel][2] = iel + (j - 1);
+      //CONN[iel][0] = iel;
+      //CONN[iel][0] = iel + (j - 1)+1;
       
-      CONN[iel][2] =  iel + index_end + (j - 1);
-      CONN[iel][3] = CONN[iel][2] + 1;
-      CONN[iel][4] = CONN[iel][3] + nnodesx;
-      CONN[iel][5] = CONN[iel][4] - 1;
+      CONN[iel][0] =  iel + index_end + (j - 1)+1;
+      CONN[iel][1] = CONN[iel][0] + 1;
+      CONN[iel][2] = CONN[iel][1] + nnodesx;
+      CONN[iel][3] = CONN[iel][2] - 1;
       
+      CONN[iel][4] = CONN[iel][0] + nnodesx*nnodesy;
+      CONN[iel][5] = CONN[iel][1] + nnodesx*nnodesy;
       CONN[iel][6] = CONN[iel][2] + nnodesx*nnodesy;
       CONN[iel][7] = CONN[iel][3] + nnodesx*nnodesy;
-      CONN[iel][8] = CONN[iel][4] + nnodesx*nnodesy;
-      CONN[iel][9] = CONN[iel][5] + nnodesx*nnodesy;
+
+      iel = iel + 1;
     }
   }
   strting_elem_number = iel;
@@ -283,19 +285,19 @@ int GRID2CONNhex(unsigned int strting_node_number, unsigned int strting_elem_num
     for (j=1; j<=nnodesy-1; j++){
       for (i=1; i<=nnodesx-1; i++){
 	
-	iel = iel + 1;
-	CONN[iel][1] = iel;
+	//CONN[iel][0] = iel;
 	
-	CONN[iel][2] = CONN[iel - nelx*nely][6];   //It uses the info of the top face of the undelrying element.
-	CONN[iel][3] = CONN[iel][2] + 1;
-	CONN[iel][4] = CONN[iel][3] + nnodesx;
-	CONN[iel][5] = CONN[iel][4] - 1;
+	CONN[iel][0] = CONN[iel - nelx*nely][4];   //It uses the info of the top face of the undelrying element.
+	CONN[iel][1] = CONN[iel][0] + 1;
+	CONN[iel][2] = CONN[iel][1] + nnodesx;
+	CONN[iel][3] = CONN[iel][2] - 1;
 	
+	CONN[iel][4] = CONN[iel][0] + nnodesx*nnodesy;
+	CONN[iel][5] = CONN[iel][1] + nnodesx*nnodesy;
 	CONN[iel][6] = CONN[iel][2] + nnodesx*nnodesy;
 	CONN[iel][7] = CONN[iel][3] + nnodesx*nnodesy;
-	CONN[iel][8] = CONN[iel][4] + nnodesx*nnodesy;
-	CONN[iel][9] = CONN[iel][5] + nnodesx*nnodesy;
 
+	iel = iel + 1;
 	index_end = index_end + 1;
       }
     }
