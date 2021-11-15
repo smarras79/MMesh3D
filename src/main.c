@@ -115,9 +115,7 @@ int main(int argc, char** argv) {
 	 *************************************************************************************/
 	//lgl = BUILD_LGL(nop);
 	//BarycentricWeights(lgl, nop);
-
-	   
-	int lread_external_grid=0;
+	
 	if (lread_external_grid == 0){
 	    
 	    /*************************************************************************************
@@ -147,8 +145,8 @@ int main(int argc, char** argv) {
 
     }else{
 
-	    GMSH_IO("./gmsh_grids/cube.msh");
-	   
+	    GMSH_IO(external_grid_file_name);
+	    
 	} //END reading external grid
 		 
 	/*************************************************************************************

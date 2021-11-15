@@ -1,16 +1,16 @@
  #INPUT_FILE.inp
 
 PROBLEM:  
-    name:             topography
+ name:             cube
 END_PROBLEM
 
 PROBLEM_DEFINITION:
  Meshing_scheme:      TFI
  Element_types:       HEXA
  Number_blocks:       1
- nelemx:              23
- nelemy:              50
- nelemz:              8
+ nelemx:              2
+ nelemy:              2
+ nelemz:              2
  nop:                 1
  PERIODICX:           Off
  PERIODICY:           Off
@@ -47,3 +47,7 @@ BDY_FILE:  no
 END_OUTPUT_FILESs
 
 #END_INPUT_FILE.inp
+
+READ_EXTERNAL_GRID
+ read_GMSH          ./gmsh_grids/hexa_UNSTR_yassine_test.msh
+END_READ_EXTERNAL_GRID
