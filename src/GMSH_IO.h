@@ -6,8 +6,7 @@ int GMSH_IO(char *inputfile);
 char ch_cap ( char ch );
 int ch_eqi ( char ch1, char ch2 );
 int ch_to_digit ( char ch );
-void gmsh_data_read ( char *gmsh_filename, int node_dim, int node_num, 
-  double node_x[], int element_order, int element_num, int element_node[] );
+void gmsh_data_read ( char *gmsh_filename, int node_dim, int node_num, int element_order, int element_num);
 int *gmsh_mesh2d_element_data_example ( int element_num, int element_order );
 void gmsh_mesh2d_element_size_example ( int *element_num, int *element_order );
 double *gmsh_mesh2d_node_data_example ( int node_num, int node_dim );

@@ -8,6 +8,8 @@
 #include "GLOBAL_VARS.h"
 #include "MEMORY.h"
 
+int Count_TotalWords(char *str);
+
 /******************************************************************************/
 int GMSH_IO(char *inputfile) {
     /*
@@ -19,21 +21,37 @@ int GMSH_IO(char *inputfile) {
     int node_dim;
     int node_num;
     int element_order;
-    int element_num;
     int dummy;
 
-    gmsh_size_read (inputfile, &node_num, &node_dim, &element_num, &dummy);
+    gmsh_size_read(inputfile, &nnodes, &node_dim, &nelem, &dummy);
+
+    MEMORY_ALLOCATE(1);
+    MEMORY_ALLOCATE(5);
     
-    MEMORY_ALLOCATE(1);	    
-
-    element_order = 1;
-    double node_x[node_dim*node_num];
-    int    element_node[element_order*element_num];	   
-    gmsh_data_read (inputfile, node_dim, node_num, node_x, element_order, element_num, element_node);
-
+    gmsh_data_read(inputfile, node_dim, nnodes, nop, nelem);
+    
+    printf(" #------------------------------------------------------\n");
+    printf(" # GMSH grid read successfully from %s :\n #   number of nodes = %d\n #   number of elem = %d\n #   nsd = %d\n", inputfile,  nnodes, nelem, node_dim);
+    printf(" #------------------------------------------------------\n");
+    
     return 0;
 }   
 /******************************************************************************/
+
+int Count_TotalWords(char *str)
+{
+	int i, totalwords;
+  	totalwords = 1;
+  	
+	for(i = 0; str[i] != '\0'; i++)
+	{
+		if(str[i] == ' ' || str[i] == '\n' || str[i] == '\t')
+		{
+			totalwords++;	
+		} 
+	}
+	return totalwords;
+}
 
 /******************************************************************************/
 char ch_cap ( char ch )
@@ -184,8 +202,7 @@ int ch_to_digit ( char ch )
 
 /******************************************************************************/
 
-void gmsh_data_read ( char *gmsh_filename, int node_dim, int node_num, 
-		      double node_x[], int element_order, int element_num, int element_node[] )
+void gmsh_data_read ( char *gmsh_filename, int node_dim, int node_num, int element_order, int element_num)
 
 /******************************************************************************/
 /*
@@ -234,11 +251,9 @@ void gmsh_data_read ( char *gmsh_filename, int node_dim, int node_num,
     char text[255];
     char* text_pointer;
     double x;
-
-    printf(" # GMSH size:\n #   number of nodes = %d\n #   number of elem = %d\n #   nsd = %d\n #   p =  %d\n # \n",  node_num, element_num, node_dim, element_order);
-  
+      
     input = fopen ( gmsh_filename, "rt" );
-
+    
     if ( ! input )
 	{
 	    fprintf ( stderr, " #\n" );
@@ -286,7 +301,7 @@ void gmsh_data_read ( char *gmsh_filename, int node_dim, int node_num,
 				{
 				    x = s_to_r8 ( text_pointer, &length, &ierror );
 				    text_pointer = text_pointer + length;
-				    node_x[i+j*node_dim] = x;
+				    //node_x[i+j*node_dim] = x;
 	 
 				    COORDS[j][i] = x;
 				    //printf(" i,j = %d %d %.8f\n", i, j, COORDS[j][i]);
@@ -313,18 +328,22 @@ void gmsh_data_read ( char *gmsh_filename, int node_dim, int node_num,
     int ibdy_edge = 0;
     int ibdy_face = 0;
     int ielem3d   = 0;
-  
+    
     text_pointer = text;
     while (fgets( text, 255, input )!= NULL)
 	//for ( ; ; )
 	{
 
-	    //error = fgets ( text_pointer, 255, input );
-	  
-	    int offset = 0,  // offset in line for next sscanf() read 
+	    int offset = 0,
+		offset14 = 0,
+		offset10 = 0,
+		offset8  = 0,// offset in line for next sscanf() read 
 		nchr = 0,    // number of char consumed by last read
 		val,         // integer value read with sscanf() 
-		nval = 0;   
+		nval = 0,
+		nval14 = 0,
+		nval10 = 0,
+		nval8  = 0;
 
 	    char *p = text_pointer, *q;
 	    text_pointer = text;
@@ -355,44 +374,44 @@ void gmsh_data_read ( char *gmsh_filename, int node_dim, int node_num,
 			}
 		    else
 			{
-			    while (sscanf (text_pointer + offset, "%d%n", &val, &nchr) == 1) {
-			     			      
-				offset += nchr;    // update offset with no. chars consumend
-				nval++;            // increment value count
-			      
-				/*if(nval == 9){
-				// *
-				// * HEXASof order 1: 8 nodes
-				// * 
-				s_to_i4 ( text_pointer, &length, &ierror );
-				text_pointer = text_pointer + length;
-				printf (" %s %d", text_pointer, nval);        // output value rea
-				  
-				for (int i=0; i<nval-1; i++){
-				k = s_to_i4 ( text_pointer, &length, &ierror );
-				text_pointer = text_pointer + length;
+			    /*
+			     * Populate CONN, CONN_BDY_FACE and CONN_BDY_EDGE
+			     */
+			    count = Count_TotalWords(text_pointer + offset);
+			    //printf(" -total words: %d\n ", count);
 
-				//if (i>3) {
-				//   int ii = i - 4;
-				//  CONN[ielem3d][ii] = k;
-				//  printf (" %d ", k);
-				//}
-				}
-				printf(" \n");
-				//ielem3d++;
-				}*/
-			      
-				if(nval == 13){
-				    // *
-				    // * HEXASof order 1: 8 nodes
-				    // * 
+			    sscanf (text_pointer + offset, "%d%n", &val, &nchr);
+			    if (count == 10)
+				{   
+				    offset10 += nchr;    // update offset with no. chars consumend
+				    nval10++;            // increment value count
+				    
 				    s_to_i4 ( text_pointer, &length, &ierror );
 				    text_pointer = text_pointer + length;
-				  
-				    for (int i=0; i<nval-1; i++){
+				    
+				    for (int i=0; i<count-1; i++){
 					k = s_to_i4 ( text_pointer, &length, &ierror );
 					text_pointer = text_pointer + length;
-
+					
+					if (i>3) {
+					    int ii = i - 4;
+					    CONN_BDY_FACES[ibdy_face][ii] = k;
+					}
+				    }
+				    ibdy_face++;
+				}
+			    if (count == 14)
+				{
+				    offset14 += nchr;    // update offset with no. chars consumend
+				    nval14++;            // increment value count
+				    
+				    s_to_i4 ( text_pointer, &length, &ierror );
+				    text_pointer = text_pointer + length;
+				    
+				    for (int i=0; i<count-1; i++){
+					k = s_to_i4 ( text_pointer, &length, &ierror );
+					text_pointer = text_pointer + length;
+					//printf(" %d", k);
 					if (i>3) {
 					    int ii = i - 4;
 					    CONN[ielem3d][ii] = k;
@@ -400,18 +419,22 @@ void gmsh_data_read ( char *gmsh_filename, int node_dim, int node_num,
 				    }
 				    ielem3d++;
 				}
-			    }
+			    //printf(" \n");
 			}
 		}
 	}
-  
+    
     fclose ( input );
-
-    nelem = ielem3d;
+    
     /*for (int i=0; i<nelem; i++){
-      printf(" nelem %d # CONN[%d] = %d %d %d %d %d %d %d %d\n", nelem, i+1, CONN[i][0], CONN[i][1], CONN[i][2], CONN[i][3], \
+      printf(" GMSH_IO.c: nelem %d # CONN[%d] = %d %d %d %d %d %d %d %d\n", nelem, i+1, CONN[i][0], CONN[i][1], CONN[i][2], CONN[i][3], \
       CONN[i][4], CONN[i][5], CONN[i][6], CONN[i][7]);
-      }*/     
+      }
+
+      for (int i=0; i<nbdy_faces; i++){
+      printf(" GMSH_IO.c: CONN_BDY_FACES[%d] = %d %d %d %d\n", i+1,  CONN_BDY_FACES[i][0], CONN_BDY_FACES[i][1], CONN_BDY_FACES[i][2], CONN_BDY_FACES[i][3]);
+      }*/
+    
     return;
  
 }
@@ -555,8 +578,14 @@ void gmsh_size_read ( char *gmsh_filename, int *node_num, int *node_dim, int *el
 		    *node_dim = 1;
 		}
 	}
-
-    /////SM
+    if (*node_dim < 3) {
+	printf(" #------------------------------------------------------\n #\n");
+	printf(" # !!!!!!! OPS, the world is 3D, don't ask me to use 2D grids!");
+	printf(" #         The code will exit now.\n #\n");
+	printf(" #------------------------------------------------------\n");
+	exit(1);
+    }
+    
     /*
       Now read element information.
     */
@@ -613,78 +642,44 @@ void gmsh_size_read ( char *gmsh_filename, int *node_num, int *node_dim, int *el
 			}
 		    else
 			{
-			    while (sscanf (text_pointer + offset, "%d%n", &val, &nchr) == 1) {
-			     			      
-				offset += nchr;    // update offset with no. chars consumend
-				nval++;            // increment value count
-			      
-				if(nval == 13){
-				    // *
-				    // * HEXASof order 1: 8 nodes
-				    // * 
-				    ielem3d++;
-				}
+			    /*
+			     * Count number of bdy faces and volumetric elements:
+			     */
+			    count = Count_TotalWords(text_pointer + offset);
+			    //printf(" -total words: %d\n ", count);
+
+			    sscanf (text_pointer + offset, "%d%n", &val, &nchr);
+			    if (count == 8) {
+				ibdy_edge++;
 			    }
+			    if (count == 10) {
+				ibdy_face++;
+				printf(" # AAAA nbdy_faces = %d\n", ibdy_face);
+			    }
+			   
+			    if (count == 14) {
+				printf(" # BBB IELEM3D = %d\n", ielem3d);
+				ielem3d++;
+			    }
+			    printf(" # CCC count = %d %d\n", count, ielem3d);
 			}
 		}
 	}
+    
+    fclose ( input );
+    
     //Store global value of nelem (conforming):
     nelem = ielem3d;
-  
-    /*
-      Now read element information.
-      *
-      level = 0;
+    nbdy_edges = ibdy_edge;
+    nbdy_faces = ibdy_face;
 
-      for ( ; ; )
-      {
-      text_pointer = text;
-      error = fgets ( text_pointer, 255, input );
-
-      if ( !error )
-      {
-      break;
-      }
-
-      if ( level == 0 )
-      {
-      if ( s_begin ( text_pointer, "$Elements" ) )
-      {
-      level = 1;
-      }
-      }
-      else if ( level == 1 )
-      {
-      *element_num = s_to_i4 ( text_pointer, &length, &ierror );
-      level = 2;
-      }
-      else if ( level == 2 )
-      {
-      if ( s_begin ( text_pointer, "$EndElements" ) )
-      {
-      break;
-      }
-      else
-      {
-      k = 0;
-      for ( ; ; )
-      {
-      s_to_i4 ( text_pointer, &length, &ierror );
-      text_pointer = text_pointer + length;
-      if ( ierror != 0 )
-      {
-      break;
-      }
-      k = k + 1;
-      }
-      *element_order = k - 5;
-      break;
-      }
-      }
-      }*/
-
-    fclose ( input );
-
+    printf(" #------------------------------------------------------\n");
+    printf(" # The GMSH external grid has: \n");
+    printf(" # nelem      = %d\n",  nelem);
+    printf(" # nbdy_faces = %d\n",  nbdy_faces);
+    //printf(" # nbdy_face %d\n",  nbdy_edges);
+    printf(" #------------------------------------------------------\n");
+    
     return;
 }
 /******************************************************************************/
