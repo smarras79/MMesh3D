@@ -68,7 +68,9 @@ nnodesx_obs,							\
     ny,									\
     nz,									\
     nelem,								\
-    nelem_g,							\
+    nelem_g,								\
+    nbdy_faces,								\
+    nbdy_edges,								\
     nelx,								\
     nely,								\
     nelz,								\
@@ -84,28 +86,26 @@ nnodesx_obs,							\
     nopy,								\
     nopz,								\
     nboun,								\
-    nboun_g,							\
+    nboun_g,								\
     elem,								\
-    EL_NODES,							\
-    NBDY_FACES,							\
-    NBDY_EDGES,							\
+    EL_NODES,								\
     i,									\
     j,									\
     k,									\
     iel,								\
     ipoin,								\
     status,								\
-    readgeo_flg,						\
-    line_cntr,							\
+    readgeo_flg,							\
+    line_cntr,								\
     cntr,								\
     count,								\
     len,								\
-    isigned,							\
+    isigned,								\
     endian,								\
-    mpiprocs,							\
-    wordsize,							\
+    mpiprocs,								\
+    wordsize,								\
     lMETIS,								\
-    lCART,                              \
+    lCART,								\
     lread_external_grid;
 
 /*
@@ -139,15 +139,15 @@ int							\
 
 char								    	\
 *inputfile,								\
-    *external_grid_file_name,               \
+    *external_grid_file_name,						\
     *print_alya,							\
     *print_vtk,								\
     *print_gmsh,							\
-    *fname,								    \
+    *fname,								\
     *input_inp,								\
-    *outfile_msh_vtk,						\
-    *outfile_msh_gmsh,						\
-    *outfile_msh_alya,						\
+    *outfile_msh_vtk,							\
+    *outfile_msh_gmsh,							\
+    *outfile_msh_alya,							\
     *problem[PROB_ENTRIES];
 
 /*

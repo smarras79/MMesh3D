@@ -105,7 +105,18 @@ int MEMORY_ALLOCATE(int flag)
 	    printf(" # \t\t y[nnodesx+1][nnodesy+1][nnodesz+1]\n");
 	    printf(" # \t\t z[nnodesx+1][nnodesy+1][nnodesz+1]\n");
 	}
-  
+    if(flag == 5)
+	{
+	    CONN_BDY_FACES = imatrix(0,nbdy_faces,0, ((nop+1)^2)); //For hexa only for now
+	    for(int ibdy_face=0; ibdy_face<=nbdy_faces; ibdy_face++){
+		for(inode=0; inode<((nop+1)^2) - 4; inode++){
+		    CONN_BDY_FACES[ibdy_face][inode] = 0;
+		}
+	    }
+	    
+	    printf(" # Memory allocated (flag 5): CONN_BDY_EDGES[nbdy_faces][(nop+1)^2]\n");
+	}
+    
     return 0;
 }
 
@@ -173,7 +184,13 @@ int MEMORY_DEALLOCATE(int flag)
 	    printf(" # \t\t free(z)\n");
 	    
 	}
-
+    if(flag == 5)
+	{
+	    free_imatrix(CONN_BDY_FACES, 0,nbdy_faces,0, ((nop+1)^2)); //For hexa only for now
+	    printf(" # Freed memory (flag 5):\n");
+	    printf(" # \t\t free(CONN_BDY_FACE)\n");
+	}
+    
     return 0;    
 }
 

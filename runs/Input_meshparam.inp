@@ -4,6 +4,10 @@ PROBLEM:
  name:             cube
 END_PROBLEM
 
+READ_EXTERNAL_GRID
+ read_GMSH          ./gmsh_grids/small.msh
+END_READ_EXTERNAL_GRID
+
 PROBLEM_DEFINITION:
  Meshing_scheme:      TFI
  Element_types:       HEXA
@@ -48,6 +52,4 @@ END_OUTPUT_FILESs
 
 #END_INPUT_FILE.inp
 
-READ_EXTERNAL_GRID
- read_GMSH          ./gmsh_grids/hexa_UNSTR_yassine_test.msh
-END_READ_EXTERNAL_GRID
+$$$ read_GMSH          ./gmsh_grids/hexa_UNSTR_yassine_test.msh
