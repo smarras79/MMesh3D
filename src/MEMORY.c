@@ -187,8 +187,7 @@ int MEMORY_DEALLOCATE(int flag)
     if(flag == 5)
 	{
 	    free_imatrix(CONN_BDY_FACES, 0,nbdy_faces,0, ((nop+1)^2)); //For hexa only for now
-	    printf(" # Freed memory (flag 5):\n");
-	    printf(" # \t\t free(CONN_BDY_FACE)\n");
+	    printf(" # Freed memory (flag 5): free(CONN_BDY_FACE)\n");
 	}
     
     return 0;    

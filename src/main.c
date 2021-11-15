@@ -151,19 +151,19 @@ int main(int argc, char** argv) {
 	 * Write output to file (VTK, ALYA, etc.)
 	 *************************************************************************************/
 	//apply_smoothing();
-	//WRITE_OUTPUT(irank);	   
+	WRITE_OUTPUT(irank);	   
 	
 	/*****************************************************
 	 * Free memory
 	 *****************************************************/
-	printf(" #------------------------------------------------------------------#\n");	
-	MEMORY_DEALLOCATE(5);
+	printf(" #------------------------------------------------------------------#\n");
 	MEMORY_DEALLOCATE(1);
 	MEMORY_DEALLOCATE(2);
 	MEMORY_DEALLOCATE(0);
+	if (lread_external_grid == 1)
+	    MEMORY_DEALLOCATE(5);
 	printf(" #------------------------------------------------------------------#\n");
     }
-    
     
     // Finalize the MPI environment.
     MPI_Finalize();

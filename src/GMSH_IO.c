@@ -654,14 +654,11 @@ void gmsh_size_read ( char *gmsh_filename, int *node_num, int *node_dim, int *el
 			    }
 			    if (count == 10) {
 				ibdy_face++;
-				printf(" # AAAA nbdy_faces = %d\n", ibdy_face);
 			    }
 			   
 			    if (count == 14) {
-				printf(" # BBB IELEM3D = %d\n", ielem3d);
 				ielem3d++;
 			    }
-			    printf(" # CCC count = %d %d\n", count, ielem3d);
 			}
 		}
 	}
