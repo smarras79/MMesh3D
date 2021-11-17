@@ -116,6 +116,17 @@ int MEMORY_ALLOCATE(int flag)
 	    
 	    printf(" # Memory allocated (flag 5): CONN_BDY_EDGES[nbdy_faces][(nop+1)^2]\n");
 	}
+    if(flag == 6)
+	{     
+	    FACE_in_ELEM = i3tensor(0,nelem-1, 0, 5, 0,1);
+	    conn_edge_el = i3tensor(0,nelem-1, 0,11, 0,1);
+	    conn_face_el = i3tensor(0,nelem-1, 0, 5, 0,3);
+	    
+	    printf(" # Memory allocated (flag 6):\n");
+	    printf(" # \t\t FACE_in_ELEM[nelem][12][2]\n");
+	    printf(" # \t\t conn_edge_el[nelem][12][2]\n");
+	    printf(" # \t\t conn_face_el[nelem][6][4]\n");
+	}
     
     return 0;
 }
@@ -145,7 +156,6 @@ int MEMORY_DEALLOCATE(int flag)
 	}
     if(flag == 1)
 	{
-      
 	    free_dvector(parameters,0,NUMBER_OF_PARAMETERS);
 	    free_dvector(COORDS1d,  0,nnodes*(nsd+1));
 	    free_ivector(ELTYPE,    0,nelem+1);
@@ -188,6 +198,17 @@ int MEMORY_DEALLOCATE(int flag)
 	{
 	    free_imatrix(CONN_BDY_FACES, 0,nbdy_faces,0, ((nop+1)^2)); //For hexa only for now
 	    printf(" # Freed memory (flag 5): free(CONN_BDY_FACE)\n");
+	}
+    if(flag == 6)
+	{  	   
+	    free_i3tensor(FACE_in_ELEM,  0,nelem-1, 0, 5, 0,1);
+	    free_i3tensor(conn_edge_el,  0,nelem-1, 0,11, 0,1);
+	    free_i3tensor( conn_face_el, 0,nelem-1, 0, 5, 0,3);
+	     
+	    printf(" # Freed memory (flag 6):\n");
+	    printf(" # \t\t free(FACE_in_ELEM)\n");
+	    printf(" # \t\t free(conn_edge_el)\n");
+	    printf(" # \t\t free(conn_face_el)\n");
 	}
     
     return 0;    

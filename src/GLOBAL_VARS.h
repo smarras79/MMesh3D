@@ -61,6 +61,7 @@ nnodesx_obs,							\
     obs_wS,								\
     nnodes_g,								\
     nnodes,								\
+    nnodes_sem,								\
     nnodesx,								\
     nnodesy,								\
     nnodesz,								\
@@ -131,10 +132,14 @@ double						\
     ***y,					\
     ***z;
 
-int							\
-**CONN,							\
-    **CONN_BDY_EDGES,					\
-    **CONN_BDY_FACES,					\
+int								\
+**CONN,								\
+    **CONN_BDY_EDGES,						\
+    **CONN_BDY_FACES,						\
+    ***conn_edge_el,						\
+    ***conn_face_el,						\
+    ***conn_face_edge_el,					\
+    ***FACE_in_ELEM,						\
     *ELTYPE;
 
 char								    	\

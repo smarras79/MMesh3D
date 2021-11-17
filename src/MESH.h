@@ -36,15 +36,25 @@ typedef struct {
 
     double **coords;   //coords[npoints][nsd]
     int    **conn;     //conn[nelem][ngl^3]
-    int     *elements; //Array of elements
 
     int    **ElCornerNodes; //element connectivity of corner nodes: ElCornerNodes[nelem][2^{nsd}]
     int    **ElEdges;       //element connectivity of edges:        ElEdges[nelem][]
-    size_t nelem;
-
-    
+    size_t nelem;    
     
 } st_mesh;
+
+struct st_mesh {
+    
+    double *coords;   //coords[npoints][nsd]
+    int    *conn;     //conn[nelem][ngl^3]
+
+    int    **ElCornerNodes; //element connectivity of corner nodes: ElCornerNodes[nelem][2^{nsd}]
+    int    **ElEdges;       //element connectivity of edges:        ElEdges[nelem][]
+    size_t nelem;    
+    
+};
+struct st_mesh mesh;
+
 
 
 /*typedef struct {

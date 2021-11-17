@@ -145,6 +145,14 @@ int main(int argc, char** argv) {
 
 	} else {
 	    GMSH_IO(external_grid_file_name);
+
+	    CGNS_ORDERING(CONN, nelem);
+	    BUILD_EDGES(CONN, nelem);
+
+	    ADD_HIGH_ORDER_NODES();
+
+	    
+	    MEMORY_DEALLOCATE(6);
 	} //END reading external grid
 	
 	/*************************************************************************************
