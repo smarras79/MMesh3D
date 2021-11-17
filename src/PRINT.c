@@ -174,6 +174,28 @@ void VIEW_i2DMAT(char *mat_name, int **A, int min_rows, int max_rows, int min_co
     return;
 }
 
+void VIEW_i3DMAT(char *mat_name, int ***A, int min_rows, int max_rows, int min_cols, int max_cols, int min_depth, int max_depth)
+{
+    //Function to view a matrix of integers
+    int i,j;
+	
+    printf("%s \n", mat_name);
+    
+    for(int k=min_depth; k<=max_depth; k++){
+	for(int i=min_cols; i<=max_cols; i++){
+	    for(int j=0; j<=8; j++){
+		printf(" %d", i);
+	    }
+	    printf("\n");
+	}
+	printf("\n");
+    }
+    
+
+		
+    return;
+}
+
 void VIEW_fVECT(char *vect_name, float *V, int min_rows, int max_rows)
 {
     //Function to view a 1D array of doubles

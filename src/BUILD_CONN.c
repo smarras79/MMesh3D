@@ -12,6 +12,7 @@
 #include "MEMORY.h"
 #include "MYDEFINE.h"
 #include "NRUTIL.h"
+#include "PRINT.h"
 #include "SURFACES.h"
 
 //BDY CODES for boundary edges:
@@ -76,6 +77,9 @@ int BUILD_EDGES(int **CONN, int nelem)
     int iface       = 0;
     int iedge;
     int NORTH, SOUTH, EAST, WEST, BOTT, TOP;
+
+    
+    VIEW_i2DMAT("CNNNNNNNNN", CONN, 0, nelem-1, 0, 7);
     
     MEMORY_ALLOCATE(6);
     
@@ -197,6 +201,8 @@ int BUILD_EDGES(int **CONN, int nelem)
     /*
      * sort by 3rd dimension
      */
+    
+    
     int conn_face_el_sort[nelem][6][4];
     int AUXI[5];
     for (int i=0; i<nelem; i++) {
@@ -219,7 +225,6 @@ int BUILD_EDGES(int **CONN, int nelem)
     iface = 0;
     for(iel = 0; iel<nelem; iel++) {
 	for(int jel = 0; jel<nelem; jel++) {
-		
 
 	    if(     conn_face_el_sort[iel][BOTT][0] == conn_face_el_sort[jel][TOP][0] && \
 		    conn_face_el_sort[iel][BOTT][1] == conn_face_el_sort[jel][TOP][1] && \
@@ -345,7 +350,6 @@ int BUILD_EDGES(int **CONN, int nelem)
 	    }
 	}
     }
-
     
     /*
      * Set repeated entries of CONN_EDGE_tmp to -1:
