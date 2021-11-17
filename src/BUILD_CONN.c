@@ -11,6 +11,7 @@
 #include "GLOBAL_VARS.h"
 #include "MEMORY.h"
 #include "MYDEFINE.h"
+#include "NRUTIL.h"
 #include "SURFACES.h"
 
 //BDY CODES for boundary edges:
@@ -192,62 +193,82 @@ int BUILD_EDGES(int **CONN, int nelem)
 	    }
 	}
     }
-	    
-    //conn_face_el_sort = sort(conn_face_el,3);
-    iface = 1;
-    for(iel = 0; iel<nelem; iel++)
-	{
-	    for(int jel = 0; jel<nelem; jel++)
-		{
+    
+    /*
+     * sort by 3rd dimension
+     */
+    int conn_face_el_sort[nelem][6][4];
+    int AUXI[5];
+    for (int i=0; i<nelem; i++) {
+	for (int j=0; j<6; j++) {
+	    for (int k=0; k<4; k++) {
+		int kk = k + 1;
+		AUXI[kk] = conn_face_el[i][j][k];
+	    }
+	    isort(4, AUXI);
+	    for (int k=0; k<4; k++) {
+		int kk = k + 1;
+		conn_face_el_sort[i][j][k] = AUXI[kk];
+		    printf(" %d\n", conn_face_el_sort[i][j][k]);
+	    } printf("\n");
+	}
+    }
+    //END sorting 
+    
 
-		    if(     conn_face_el[iel][BOTT][0] == conn_face_el[jel][TOP][0] && \
-			    conn_face_el[iel][BOTT][1] == conn_face_el[jel][TOP][1] && \
-			    conn_face_el[iel][BOTT][2] == conn_face_el[jel][TOP][2] && \
-			    conn_face_el[iel][BOTT][3] == conn_face_el[jel][TOP][3])
-			{			
-			    FACE_in_ELEM[iel][BOTT][0] = iel;
-			    FACE_in_ELEM[iel][BOTT][1] = jel;
+    iface = 0;
+    for(iel = 0; iel<nelem; iel++) {
+	for(int jel = 0; jel<nelem; jel++) {
+		
+
+	    if(     conn_face_el_sort[iel][BOTT][0] == conn_face_el_sort[jel][TOP][0] && \
+		    conn_face_el_sort[iel][BOTT][1] == conn_face_el_sort[jel][TOP][1] && \
+		    conn_face_el_sort[iel][BOTT][2] == conn_face_el_sort[jel][TOP][2] && \
+		    conn_face_el_sort[iel][BOTT][3] == conn_face_el_sort[jel][TOP][3])
+		{			
+		    FACE_in_ELEM[iel][BOTT][0] = iel;
+		    FACE_in_ELEM[iel][BOTT][1] = jel;
 				
-			    FACE_in_ELEM[jel][TOP][0] = jel;
-			    FACE_in_ELEM[jel][TOP][1] = iel;
+		    FACE_in_ELEM[jel][TOP][0] = jel;
+		    FACE_in_ELEM[jel][TOP][1] = iel;
 				
-			    //fprintf(' SHARED FACE:  face %d of ELEMENT %d is shared with face %d of ELEMENT %d\n'][BOTT][iel][TOP][jel];
+		    //fprintf(' SHARED FACE:  face %d of ELEMENT %d is shared with face %d of ELEMENT %d\n'][BOTT][iel][TOP][jel];
 				
-			    iface = iface + 1;
+		    iface = iface + 1;
 			
-			} else if (conn_face_el[iel][EAST][0] == conn_face_el[jel][WEST][0] && \
-				   conn_face_el[iel][EAST][1] == conn_face_el[jel][WEST][1] && \
-				   conn_face_el[iel][EAST][2] == conn_face_el[jel][WEST][2] && \
-				   conn_face_el[iel][EAST][3] == conn_face_el[jel][WEST][3])
-			{
+		} else if (conn_face_el_sort[iel][EAST][0] == conn_face_el_sort[jel][WEST][0] && \
+			   conn_face_el_sort[iel][EAST][1] == conn_face_el_sort[jel][WEST][1] && \
+			   conn_face_el_sort[iel][EAST][2] == conn_face_el_sort[jel][WEST][2] && \
+			   conn_face_el_sort[iel][EAST][3] == conn_face_el_sort[jel][WEST][3])
+		{
 			
-			    FACE_in_ELEM[iel][EAST][0] = iel;
-			    FACE_in_ELEM[iel][EAST][1] = jel;
+		    FACE_in_ELEM[iel][EAST][0] = iel;
+		    FACE_in_ELEM[iel][EAST][1] = jel;
 			
-			    FACE_in_ELEM[jel][WEST][0] = jel;
-			    FACE_in_ELEM[jel][WEST][1] = iel;
+		    FACE_in_ELEM[jel][WEST][0] = jel;
+		    FACE_in_ELEM[jel][WEST][1] = iel;
 			
-			    //fprintf(' SHARED FACE:  face %d of ELEMENT %d is shared with face %d of ELEMENT %d\n'][EAST][iel][WEST][jel];
+		    //fprintf(' SHARED FACE:  face %d of ELEMENT %d is shared with face %d of ELEMENT %d\n'][EAST][iel][WEST][jel];
 			
-			    iface = iface + 1;
+		    iface = iface + 1;
 			
-			} else if  (conn_face_el[iel][SOUTH][0] == conn_face_el[jel][NORTH][0] && \
-				    conn_face_el[iel][SOUTH][1] == conn_face_el[jel][NORTH][1] && \
-				    conn_face_el[iel][SOUTH][2] == conn_face_el[jel][NORTH][2] && \
-				    conn_face_el[iel][SOUTH][3] == conn_face_el[jel][NORTH][3])
-			{
+		} else if  (conn_face_el_sort[iel][SOUTH][0] == conn_face_el_sort[jel][NORTH][0] && \
+			    conn_face_el_sort[iel][SOUTH][1] == conn_face_el_sort[jel][NORTH][1] && \
+			    conn_face_el_sort[iel][SOUTH][2] == conn_face_el_sort[jel][NORTH][2] && \
+			    conn_face_el_sort[iel][SOUTH][3] == conn_face_el_sort[jel][NORTH][3])
+		{
 			
-			    FACE_in_ELEM[iel][SOUTH][0] = iel;
-			    FACE_in_ELEM[iel][SOUTH][1] = jel;
+		    FACE_in_ELEM[iel][SOUTH][0] = iel;
+		    FACE_in_ELEM[iel][SOUTH][1] = jel;
 			
-			    FACE_in_ELEM[jel][NORTH][0] = jel;
-			    FACE_in_ELEM[jel][NORTH][1] = iel;
+		    FACE_in_ELEM[jel][NORTH][0] = jel;
+		    FACE_in_ELEM[jel][NORTH][1] = iel;
 			
-			    //fprintf(' SHARED FACE:  face %d of ELEMENT %d is shared with face %d of ELEMENT %d\n', SOUTH, iel, NORTH, jel];
-			    iface = iface + 1;
-			}
+		    //fprintf(' SHARED FACE:  face %d of ELEMENT %d is shared with face %d of ELEMENT %d\n', SOUTH, iel, NORTH, jel];
+		    iface = iface + 1;
 		}
 	}
+    }
 		    
     int nint_faces        = iface - 1;
     int nfaces            = nint_faces + nbdy_faces;
@@ -289,23 +310,24 @@ int BUILD_EDGES(int **CONN, int nelem)
 	}
     }
     
-    int NFACE_all = IFACE_all - 1;
+    int nface_all = iface_all - 1;
     int REPEATED_auxi[nfaces][2];
-    int FACE_MULTIPLICITY_auxi[NFACE_all];
+    int REPEATED_index[nface_all];
+    int FACE_MULTIPLICITY_auxi[nface_all];
     for (int i=0; i<nfaces; i++) {
 	REPEATED_auxi[i][0] = -1;
 	REPEATED_auxi[i][1] = -1;
     }    
-    for (int i=0; i<NFACE_all; i++) {
+    for (int i=0; i<nface_all; i++) {
 	FACE_MULTIPLICITY_auxi[i] = 0;
     }
 
-    IFACE_repeated = 0;
-    ifac           = 1;
-    krepeated      = 0;
-    for (int i=0; i<NFACE_all; i++) {
+    int iface_repeated = 0;
+    int ifac           = 1;
+    int krepeated      = 0;
+    for (int i=0; i<nface_all; i++) {
 	int multiplicity = 0;
-	for (int j=i; j<NFACE_all; j++) {
+	for (int j=i; j<nface_all; j++) {
 		
 	    if (j != i) {
 		if ((CONN_FACE_all[i][0] == CONN_FACE_all[j][0] &&	\
@@ -330,13 +352,65 @@ int BUILD_EDGES(int **CONN, int nelem)
      */
     int nrepeated = krepeated;
     for (int i=0; i<nrepeated; i++) {
-	irepeated_index = REPEATED_index[i];
+	int irepeated_index = REPEATED_index[i];
 	
-	CONN_FACE_all(irepeated_index, 1) = -1;
-	CONN_FACE_all(irepeated_index, 2) = -1;
-	CONN_FACE_all(irepeated_index, 3) = -1;
-	CONN_FACE_all(irepeated_index, 4) = -1;
-end
+	CONN_FACE_all[irepeated_index][0] = -1;
+	CONN_FACE_all[irepeated_index][1] = -1;
+	CONN_FACE_all[irepeated_index][2] = -1;
+	CONN_FACE_all[irepeated_index][3] = -1;
+    }
+
+    
+    /*
+     * STORE EACH FACE into CONN_FACE(1:`, 1:4):
+     */
+    ifac = 0;
+    int FACE_MULTIPLICITY[nface_all]; //overallocated
+    for (int iface_all=0; iface_all<nface_all; iface_all++) {
+	if (CONN_FACE_all[iface_all][0] > 0) {
+	    
+	    CONN_FACE[ifac][0] = CONN_FACE_all[iface_all][0];
+	    CONN_FACE[ifac][1] = CONN_FACE_all[iface_all][1];
+	    CONN_FACE[ifac][2] = CONN_FACE_all[iface_all][2];
+	    CONN_FACE[ifac][3] = CONN_FACE_all[iface_all][3];
+	    /*
+	      FACE_MULTIPLICITY[ifac] = FACE_MULTIPLICITY_auxi[iface_all];
+	    */
+	    // FACE_in_ELEM[ifac][0] = FACE_in_ELEM[iface_all][0];
+	    // FACE_in_ELEM[ifac][1] = FACE_in_ELEM[iface_all][1];
+	    
+	    ifac = ifac + 1;
+	}
+    }
+    
+    printf(" NELEM %d. nface_all %d %d %d", nelem, nface_all, ifac, nfaces);
+    exit(1);
+    /*for (int iface=0; iface<nfaces; iface++) {
+	printf(" CONN_FACE(%d,1:4) = %d %d %d %d, has multiplicity %d\n", iface, CONN_FACE[iface][0], CONN_FACE[iface][1], CONN_FACE[iface][2], CONN_FACE[iface][3], FACE_MULTIPLICITY[iface]);
+	}*/
+
+    /*--------------------------------------------------------------------------
+     * Populate FACE_LtoG(1:NEL,1:6) OK
+     *--------------------------------------------------------------------------*
+    for (int iface=0; iface<nfaces; iface++) {
+	for (int iel=0; iel<nelem; iel++) {
+	    for (int iface=0; iface<6; iface++) {
+		
+		if ( (  CONN_FACE[iface][0] == conn_face_el[iel][iface][0] && \
+			CONN_FACE[iface][1] == conn_face_el[iel][iface][1] && \
+			CONN_FACE[iface][2] == conn_face_el[iel][iface][2] && \
+			CONN_FACE[iface][3] == conn_face_el[iel][iface][3]) ) {
+			    
+			    FACE_LtoG[iel][iface] = iface;
+			    //%fprintf('  --- FACE_LtoG(%d,%d) = %d -> (%d %d %d %d) \n', iel, iface, FACE_LtoG(iel, iface), conn_face_el_sort[iel][iface][0], \
+			    //	%conn_face_el_sort[iel][iface][1], \
+			    //	%conn_face_el_sort[iel][iface][2], \
+			    //	%conn_face_el_sort[iel][iface][3]);
+		}
+	    }
+	}
+	}*/
+    
     
     return 0;
 }

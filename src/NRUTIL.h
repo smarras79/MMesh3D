@@ -43,6 +43,11 @@ static int iminarg1,iminarg2;
 
 #if defined(__STDC__) || defined(ANSI) || defined(NRANSI) /* ANSI */
 
+
+//void sort(unsigned long n, float arr[]);
+void isort(unsigned long n, int *arr);
+void sort(unsigned long n, float *arr);
+
 /* Taken from: NASA web: http://coding.jpl.nasa.gov/~hamkins/source_code/C/utility/sort.c*/
 void locate(float xx[], unsigned long n, float x, unsigned long *j);
 

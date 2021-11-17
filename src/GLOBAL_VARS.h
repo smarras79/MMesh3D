@@ -140,6 +140,7 @@ int								\
     ***conn_face_el,						\
     ***conn_face_edge_el,					\
     ***FACE_in_ELEM,						\
+    **FACE_LtoG,						\
     *ELTYPE;
 
 char								    	\

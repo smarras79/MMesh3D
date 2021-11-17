@@ -5,7 +5,7 @@ PROBLEM:
 END_PROBLEM
 
 READ_EXTERNAL_GRID
- read_GMSH          ./gmsh_grids/cav3d-2x2-nop1.msh
+ read_GMSH          ./gmsh_grids/cav3dCoarse.2x2elems-linear.msh
 END_READ_EXTERNAL_GRID
 
 PROBLEM_DEFINITION:

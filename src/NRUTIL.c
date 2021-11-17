@@ -6,18 +6,156 @@
 #include <string.h>
 #include <stdio.h>
 #include <math.h>
-#include "nrutil.h"
+#include "NRUTIL.h"
 #define NR_END 1
 #define FREE_ARG char*
 #define NRANSI
 
+#define SWAP(a,b) temp=(a);(a)=(b);(b)=temp;
+#define M 7
+#define NSTACK 50
+
+
+void isort(unsigned long n, int *arr) {
+    
+    /*Sorts an array arr[1..n] into ascending numerical order using the Quicksort algorithm. n is
+      input; arr is replaced on output by its sorted rearrangement.*/
+    
+    unsigned long i,ir=n,j,k,l=1,*istack;
+    int jstack=0;
+    int a,temp;
+    istack=lvector(1,NSTACK);
+    for (;;) { //Insertion sort when subarray small enough.
+	if (ir-l < M) {
+	    for (j=l+1;j<=ir;j++) {
+		a=arr[j];
+		for (i=j-1;i>=l;i--) {
+		    if (arr[i] <= a) break;
+		    arr[i+1]=arr[i];
+
+		}
+		arr[i+1]=a;
+	    }
+	    if (jstack == 0) break;
+	    ir=istack[jstack--]; //Pop stack and begin a new round of partitioning.
+	    l =istack[jstack--]; 
+	} else {
+	    k=(l+ir) >> 1; //Choose median of left, center,
+	    //and right elements as partitioning element a. Also
+	    //rearrange so that a[l] <= a[l+1] <= a[ir].
+	    SWAP(arr[k],arr[l+1]);
+	    if (arr[l] > arr[ir]) {
+		SWAP(arr[l],arr[ir]);
+	    }
+	    if (arr[l+1] > arr[ir]) {
+		SWAP(arr[l+1],arr[ir]);
+	    }
+	    if (arr[l] > arr[l+1]) {
+		SWAP(arr[l],arr[l+1]);
+	    }
+	    i=l+1; //Initialize pointers for partitioning.
+	    j=ir;
+	    a=arr[l+1]; //Partitioning element.
+	    for (;;) { //Beginning of innermost loop.
+		do i++; while (arr[i] < a); //Scan up to find element > a.
+		do j--; while (arr[j] > a); //Scan down to find element < a.
+		if (j < i) break; //Pointers crossed. Partitioning complete.
+		SWAP(arr[i],arr[j]); //Exchange elements.
+	    } //End of innermost loop.
+	    arr[l+1]=arr[j]; //Insert partitioning element.
+	    arr[j]=a;
+	    jstack += 2;
+	    //Push pointers to larger subarray on stack, process smaller subarray immediately.
+	    if (jstack > NSTACK) nrerror("NSTACK too small in sort.");
+	    if (ir-i+1 >= j-l) {
+		istack[jstack]=ir;
+		istack[jstack-1]=i;
+		ir=j-1;
+	    } else {
+		istack[jstack]=j-1;
+		istack[jstack-1]=l;
+		l=i;
+	    }
+	}
+    }
+    free_lvector(istack,1,NSTACK);
+}
+
+
+//void sort(unsigned long n, float arr[]) {
+void sort(unsigned long n, float *arr) {
+    
+    /*Sorts an array arr[1..n] into ascending numerical order using the Quicksort algorithm. n is
+      input; arr is replaced on output by its sorted rearrangement.*/
+    
+    unsigned long i,ir=n,j,k,l=1,*istack;
+    int jstack=0;
+    float a,temp;
+    istack=lvector(1,NSTACK);
+    for (;;) { //Insertion sort when subarray small enough.
+	if (ir-l < M) {
+	    for (j=l+1;j<=ir;j++) {
+		a=arr[j];
+		for (i=j-1;i>=l;i--) {
+		    if (arr[i] <= a) break;
+		    arr[i+1]=arr[i];
+
+		}
+		arr[i+1]=a;
+	    }
+	    if (jstack == 0) break;
+	    ir=istack[jstack--]; //Pop stack and begin a new round of partitioning.
+	    l =istack[jstack--]; 
+	} else {
+	    k=(l+ir) >> 1; //Choose median of left, center,
+	    //and right elements as partitioning element a. Also
+	    //rearrange so that a[l] <= a[l+1] <= a[ir].
+	    SWAP(arr[k],arr[l+1]);
+	    if (arr[l] > arr[ir]) {
+		SWAP(arr[l],arr[ir]);
+	    }
+	    if (arr[l+1] > arr[ir]) {
+		SWAP(arr[l+1],arr[ir]);
+	    }
+	    if (arr[l] > arr[l+1]) {
+		SWAP(arr[l],arr[l+1]);
+	    }
+	    i=l+1; //Initialize pointers for partitioning.
+	    j=ir;
+	    a=arr[l+1]; //Partitioning element.
+	    for (;;) { //Beginning of innermost loop.
+		do i++; while (arr[i] < a); //Scan up to find element > a.
+		do j--; while (arr[j] > a); //Scan down to find element < a.
+		if (j < i) break; //Pointers crossed. Partitioning complete.
+		SWAP(arr[i],arr[j]); //Exchange elements.
+	    } //End of innermost loop.
+	    arr[l+1]=arr[j]; //Insert partitioning element.
+	    arr[j]=a;
+	    jstack += 2;
+	    //Push pointers to larger subarray on stack, process smaller subarray immediately.
+	    if (jstack > NSTACK) nrerror("NSTACK too small in sort.");
+	    if (ir-i+1 >= j-l) {
+		istack[jstack]=ir;
+		istack[jstack-1]=i;
+		ir=j-1;
+	    } else {
+		istack[jstack]=j-1;
+		istack[jstack-1]=l;
+		l=i;
+	    }
+	}
+    }
+    free_lvector(istack,1,NSTACK);
+}
+
+
 void nrerror(char error_text[])
 /* Numerical Recipes standard error handler */
 {
-	fprintf(stderr,"Numerical Recipes run-time error...\n");
-	fprintf(stderr,"%s\n",error_text);
-	fprintf(stderr,"...now exiting to system...\n");
-	exit(1);
+    fprintf(stderr,"Numerical Recipes run-time error...\n");
+    fprintf(stderr,"%s\n",error_text);
+    fprintf(stderr,"...now exiting to system...\n");
+    exit(1);
 }
 
 /* locate(): Taken from: NASA web: http://coding.jpl.nasa.gov/~hamkins/source_code/C/utility/sort.c
@@ -27,16 +165,16 @@ void nrerror(char error_text[])
  * is out of range. */
 void locate(float xx[], unsigned long n, float x, unsigned long *j)
 {
-   unsigned long ju,jm,jl;
-   int ascnd;
+    unsigned long ju,jm,jl;
+    int ascnd;
 
-   jl=0; /* Initialize lower */
-   ju=n+1; /* and upper limits. */
-   ascnd=(xx[n] >= xx[1]);
-   while (ju-jl > 1) { /* If we are not yet done, */
-      jm=(ju+jl) >> 1; /* compute a midpoint, */
-      if ((x >= xx[jm]) == ascnd)
-         jl=jm; /* and replace either the lower limit */
+    jl=0; /* Initialize lower */
+    ju=n+1; /* and upper limits. */
+    ascnd=(xx[n] >= xx[1]);
+    while (ju-jl > 1) { /* If we are not yet done, */
+	jm=(ju+jl) >> 1; /* compute a midpoint, */
+	if ((x >= xx[jm]) == ascnd)
+	    jl=jm; /* and replace either the lower limit */
       else
          ju=jm; /* or the upper limit, as appropriate. */
    } /* Repeat until the test condition is satisfied. */
