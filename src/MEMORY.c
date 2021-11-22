@@ -107,14 +107,14 @@ int MEMORY_ALLOCATE(int flag)
 	}
     if(flag == 5)
 	{
-	    CONN_BDY_FACES = imatrix(0,nbdy_faces,0, ((nop+1)^2)); //For hexa only for now
+	    CONN_BDY_FACES = imatrix(0,nbdy_faces, 0,(nop+1)*(nop+1)); //For hexa only for now
 	    for(int ibdy_face=0; ibdy_face<=nbdy_faces; ibdy_face++){
-		for(inode=0; inode<((nop+1)^2) - 4; inode++){
+		for(inode=0; inode<((nop+1)*(nop+1)); inode++){
 		    CONN_BDY_FACES[ibdy_face][inode] = 0;
 		}
 	    }
 	    
-	    printf(" # Memory allocated (flag 5): CONN_BDY_EDGES[nbdy_faces][(nop+1)^2]\n");
+	    printf(" # Memory allocated (flag 5): CONN_BDY_EDGES[nbdy_faces][(nop+1)*(nop+1)]\n");
 	}
     if(flag == 6)
 	{
@@ -128,6 +128,16 @@ int MEMORY_ALLOCATE(int flag)
 	    printf(" # \t\t FACE_in_ELEM[nelem][12][2]\n");
 	    printf(" # \t\t conn_edge_el[nelem][12][2]\n");
 	    printf(" # \t\t conn_face_el[nelem][6][4]\n");
+	}
+    if(flag == 7)
+	{
+	    CONN_FACE = imatrix(0,nfaces, 0, (nop+1)*(nop+1)); //For hexa only for now
+	    for(int iface=0; iface<nfaces; iface++){
+		for(int inode=0; inode<((nop+1)*(nop+1)); inode++){
+		    CONN_FACE[iface][inode] = 0;
+		}
+	    }
+	    printf(" # Memory allocated (flag 7): CONN_FACES[%d][%d]\n", nfaces, (nop+1)*(nop+1));
 	}
     
     return 0;
@@ -147,7 +157,7 @@ int MEMORY_DEALLOCATE(int flag)
 	    free(fname);
 	    free(input_inp);
   
-  		free(external_grid_file_name);
+	    free(external_grid_file_name);
 	    free(outfile_msh_vtk);
 	    free(outfile_msh_alya);
   
@@ -198,7 +208,7 @@ int MEMORY_DEALLOCATE(int flag)
 	}
     if(flag == 5)
 	{
-	    free_imatrix(CONN_BDY_FACES, 0,nbdy_faces,0, ((nop+1)^2)); //For hexa only for now
+	    free_imatrix(CONN_BDY_FACES, 0,nbdy_faces, 0,((nop+1)*(nop+1))); //For hexa only for now
 	    printf(" # Freed memory (flag 5): free(CONN_BDY_FACE)\n");
 	}
     if(flag == 6)
@@ -214,7 +224,12 @@ int MEMORY_DEALLOCATE(int flag)
 	    printf(" # \t\t free(conn_edge_el)\n");
 	    printf(" # \t\t free(conn_face_el)\n");
 	}
-    
+     if(flag == 7)
+	{
+	    free_imatrix(CONN_FACE, 0,nfaces, 0,((nop+1)*(nop+1))); //For hexa only for now
+	    printf(" # Freed memory (flag 7): free(CONN_FACE)\n");
+	}
+     
     return 0;    
 }
 

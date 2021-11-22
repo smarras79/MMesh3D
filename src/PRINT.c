@@ -179,20 +179,17 @@ void VIEW_i3DMAT(char *mat_name, int ***A, int min_rows, int max_rows, int min_c
     //Function to view a matrix of integers
     int i,j;
 	
-    printf("%s \n", mat_name);
-    
-    for(int k=min_depth; k<=max_depth; k++){
-	for(int i=min_cols; i<=max_cols; i++){
-	    for(int j=0; j<=8; j++){
-		printf(" %d", i);
+    printf("%s \n", mat_name);    
+    for(int i=min_rows; i<=max_rows; i++){
+	for(int j=min_cols; j<=max_cols; j++){
+	    for(int k=min_depth; k<=max_depth; k++){
+		printf(" %d", A[i][j][k]);
 	    }
 	    printf("\n");
 	}
 	printf("\n");
     }
     
-
-		
     return;
 }
 

@@ -3,7 +3,9 @@
  */
 
 #define nsd                   3
+
 #define HEXA                  8
+#define NELFACES              6
 #define WEDGE                 6
 
 #define PROB_ENTRIES         14
@@ -26,3 +28,4 @@
 
 /* Physical quantities */
 #define earth_radius        6.37122e+6
+#define earth_gravity       9.81

@@ -3,5 +3,5 @@
 
 #include <stdbool.h>
 bool AlmostEqual(double a, double b);
-
+bool iAlmostEqual(int a, int b);
 #endif

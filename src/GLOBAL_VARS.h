@@ -70,6 +70,7 @@ nnodesx_obs,							\
     nz,									\
     nelem,								\
     nelem_g,								\
+    nfaces,								\
     nbdy_faces,								\
     nbdy_edges,								\
     nelx,								\
@@ -134,6 +135,7 @@ double						\
 
 int								\
 **CONN,								\
+    **CONN_FACE,						\
     **CONN_BDY_EDGES,						\
     **CONN_BDY_FACES,						\
     ***conn_edge_el,						\

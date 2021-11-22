@@ -430,11 +430,11 @@ void gmsh_data_read ( char *gmsh_filename, int node_dim, int node_num, int eleme
       printf(" GMSH_IO.c: nelem %d # CONN[%d] = %d %d %d %d %d %d %d %d\n", nelem, i+1, CONN[i][0], CONN[i][1], CONN[i][2], CONN[i][3], \
       CONN[i][4], CONN[i][5], CONN[i][6], CONN[i][7]);
       }
-
+    
       for (int i=0; i<nbdy_faces; i++){
       printf(" GMSH_IO.c: CONN_BDY_FACES[%d] = %d %d %d %d\n", i+1,  CONN_BDY_FACES[i][0], CONN_BDY_FACES[i][1], CONN_BDY_FACES[i][2], CONN_BDY_FACES[i][3]);
-      }*/
-    
+      }
+    */
     return;
  
 }

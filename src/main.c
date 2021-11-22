@@ -146,7 +146,7 @@ int main(int argc, char** argv) {
 	} else {
 	    GMSH_IO(external_grid_file_name);
 
-	    CGNS_ORDERING(CONN, nelem);
+	    //CGNS_ORDERING(CONN, nelem);
 	    BUILD_EDGES(CONN, nelem);
 	    
 	    ADD_HIGH_ORDER_NODES();
@@ -168,8 +168,10 @@ int main(int argc, char** argv) {
 	MEMORY_DEALLOCATE(1);
 	MEMORY_DEALLOCATE(2);
 	MEMORY_DEALLOCATE(0);
-	if (lread_external_grid == 1)
+	if (lread_external_grid == 1){	    
+	    MEMORY_DEALLOCATE(7);
 	    MEMORY_DEALLOCATE(5);
+	}
 	printf(" #------------------------------------------------------------------#\n");
     }
     

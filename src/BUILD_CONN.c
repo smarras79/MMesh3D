@@ -3,9 +3,9 @@
  *
  * Simone Marras, Aug 2012
  */
-
 #include <stdlib.h>
 
+#include "ALMOST_EQUAL.h"
 #include "BUILD_CONN.h"
 #include "GRID2CONN.h"
 #include "GLOBAL_VARS.h"
@@ -16,10 +16,17 @@
 #include "SURFACES.h"
 
 //BDY CODES for boundary edges:
-#define TOP_FLG   111;
-#define BOTT_FLG  222;
-#define LEFT_FLG  222;
-#define RIGHT_FLG 222;
+#define TOP_FLG   111
+#define BOTT_FLG  222
+#define LEFT_FLG  222
+#define RIGHT_FLG 222
+
+#define SOUTH 0
+#define NORTH 2
+#define EAST  1
+#define WEST  3
+#define BOTT  4
+#define TOP   5
 
 int BUILD_CONN(void)
 {
@@ -76,12 +83,16 @@ int BUILD_EDGES(int **CONN, int nelem)
     int ibdy_edge   = 0;
     int iface       = 0;
     int iedge;
-    int NORTH, SOUTH, EAST, WEST, BOTT, TOP;
-
     
-    VIEW_i2DMAT("CNNNNNNNNN", CONN, 0, nelem-1, 0, 7);
-    
+    /* Allocate conn_edge_el
+     * FACE_LtoG
+     * FACE_in_ELEM
+     * conn_edge_el
+     * conn_face_el
+     */
     MEMORY_ALLOCATE(6);
+
+    VIEW_i2DMAT("CONN", CONN, 0,nelem-1, 0,7);
     
     for (iel = 0; iel<nelem; iel++)
 	{
@@ -132,32 +143,31 @@ int BUILD_EDGES(int **CONN, int nelem)
 	 * Local faces node connectivity:
 	 * i.e. what nodes belong to a given local face in iel:
 	 */
-	SOUTH = 0; //south
 	conn_face_el[iel][SOUTH][0] = CONN[iel][0];
 	conn_face_el[iel][SOUTH][1] = CONN[iel][1];
 	conn_face_el[iel][SOUTH][2] = CONN[iel][5];
 	conn_face_el[iel][SOUTH][3] = CONN[iel][4];
-	NORTH = 2; //north
+
 	conn_face_el[iel][NORTH][0] = CONN[iel][2];
 	conn_face_el[iel][NORTH][1] = CONN[iel][3];
 	conn_face_el[iel][NORTH][2] = CONN[iel][7];
 	conn_face_el[iel][NORTH][3] = CONN[iel][6];
-	EAST = 1; //east
+	
 	conn_face_el[iel][EAST][0] = CONN[iel][1];
 	conn_face_el[iel][EAST][1] = CONN[iel][2];
 	conn_face_el[iel][EAST][2] = CONN[iel][6];
 	conn_face_el[iel][EAST][3] = CONN[iel][5];
-	WEST = 3; //west
+	
 	conn_face_el[iel][WEST][0] = CONN[iel][3];
 	conn_face_el[iel][WEST][1] = CONN[iel][0];
 	conn_face_el[iel][WEST][2] = CONN[iel][4];
 	conn_face_el[iel][WEST][3] = CONN[iel][7];
-	BOTT = 4; //bottom
+	
 	conn_face_el[iel][BOTT][0] = CONN[iel][3];
 	conn_face_el[iel][BOTT][1] = CONN[iel][2];
 	conn_face_el[iel][BOTT][2] = CONN[iel][1];
 	conn_face_el[iel][BOTT][3] = CONN[iel][0];
-	TOP = 5; //top
+	
 	conn_face_el[iel][TOP][0] = CONN[iel][4];
 	conn_face_el[iel][TOP][1] = CONN[iel][5];
 	conn_face_el[iel][TOP][2] = CONN[iel][6];
@@ -201,44 +211,43 @@ int BUILD_EDGES(int **CONN, int nelem)
     /*
      * sort by 3rd dimension
      */
-    
-    
-    int conn_face_el_sort[nelem][6][4];
-    int AUXI[5];
+    int ***conn_face_el_sort;
+    int auxi[5];
+    conn_face_el_sort = i3tensor(0, nelem-1, 0, 5, 0, 3);
     for (int i=0; i<nelem; i++) {
 	for (int j=0; j<6; j++) {
-	    for (int k=0; k<4; k++) {
+	    for (int k=0; k<NELFACES; k++) {
 		int kk = k + 1;
-		AUXI[kk] = conn_face_el[i][j][k];
+		auxi[kk] = conn_face_el[i][j][k];
 	    }
-	    isort(4, AUXI);
+	    isort(4, auxi);
 	    for (int k=0; k<4; k++) {
 		int kk = k + 1;
-		conn_face_el_sort[i][j][k] = AUXI[kk];
-		    printf(" %d\n", conn_face_el_sort[i][j][k]);
-	    } printf("\n");
+		conn_face_el_sort[i][j][k] = auxi[kk];
+	    }
 	}
     }
-    //END sorting 
+    //VIEW_i3DMAT("CONN_FACE_EL_SORT", conn_face_el_sort, 0, nelem-1, 0, 5, 0, 3);
+    //printf(" END SORT\n");
+    //END sorting
     
-
     iface = 0;
-    for(iel = 0; iel<nelem; iel++) {
-	for(int jel = 0; jel<nelem; jel++) {
+    for(int iel=0; iel<nelem; iel++) {
+	for(int jel=0; jel<nelem; jel++) {
 
 	    if(     conn_face_el_sort[iel][BOTT][0] == conn_face_el_sort[jel][TOP][0] && \
 		    conn_face_el_sort[iel][BOTT][1] == conn_face_el_sort[jel][TOP][1] && \
 		    conn_face_el_sort[iel][BOTT][2] == conn_face_el_sort[jel][TOP][2] && \
 		    conn_face_el_sort[iel][BOTT][3] == conn_face_el_sort[jel][TOP][3])
-		{			
+		{	
 		    FACE_in_ELEM[iel][BOTT][0] = iel;
 		    FACE_in_ELEM[iel][BOTT][1] = jel;
 				
 		    FACE_in_ELEM[jel][TOP][0] = jel;
 		    FACE_in_ELEM[jel][TOP][1] = iel;
-				
-		    //fprintf(' SHARED FACE:  face %d of ELEMENT %d is shared with face %d of ELEMENT %d\n'][BOTT][iel][TOP][jel];
-				
+
+		    //printf(" SHARED FACE:  face %d of ELEMENT %d is shared with face %d of ELEMENT %d\n", BOTT+1,iel+1, TOP+1, jel+1);
+						
 		    iface = iface + 1;
 			
 		} else if (conn_face_el_sort[iel][EAST][0] == conn_face_el_sort[jel][WEST][0] && \
@@ -253,8 +262,8 @@ int BUILD_EDGES(int **CONN, int nelem)
 		    FACE_in_ELEM[jel][WEST][0] = jel;
 		    FACE_in_ELEM[jel][WEST][1] = iel;
 			
-		    //fprintf(' SHARED FACE:  face %d of ELEMENT %d is shared with face %d of ELEMENT %d\n'][EAST][iel][WEST][jel];
-			
+		    //printf(" SHARED FACE:  face %d of ELEMENT %d is shared with face %d of ELEMENT %d\n", EAST+1, iel+1, WEST+1, jel+1);
+				
 		    iface = iface + 1;
 			
 		} else if  (conn_face_el_sort[iel][SOUTH][0] == conn_face_el_sort[jel][NORTH][0] && \
@@ -269,30 +278,35 @@ int BUILD_EDGES(int **CONN, int nelem)
 		    FACE_in_ELEM[jel][NORTH][0] = jel;
 		    FACE_in_ELEM[jel][NORTH][1] = iel;
 			
-		    //fprintf(' SHARED FACE:  face %d of ELEMENT %d is shared with face %d of ELEMENT %d\n', SOUTH, iel, NORTH, jel];
+		    //printf(" SHARED FACE:  face %d of ELEMENT %d is shared with face %d of ELEMENT %d\n", SOUTH+1, iel+1, NORTH+1, jel+1);
+
 		    iface = iface + 1;
 		}
 	}
     }
-		    
-    int nint_faces        = iface - 1;
-    int nfaces            = nint_faces + nbdy_faces;
     int face_direction[6] = {SOUTH, EAST, NORTH, WEST, BOTT, TOP};
-
+    int nint_faces        = iface;
+    nfaces                = nint_faces + nbdy_faces;
+    
     /*----------------------------------------------------------------------------------------------------
      * Store connectivity of internal faces: 
      * start from the boundary faces and append the internal faces afterwards:
      *----------------------------------------------------------------------------------------------------*/
     //1) Store bdy faces in CONN_FACE(1:BDY_FACES, 1:4)
-    int CONN_FACE[nfaces][4];
-    int CONN_FACE_all[nfaces][4];
+    //int CONN_FACE[nfaces][4];
+    int nface_all = nelem*6;
+    int CONN_FACE_all[nface_all][4];
+
+    MEMORY_ALLOCATE(7);
     
+    //printf(" CONN_BDY_FACES\n");
     for (int i=0; i<nbdy_faces; i++) {
 	for (int j=0; j<4; j++) {
 	    CONN_FACE[i][j] = CONN_BDY_FACES[i][j];
+	    //printf("%d ", CONN_FACE[i][j]);
 	}
+	//printf("\n");
     }
-    
     /*
      * 2) Append the internal faces to CONN_FACE(NCONN_BDY_FACES+1:NFACES, 1:4)
      *
@@ -302,7 +316,6 @@ int BUILD_EDGES(int **CONN, int nelem)
      *
      * Detect ALL faces, including the shared ones:
      */
-    int iel;
     int iface_all = 0;
     for (int iel=0; iel<nelem; iel++) {
 	for (int ifac=0; ifac<6; ifac++) {
@@ -315,41 +328,74 @@ int BUILD_EDGES(int **CONN, int nelem)
 	}
     }
     
-    int nface_all = iface_all - 1;
+    int CONN_FACE_tmp[iface_all][4];
+    for (int i=0; i<iface_all; i++) {
+	for (int j=0; j<4; j++) {
+	    int jj = j + 1;
+	    auxi[jj] = CONN_FACE_all[i][j];
+	}
+	isort(4, auxi);
+	for (int j=0; j<4; j++) {
+	    int jj = j + 1;
+	    CONN_FACE_tmp[i][j] = auxi[jj];
+	}
+    }//OK
+    
+    /*for (int i=0; i<iface_all; i++) {
+	printf(" %d %d %d %d %d\n", i, CONN_FACE_tmp[i][0], CONN_FACE_tmp[i][1], CONN_FACE_tmp[i][2],  CONN_FACE_tmp[i][3]);
+	}*/
+    //int nface_all = iface_all;  /* NOTICE: nface_all are ALL of the faces,
+    //				     * including the repeated faces. 
+    //				     * nfaces are only the faces counted once.*/
     int REPEATED_auxi[nfaces][2];
-    int REPEATED_index[nface_all];
-    int FACE_MULTIPLICITY_auxi[nface_all];
+    int REPEATED_index[nface_all+1];
+    int FACE_MULTIPLICITY_auxi[nface_all+1];
     for (int i=0; i<nfaces; i++) {
 	REPEATED_auxi[i][0] = -1;
 	REPEATED_auxi[i][1] = -1;
     }    
     for (int i=0; i<nface_all; i++) {
+	REPEATED_index[i] = -1;
 	FACE_MULTIPLICITY_auxi[i] = 0;
     }
-
     int iface_repeated = 0;
-    int ifac           = 1;
     int krepeated      = 0;
-    for (int i=0; i<nface_all; i++) {
+
+    printf(" # Number of all faces\t\t%d\n # number of unique faces\t%d\n # Number of interlan faces\t%d\n # Number of boundary faces\t%d\n", nface_all, nfaces, nint_faces, nbdy_faces);
+    
+    iface = 0;
+    for (int i=1; i<=nface_all; i++) {
 	int multiplicity = 0;
-	for (int j=i; j<nface_all; j++) {
-		
+	//	printf("Face %d -> [%d %d %d %d] \n", i, CONN_FACE_tmp[i-1][0], CONN_FACE_tmp[i-1][1], CONN_FACE_tmp[i-1][2], CONN_FACE_tmp[i-1][3]);	
+	for (int j=i; j<=nface_all; j++) {
 	    if (j != i) {
-		if ((CONN_FACE_all[i][0] == CONN_FACE_all[j][0] &&	\
-		     CONN_FACE_all[i][1] == CONN_FACE_all[j][1] &&	\
-		     CONN_FACE_all[i][2] == CONN_FACE_all[j][2] &&	\
-		     CONN_FACE_all[i][3] == CONN_FACE_all[j][3]) ) {
+		if ( iAlmostEqual(CONN_FACE_tmp[i-1][0], CONN_FACE_tmp[j-1][0]) && \
+		     iAlmostEqual(CONN_FACE_tmp[i-1][1], CONN_FACE_tmp[j-1][1]) && \
+		     iAlmostEqual(CONN_FACE_tmp[i-1][2], CONN_FACE_tmp[j-1][2]) && \
+		     iAlmostEqual(CONN_FACE_tmp[i-1][3], CONN_FACE_tmp[j-1][3]) ) {
 		    
 		    multiplicity = multiplicity  + 1;
 		    krepeated = krepeated + 1;
-		    REPEATED_index[krepeated] = j;
-		    FACE_MULTIPLICITY_auxi[i] = multiplicity + 1;
+		    REPEATED_index[krepeated-1] = j;
 		    
-		    //printf('k=%d, REPEATED_index %d -> (%d %d %d %d) repeated %d times\n', krepeated, REPEATED_index(krepeated), CONN_FACE_tmp(j, 1), CONN_FACE_tmp(j, 2), CONN_FACE_tmp(j, 3), CONN_FACE_tmp(j, 4), multiplicity);
+		    FACE_MULTIPLICITY_auxi[nbdy_faces + iface] = multiplicity + 1;
+
+		    CONN_FACE[nbdy_faces + iface][0] =  CONN_FACE_tmp[j-1][0];
+		    CONN_FACE[nbdy_faces + iface][1] =  CONN_FACE_tmp[j-1][1];
+		    CONN_FACE[nbdy_faces + iface][2] =  CONN_FACE_tmp[j-1][3];
+		    CONN_FACE[nbdy_faces + iface][3] =  CONN_FACE_tmp[j-1][2];
+		    
+		    /*printf("k=%d, REPEATED_index %d -> [%d %d %d %d] repeated %d times (%d)\n", krepeated-1, REPEATED_index[krepeated-1], \
+			   CONN_FACE_tmp[j-1][0], CONN_FACE_tmp[j-1][1], CONN_FACE_tmp[j-1][2], CONN_FACE_tmp[j-1][3], \
+			   FACE_MULTIPLICITY_auxi[nbdy_faces + iface], multiplicity + 1);
+		    */
+		    iface = iface + 1;
 		}
 	    }
 	}
-    }
+    } //OK (DO NOT CALL "CGNS_ORDERING(CONN, nelem)"!!!!!)
+    //printf(" NBDY FACEs + IFACE = %d\n", nbdy_faces + iface);
+    //VIEW_i2DMAT("CONN_FACE", CONN_FACE, 0, nfaces-1, 0, 3);
     
     /*
      * Set repeated entries of CONN_EDGE_tmp to -1:
@@ -357,64 +403,156 @@ int BUILD_EDGES(int **CONN, int nelem)
     int nrepeated = krepeated;
     for (int i=0; i<nrepeated; i++) {
 	int irepeated_index = REPEATED_index[i];
-	
 	CONN_FACE_all[irepeated_index][0] = -1;
 	CONN_FACE_all[irepeated_index][1] = -1;
 	CONN_FACE_all[irepeated_index][2] = -1;
 	CONN_FACE_all[irepeated_index][3] = -1;
     }
-
     
     /*
      * STORE EACH FACE into CONN_FACE(1:`, 1:4):
-     */
-    ifac = 0;
+     *
     int FACE_MULTIPLICITY[nface_all]; //overallocated
+    int ifac = 0;
     for (int iface_all=0; iface_all<nface_all; iface_all++) {
-	if (CONN_FACE_all[iface_all][0] > 0) {
+	//if (CONN_FACE_all[iface_all][0] > 0) {
+	if (FACE_MULTIPLICITY_auxi[nbdy_faces+iface_all] > 0) {
+		    
+	    //CONN_FACE[ifac][0] = CONN_FACE_all[iface_all][0];
+	    //CONN_FACE[ifac][1] = CONN_FACE_all[iface_all][1];
+	    //CONN_FACE[ifac][2] = CONN_FACE_all[iface_all][2];
+	    //CONN_FACE[ifac][3] = CONN_FACE_all[iface_all][3];
+
+	    //CONN_FACE[ifac][0] = CONN_FACE_tmp[iface_all][0];
+	    //CONN_FACE[ifac][1] = CONN_FACE_tmp[iface_all][1];
+	    //CONN_FACE[ifac][2] = CONN_FACE_tmp[iface_all][2];
+	    //CONN_FACE[ifac][3] = CONN_FACE_tmp[iface_all][3];
 	    
-	    CONN_FACE[ifac][0] = CONN_FACE_all[iface_all][0];
-	    CONN_FACE[ifac][1] = CONN_FACE_all[iface_all][1];
-	    CONN_FACE[ifac][2] = CONN_FACE_all[iface_all][2];
-	    CONN_FACE[ifac][3] = CONN_FACE_all[iface_all][3];
-	    /*
-	      FACE_MULTIPLICITY[ifac] = FACE_MULTIPLICITY_auxi[iface_all];
-	    */
+	    FACE_MULTIPLICITY[nbdy_faces + ifac] = FACE_MULTIPLICITY_auxi[iface_all];
+	
 	    // FACE_in_ELEM[ifac][0] = FACE_in_ELEM[iface_all][0];
 	    // FACE_in_ELEM[ifac][1] = FACE_in_ELEM[iface_all][1];
 	    
 	    ifac = ifac + 1;
 	}
-    }
-    
-    printf(" NELEM %d. nface_all %d %d %d", nelem, nface_all, ifac, nfaces);
-    exit(1);
-    /*for (int iface=0; iface<nfaces; iface++) {
-	printf(" CONN_FACE(%d,1:4) = %d %d %d %d, has multiplicity %d\n", iface, CONN_FACE[iface][0], CONN_FACE[iface][1], CONN_FACE[iface][2], CONN_FACE[iface][3], FACE_MULTIPLICITY[iface]);
 	}*/
 
+    /*
+    for (int iface=0; iface<nfaces; iface++) {
+	if (iface < nbdy_faces) {
+	    printf(" BDY: CONN_FACE(%d,1:4) = %d %d %d %d - repeated %d times\n", iface, CONN_FACE[iface][0], CONN_FACE[iface][1], CONN_FACE[iface][2], CONN_FACE[iface][3], FACE_MULTIPLICITY_auxi[iface]);
+	} else {
+	    printf(" INT: CONN_FACE(%d,1:4) = %d %d %d %d - repeated %d times\n", iface, CONN_FACE[iface][0], CONN_FACE[iface][1], CONN_FACE[iface][2], CONN_FACE[iface][3], FACE_MULTIPLICITY_auxi[iface]);
+	}
+	} //OK CONN_FACE and FACE_MULTIPLICITY;*/
+    
     /*--------------------------------------------------------------------------
      * Populate FACE_LtoG(1:NEL,1:6) OK
-     *--------------------------------------------------------------------------*
-    for (int iface=0; iface<nfaces; iface++) {
+     *--------------------------------------------------------------------------*/
+    int CONN_FACE_sort[nfaces][4];
+    for (int i=0; i<nfaces; i++) {
+	for (int j=0; j<4; j++) {
+	    int jj = j + 1;
+	    auxi[jj] = CONN_FACE[i][j];  THIS IS PROBABLY INCORRECTLY DONE! RECHECK IT
+	}
+	isort(2, auxi);
+	for (int j=0; j<4; j++) {
+	    int jj = j + 1;
+	    CONN_FACE_sort[i][j] = auxi[jj];
+	}
+    }//OK
+    for (int i=0; i<nfaces; i++) {
+	for (int j=0; j<4; j++) {
+	    printf("  CONN_FACE_sort[%d][%d] = %d \n", i,j, CONN_FACE_sort[i][j]);
+	}
+    }
+    
+    for (int iel=0; iel<nelem; iel++) {
+	for (int i=0; i<6; i++) {
+	    for (int j=0; j<4; j++) {
+		printf("  iel=%d. conn_face_el_sort[%d][%d] = %d \n", iel, i,j, conn_face_el_sort[iel][i][j]);
+	    }
+	}
+    }
+    
+    for (int IFACE=0; IFACE<nfaces; IFACE++) {
 	for (int iel=0; iel<nelem; iel++) {
 	    for (int iface=0; iface<6; iface++) {
 		
-		if ( (  CONN_FACE[iface][0] == conn_face_el[iel][iface][0] && \
-			CONN_FACE[iface][1] == conn_face_el[iel][iface][1] && \
-			CONN_FACE[iface][2] == conn_face_el[iel][iface][2] && \
-			CONN_FACE[iface][3] == conn_face_el[iel][iface][3]) ) {
+		if ( (  CONN_FACE_sort[IFACE][0] == conn_face_el_sort[iel][iface][0] && \
+			CONN_FACE_sort[IFACE][1] == conn_face_el_sort[iel][iface][1] && \
+			CONN_FACE_sort[IFACE][2] == conn_face_el_sort[iel][iface][3] && \
+			CONN_FACE_sort[IFACE][3] == conn_face_el_sort[iel][iface][2]) ||
+		      (  CONN_FACE_sort[IFACE][0] == conn_face_el_sort[iel][iface][0] && \
+			 CONN_FACE_sort[IFACE][1] == conn_face_el_sort[iel][iface][1] && \
+			 CONN_FACE_sort[IFACE][2] == conn_face_el_sort[iel][iface][2] && \
+			 CONN_FACE_sort[IFACE][3] == conn_face_el_sort[iel][iface][3])
+		     ) {
 			    
-			    FACE_LtoG[iel][iface] = iface;
-			    //%fprintf('  --- FACE_LtoG(%d,%d) = %d -> (%d %d %d %d) \n', iel, iface, FACE_LtoG(iel, iface), conn_face_el_sort[iel][iface][0], \
-			    //	%conn_face_el_sort[iel][iface][1], \
-			    //	%conn_face_el_sort[iel][iface][2], \
-			    //	%conn_face_el_sort[iel][iface][3]);
+		    FACE_LtoG[iel][iface] = IFACE;
+		    printf("  --- FACE_LtoG[%d,%d] = %d -> [%d %d %d %d] \n", iel, iface+1, \
+			   FACE_LtoG[iel][iface], conn_face_el_sort[iel][iface][0], \
+			   conn_face_el_sort[iel][iface][1],		\
+			   conn_face_el_sort[iel][iface][2],		\
+			   conn_face_el_sort[iel][iface][3]);
 		}
 	    }
 	}
-	}*/
+    }
+    //QUI
     
+    return 0;
+    free_i3tensor(conn_face_el_sort, 0, nelem-1, 0, 5, 0, 3);
+
+    
+    /*----------------------------------------------------------------------------------------------------------------
+     * Global edge connectivity:
+     *----------------------------------------------------------------------------------------------------------------
+     *
+     * Loop 1 to populate internal edges to CONN_EDGE:
+     *
+     *EDGE_FLG(1:NEDGES)          = -1;
+     *EDGE_LtoG(1:NELEM, 1:12)    = -1; %map from local edge number (1:4) to global edge number
+     *EDGE_in_ELEM(1:NEDGES, 1:2) = -1;
+     *CONN_EDGE(1:NEDGES, 1:3)    = -1; %third column is to color the edge if repeated.
+     *EDGE_MULTIPLICITY(1:NEDGES) = -1;
+     *
+     * Detect ALL edges, including the shared ones:
+     */
+    int nedge_all = nelem*12;
+    int CONN_EDGE_tmp[nedge_all][2];
+    int CONN_EDGE_all[nedge_all][2];
+    int EDGE_in_ELEM[ nedge_all];
+    int tmp1;
+    int iedge_all = 0;
+    for (int iel=0; iel<nelem; iel++) {
+	for (int iedg=0; iedg<12; iedg++) {
+
+	    CONN_EDGE_all[iedge_all][0] = conn_edge_el[iel][iedg][0];
+	    CONN_EDGE_all[iedge_all][1] = conn_edge_el[iel][iedg][1];
+		
+	    //Used later to detect repeated rows only:
+	    CONN_EDGE_tmp[iedge_all][0]  = conn_edge_el[iel][iedg][0];
+	    CONN_EDGE_tmp[iedge_all][1]  = conn_edge_el[iel][iedg][1];
+	    
+	    /*
+	     * Order first and second point in ascending order [for comparison
+	     * purposes only)
+	     */
+	    if (CONN_EDGE_tmp[iedge_all][0] > CONN_EDGE_tmp[iedge_all][1]) {
+		tmp1 = CONN_EDGE_tmp[iedge_all][1];
+		CONN_EDGE_tmp[iedge_all][1] = CONN_EDGE_tmp[iedge_all][0];
+		CONN_EDGE_tmp[iedge_all][0] = tmp1;
+	    }
+		
+	    EDGE_in_ELEM[iedge_all] = iel;
+		
+	    //EDGE_FLG[iedge_all] = 1;
+	    iedge_all = iedge_all + 1;
+	}
+    }
+
+
     
     return 0;
 }
