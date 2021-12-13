@@ -453,7 +453,7 @@ int BUILD_EDGES(int **CONN, int nelem)
     for (int i=0; i<nfaces; i++) {
 	for (int j=0; j<4; j++) {
 	    int jj = j + 1;
-	    auxi[jj] = CONN_FACE[i][j];  THIS IS PROBABLY INCORRECTLY DONE! RECHECK IT
+	    auxi[jj] = CONN_FACE[i][j];  //THIS IS PROBABLY INCORRECTLY DONE! RECHECK IT
 	}
 	isort(2, auxi);
 	for (int j=0; j<4; j++) {

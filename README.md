@@ -5,7 +5,13 @@ Elliptic, structured grid generator for simply connected domains with real topog
 (Created in 2011. Posted on GitHub in 2020)
 
 ##MPI version:
-Open-MPI 4.1.0 compiled from source with gcc-9
+#Option 1 (Recommended): use homebrew to install gcc and openmpi
+```
+>> brew install gcc openmpi metis
+```
+Brew will install them in `/opt/homebrew/Cellar` or similar.
+
+#Option 2: Open-MPI 4.1.0 compiled from source with gcc-9
 
 ```
 >> ./configure --prefix=/MY/PATH/TO/openmpi-4.1.0/build_gcc9/ CC=gcc-9 CXX=g++-9 F77=gfortran-9 FC=gfortran-9

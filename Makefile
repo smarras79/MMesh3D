@@ -1,12 +1,19 @@
 #
-# 'make depend' uses makedepend to automatically generate dependencies 
-#               (dependencies are added to end of Makefile)
-# 'make'        build executable file 'mycc'
-# 'make clean'  removes all .o and executable files
+# Set USER_NAME and set your own CC if not defined yet
 #
-
-# define the C compiler to use
-CC = /Users/simone/mylibs/openmpi-4.1.0/build_gcc9/bin/mpicc
+USER_NAME="sm_macair"
+$(info USER_NAME=$(USER_NAME))
+ifeq ($(USER_NAME),"sm_macair")
+   CC = /opt/homebrew/Cellar/openmpi/4.1.2/bin/mpicc
+else ifeq ($(USER_NAME),"sm_imac")
+   CC = /Users/simone/mylibs/openmpi-4.1.0/build_gcc9/bin/mpicc
+else
+missing_cc_error:
+	@echo " ERROR in Makefile!"
+	@echo "    CC rule not defined for $(USER_NAME)!"
+	@echo "    Edit Makefile and add set your CC."
+	exit
+endif
 
 MPI_COMPILE_FLAGS = $(bash mpicc --showme:compile)
 MPI_LINK_FLAGS = $(bash mpicc --showme:link)
@@ -35,6 +42,11 @@ LFLAGS =
 #   option, something like (this will link in libmylib.so and libm.so:
 LIBS =
 #LIBS = -lp4est -lsc -lz
+
+
+SRC =./src
+BIN =./bin
+EXE = $(BIN)/MMesh3D.a
 
 # define the C source files
 SRCS =  \
@@ -73,11 +85,6 @@ SRCS =  \
 #
 OBJS = $(SRCS:.c=.o)
 
-# define the executable file
-SRC=./src
-BIN=./bin
-EXE = $(BIN)/MMesh3D.a
-
 #
 # The following part of the makefile is generic; it can be used to 
 # build any executable just by changing the definitions above and by
@@ -86,9 +93,6 @@ EXE = $(BIN)/MMesh3D.a
 .PHONY: depend clean
 
 all: $(EXE)
-	@echo "---------------------------------------------"
-	@echo  COMPILATION of $(BIN)/$(EXE) was COMPLETED. 
-	@echo "---------------------------------------------"
 
 $(EXE): $(OBJS)
 	$(CC) $(CFLAGS) $(INCLUDES) -o $(EXE) $(OBJS) $(LFLAGS) $(LIBS)
@@ -103,7 +107,3 @@ $(EXE): $(OBJS)
 clean:
 	$(RM) $(SRC)/*.o $(SRC)/*~ $(EXE)
 	clear
-
-depend: $(SRCS)
-	makedepend $(INCLUDES) $^
-
