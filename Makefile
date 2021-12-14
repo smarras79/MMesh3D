@@ -1,7 +1,7 @@
 #
 # Set USER_NAME and set your own CC if not defined yet
 #
-USER_NAME="sm_macair"
+USER_NAME="sm_imac"
 $(info USER_NAME=$(USER_NAME))
 ifeq ($(USER_NAME),"sm_macair")
    CC = /opt/homebrew/Cellar/openmpi/4.1.2/bin/mpicc

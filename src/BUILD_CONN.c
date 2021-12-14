@@ -213,17 +213,18 @@ int BUILD_EDGES(int **CONN, int nelem)
      */
     int ***conn_face_el_sort;
     int auxi[5];
+    int npoints_in_iface = 4;
     conn_face_el_sort = i3tensor(0, nelem-1, 0, 5, 0, 3);
-    for (int i=0; i<nelem; i++) {
+    for (int iel=0; iel<nelem; iel++) {
 	for (int j=0; j<6; j++) {
 	    for (int k=0; k<NELFACES; k++) {
 		int kk = k + 1;
-		auxi[kk] = conn_face_el[i][j][k];
-	    }
-	    isort(4, auxi);
+		auxi[kk] = conn_face_el[iel][j][k];
+	    }	    
+	    isort(npoints_in_iface, auxi);
 	    for (int k=0; k<4; k++) {
 		int kk = k + 1;
-		conn_face_el_sort[i][j][k] = auxi[kk];
+		conn_face_el_sort[iel][j][k] = auxi[kk];
 	    }
 	}
     }
@@ -440,13 +441,13 @@ int BUILD_EDGES(int **CONN, int nelem)
 
     //OK WORKING: CONN_FACE is now correctly populated and ordered.
     //Uncomment the following for loop to print it to screen.
-    /*for (int iface=0; iface<nfaces; iface++) {
+    for (int iface=0; iface<nfaces; iface++) {
 	if (iface < nbdy_faces) {
 	    printf(" BDY: CONN_FACE(%d,1:4) = %d %d %d %d - repeated %d times\n", iface, CONN_FACE[iface][0], CONN_FACE[iface][1], CONN_FACE[iface][2], CONN_FACE[iface][3], FACE_MULTIPLICITY_auxi[iface]);
 	} else {
 	    printf(" INT: CONN_FACE(%d,1:4) = %d %d %d %d - repeated %d times\n", iface, CONN_FACE[iface][0], CONN_FACE[iface][1], CONN_FACE[iface][2], CONN_FACE[iface][3], FACE_MULTIPLICITY_auxi[iface]);
 	}
-      }*/ //OK CONN_FACE and FACE_MULTIPLICITY;
+      } //OK CONN_FACE and FACE_MULTIPLICITY;
     
     
     /*--------------------------------------------------------------------------
@@ -458,17 +459,22 @@ int BUILD_EDGES(int **CONN, int nelem)
 	    int jj = j + 1;
 	    auxi[jj] = CONN_FACE[i][j];  //THIS IS PROBABLY INCORRECTLY DONE! RECHECK IT
 	}
-	isort(2, auxi);
+	isort(npoints_in_iface, auxi);
 	for (int j=0; j<4; j++) {
 	    int jj = j + 1;
 	    CONN_FACE_sort[i][j] = auxi[jj];
 	}
     }//OK
-    for (int i=0; i<nfaces; i++) {
-	for (int j=0; j<4; j++) {
-	    printf("  CONN_FACE_sort[%d][%d] = %d \n", i,j, CONN_FACE_sort[i][j]);
+    for (int iface=0; iface<nfaces; iface++) {
+	if (iface < nbdy_faces) {
+	    printf(" face %d: s BDY: CONN_FACE_sort(%d,1:4) = %d %d %d %d - repeated %d times\n", iface, iface, CONN_FACE_sort[iface][0], CONN_FACE_sort[iface][1], CONN_FACE_sort[iface][2], CONN_FACE_sort[iface][3], FACE_MULTIPLICITY_auxi[iface]);
+	    printf(" face %d: u BDY: CONN_FACE     (%d,1:4) = %d %d %d %d - repeated %d times\n", iface, iface, CONN_FACE[iface][0], CONN_FACE[iface][1], CONN_FACE[iface][2], CONN_FACE[iface][3], FACE_MULTIPLICITY_auxi[iface]);
+	} else {
+	    printf(" face %d: s INT: CONN_FACE_sort(%d,1:4) = %d %d %d %d - repeated %d times\n", iface, iface, CONN_FACE_sort[iface][0], CONN_FACE_sort[iface][1], CONN_FACE_sort[iface][2], CONN_FACE_sort[iface][3], FACE_MULTIPLICITY_auxi[iface]);
+	    printf(" face %d: u INT: CONN_FACE     (%d,1:4) = %d %d %d %d - repeated %d times\n", iface, iface, CONN_FACE[iface][0], CONN_FACE[iface][1], CONN_FACE[iface][2], CONN_FACE[iface][3], FACE_MULTIPLICITY_auxi[iface]);
 	}
-    }
+    } //O
+    return 0;
     
     for (int iel=0; iel<nelem; iel++) {
 	for (int i=0; i<6; i++) {
@@ -477,7 +483,7 @@ int BUILD_EDGES(int **CONN, int nelem)
 	    }
 	}
     }
-    
+    return 0;
     for (int IFACE=0; IFACE<nfaces; IFACE++) {
 	for (int iel=0; iel<nelem; iel++) {
 	    for (int iface=0; iface<6; iface++) {
