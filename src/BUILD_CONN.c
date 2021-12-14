@@ -473,17 +473,16 @@ int BUILD_EDGES(int **CONN, int nelem)
 	    printf(" face %d: s INT: CONN_FACE_sort(%d,1:4) = %d %d %d %d - repeated %d times\n", iface, iface, CONN_FACE_sort[iface][0], CONN_FACE_sort[iface][1], CONN_FACE_sort[iface][2], CONN_FACE_sort[iface][3], FACE_MULTIPLICITY_auxi[iface]);
 	    printf(" face %d: u INT: CONN_FACE     (%d,1:4) = %d %d %d %d - repeated %d times\n", iface, iface, CONN_FACE[iface][0], CONN_FACE[iface][1], CONN_FACE[iface][2], CONN_FACE[iface][3], FACE_MULTIPLICITY_auxi[iface]);
 	}
-    } //O
-    return 0;
+    } //OK
     
-    for (int iel=0; iel<nelem; iel++) {
+    /*for (int iel=0; iel<nelem; iel++) {
 	for (int i=0; i<6; i++) {
 	    for (int j=0; j<4; j++) {
 		printf("  iel=%d. conn_face_el_sort[%d][%d] = %d \n", iel, i,j, conn_face_el_sort[iel][i][j]);
 	    }
 	}
-    }
-    return 0;
+	}*/
+    
     for (int IFACE=0; IFACE<nfaces; IFACE++) {
 	for (int iel=0; iel<nelem; iel++) {
 	    for (int iface=0; iface<6; iface++) {
@@ -509,8 +508,6 @@ int BUILD_EDGES(int **CONN, int nelem)
 	}
     }
     //QUI
-    
-    return 0;
     free_i3tensor(conn_face_el_sort, 0, nelem-1, 0, 5, 0, 3);
 
     
