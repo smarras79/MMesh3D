@@ -409,43 +409,45 @@ int BUILD_EDGES(int **CONN, int nelem)
 	CONN_FACE_all[irepeated_index][3] = -1;
     }
     
-    /*
-     * STORE EACH FACE into CONN_FACE(1:`, 1:4):
-     *
-    int FACE_MULTIPLICITY[nface_all]; //overallocated
-    int ifac = 0;
-    for (int iface_all=0; iface_all<nface_all; iface_all++) {
-	//if (CONN_FACE_all[iface_all][0] > 0) {
-	if (FACE_MULTIPLICITY_auxi[nbdy_faces+iface_all] > 0) {
+    /* /\* THIS WAS THE OLD WAY AS IN THE MATLAB CODE BUT IT'S NOT NECESSARY.*\/ */
+    /* /\*  * STORE EACH FACE into CONN_FACE(1:`, 1:4): *\/ */
+    /* /\*  * *\/ */
+    /* /\* int FACE_MULTIPLICITY[nface_all]; //overallocated *\/ */
+    /* /\* int ifac = 0; *\/ */
+    /* /\* for (int iface_all=0; iface_all<nface_all; iface_all++) { *\/ */
+    /* /\* 	//if (CONN_FACE_all[iface_all][0] > 0) { *\/ */
+    /* /\* 	if (FACE_MULTIPLICITY_auxi[nbdy_faces+iface_all] > 0) { *\/ */
 		    
-	    //CONN_FACE[ifac][0] = CONN_FACE_all[iface_all][0];
-	    //CONN_FACE[ifac][1] = CONN_FACE_all[iface_all][1];
-	    //CONN_FACE[ifac][2] = CONN_FACE_all[iface_all][2];
-	    //CONN_FACE[ifac][3] = CONN_FACE_all[iface_all][3];
+    /* /\* 	    //CONN_FACE[ifac][0] = CONN_FACE_all[iface_all][0]; *\/ */
+    /* /\* 	    //CONN_FACE[ifac][1] = CONN_FACE_all[iface_all][1]; *\/ */
+    /* /\* 	    //CONN_FACE[ifac][2] = CONN_FACE_all[iface_all][2]; *\/ */
+    /* /\* 	    //CONN_FACE[ifac][3] = CONN_FACE_all[iface_all][3]; *\/ */
 
-	    //CONN_FACE[ifac][0] = CONN_FACE_tmp[iface_all][0];
-	    //CONN_FACE[ifac][1] = CONN_FACE_tmp[iface_all][1];
-	    //CONN_FACE[ifac][2] = CONN_FACE_tmp[iface_all][2];
-	    //CONN_FACE[ifac][3] = CONN_FACE_tmp[iface_all][3];
+    /* /\* 	    //CONN_FACE[ifac][0] = CONN_FACE_tmp[iface_all][0]; *\/ */
+    /* /\* 	    //CONN_FACE[ifac][1] = CONN_FACE_tmp[iface_all][1]; *\/ */
+    /* /\* 	    //CONN_FACE[ifac][2] = CONN_FACE_tmp[iface_all][2]; *\/ */
+    /* /\* 	    //CONN_FACE[ifac][3] = CONN_FACE_tmp[iface_all][3]; *\/ */
 	    
-	    FACE_MULTIPLICITY[nbdy_faces + ifac] = FACE_MULTIPLICITY_auxi[iface_all];
+    /* /\* 	    FACE_MULTIPLICITY[nbdy_faces + ifac] = FACE_MULTIPLICITY_auxi[iface_all]; *\/ */
 	
-	    // FACE_in_ELEM[ifac][0] = FACE_in_ELEM[iface_all][0];
-	    // FACE_in_ELEM[ifac][1] = FACE_in_ELEM[iface_all][1];
+    /* /\* 	    // FACE_in_ELEM[ifac][0] = FACE_in_ELEM[iface_all][0]; *\/ */
+    /* /\* 	    // FACE_in_ELEM[ifac][1] = FACE_in_ELEM[iface_all][1]; *\/ */
 	    
-	    ifac = ifac + 1;
-	}
-	}*/
+    /* /\* 	    ifac = ifac + 1; *\/ */
+    /* /\* 	} *\/ */
+    /* /\* 	}*\\/ *\/ */
 
-    
-    for (int iface=0; iface<nfaces; iface++) {
+
+    //OK WORKING: CONN_FACE is now correctly populated and ordered.
+    //Uncomment the following for loop to print it to screen.
+    /*for (int iface=0; iface<nfaces; iface++) {
 	if (iface < nbdy_faces) {
 	    printf(" BDY: CONN_FACE(%d,1:4) = %d %d %d %d - repeated %d times\n", iface, CONN_FACE[iface][0], CONN_FACE[iface][1], CONN_FACE[iface][2], CONN_FACE[iface][3], FACE_MULTIPLICITY_auxi[iface]);
 	} else {
 	    printf(" INT: CONN_FACE(%d,1:4) = %d %d %d %d - repeated %d times\n", iface, CONN_FACE[iface][0], CONN_FACE[iface][1], CONN_FACE[iface][2], CONN_FACE[iface][3], FACE_MULTIPLICITY_auxi[iface]);
 	}
-	} //OK CONN_FACE and FACE_MULTIPLICITY;
-    return 0;
+      }*/ //OK CONN_FACE and FACE_MULTIPLICITY;
+    
     
     /*--------------------------------------------------------------------------
      * Populate FACE_LtoG(1:NEL,1:6) OK
