@@ -561,26 +561,31 @@ int BUILD_EDGES(int **CONN, int nelem)
 	}
     }
 
-    
-    int NEDGE_all                         = iedge_all - 1;
-    int REPEATED_auxi[NEDGE_all][2]       = -1;
-    int EDGE_MULTIPLICITY_auxi[NEDGE_all] =  0;
     int IEDGE_repeated                    =  0;
-    int iedge                             =  1;
+    int EDGE_MULTIPLICITY_auxi[nedge_all];
+    int EDGE_REPEATED_auxi[nedge_all][2];
     krepeated                             =  0;
 
-    for (int i=0; i<NEDGE_all; i++) {
-	multiplicity = 0;
-	for (int j=i; j<NEDGE_all; j++) {
-	    if (j != i) {
-		if ( (CONN_EDGE_tmp[i][1) == CONN_EDGE_tmp[j][1)) && (CONN_EDGE_tmp[i][2) == CONN_EDGE_tmp[j][2))) {
-		    multiplicity                = multiplicity  + 1;
-		    krepeated                   = krepeated + 1;
-		    REPEATED_index[krepeated-1] = j;
-		    EDGE_MULTIPLICITY_auxi[i]   = multiplicity + 1;
-		}	
-	    }
+    iedge = 0;
+    for (int i=0; i<nedge_all; i++) {
+      int multiplicity = 0;
+      for (int j=i; j<nedge_all; j++) {
+	if (j != i) {
+	  if ( iAlmostEqual(CONN_EDGE_tmp[i][0], CONN_EDGE_tmp[j][0]) &&
+	       iAlmostEqual(CONN_EDGE_tmp[i][1], CONN_EDGE_tmp[j][1]) ) {
+		
+	    multiplicity                  = multiplicity  + 1;
+	    krepeated                     = krepeated + 1;
+	    REPEATED_index[krepeated-1]   = j;
+	    EDGE_MULTIPLICITY_auxi[iedge] = multiplicity + 1;
+	    
+	    printf("iedge=%d, EDGE_MULTIPLICITY %d -> [%d %d %d %d] repeated %d times (%d)\n", krepeated-1, REPEATED_index[krepeated-1], FACE_MULTIPLICITY_auxi[iedge], multiplicity + 1);
+
+	    iedge = iedge + 1;
+	    
+	  }	
 	}
+      }
     }
     
     return 0;
