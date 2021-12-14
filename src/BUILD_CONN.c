@@ -437,14 +437,15 @@ int BUILD_EDGES(int **CONN, int nelem)
 	}
 	}*/
 
-    /*
+    
     for (int iface=0; iface<nfaces; iface++) {
 	if (iface < nbdy_faces) {
 	    printf(" BDY: CONN_FACE(%d,1:4) = %d %d %d %d - repeated %d times\n", iface, CONN_FACE[iface][0], CONN_FACE[iface][1], CONN_FACE[iface][2], CONN_FACE[iface][3], FACE_MULTIPLICITY_auxi[iface]);
 	} else {
 	    printf(" INT: CONN_FACE(%d,1:4) = %d %d %d %d - repeated %d times\n", iface, CONN_FACE[iface][0], CONN_FACE[iface][1], CONN_FACE[iface][2], CONN_FACE[iface][3], FACE_MULTIPLICITY_auxi[iface]);
 	}
-	} //OK CONN_FACE and FACE_MULTIPLICITY;*/
+	} //OK CONN_FACE and FACE_MULTIPLICITY;
+    return 0;
     
     /*--------------------------------------------------------------------------
      * Populate FACE_LtoG(1:NEL,1:6) OK
@@ -490,7 +491,7 @@ int BUILD_EDGES(int **CONN, int nelem)
 		     ) {
 			    
 		    FACE_LtoG[iel][iface] = IFACE;
-		    printf("  --- FACE_LtoG[%d,%d] = %d -> [%d %d %d %d] \n", iel, iface+1, \
+		    printf("  --- FACE_LtoG[%d,%d] = %d -> [%d %d %d %d] \n", iel+1, iface+1, \
 			   FACE_LtoG[iel][iface], conn_face_el_sort[iel][iface][0], \
 			   conn_face_el_sort[iel][iface][1],		\
 			   conn_face_el_sort[iel][iface][2],		\
