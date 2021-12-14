@@ -475,14 +475,7 @@ int BUILD_EDGES(int **CONN, int nelem)
 	}
     } //OK
     
-    /*for (int iel=0; iel<nelem; iel++) {
-	for (int i=0; i<6; i++) {
-	    for (int j=0; j<4; j++) {
-		printf("  iel=%d. conn_face_el_sort[%d][%d] = %d \n", iel, i,j, conn_face_el_sort[iel][i][j]);
-	    }
-	}
-	}*/
-    
+    int IBDY_FACE = 0;
     for (int IFACE=0; IFACE<nfaces; IFACE++) {
 	for (int iel=0; iel<nelem; iel++) {
 	    for (int iface=0; iface<6; iface++) {
@@ -506,17 +499,28 @@ int BUILD_EDGES(int **CONN, int nelem)
 		}
 	    }
 	}
+
+	/* UNCOMMENT this part to populate CONN_BDY_FACE[0:NBDY_FACES][0:3]
+	   if it is not coming from the GMSH file 
+	   
+	   if (FACE_MULTIPLICITY_auxi[IFACE] == 0) { //CHECK THE SIZE OF THIS FIRST
+	      CONN_BDY_FACE[IBDY_FACE][0] = CONN_FACE[IFACE][0];
+	      CONN_BDY_FACE[IBDY_FACE][1] = CONN_FACE[IFACE][1];
+	      CONN_BDY_FACE[IBDY_FACE][2] = CONN_FACE[IFACE][2];
+	      CONN_BDY_FACE[IBDY_FACE][3] = CONN_FACE[IFACE][3];
+	      IBDY_FACE = IBDY_FACE + 1;
+           }
+	*/
     }
-    //QUI
     free_i3tensor(conn_face_el_sort, 0, nelem-1, 0, 5, 0, 3);
 
-    
     /*----------------------------------------------------------------------------------------------------------------
      * Global edge connectivity:
      *----------------------------------------------------------------------------------------------------------------
      *
      * Loop 1 to populate internal edges to CONN_EDGE:
      *
+
      *EDGE_FLG(1:NEDGES)          = -1;
      *EDGE_LtoG(1:NELEM, 1:12)    = -1; %map from local edge number (1:4) to global edge number
      *EDGE_in_ELEM(1:NEDGES, 1:2) = -1;
@@ -552,13 +556,32 @@ int BUILD_EDGES(int **CONN, int nelem)
 	    }
 		
 	    EDGE_in_ELEM[iedge_all] = iel;
-		
-	    //EDGE_FLG[iedge_all] = 1;
+	    
 	    iedge_all = iedge_all + 1;
 	}
     }
 
+    
+    int NEDGE_all                         = iedge_all - 1;
+    int REPEATED_auxi[NEDGE_all][2]       = -1;
+    int EDGE_MULTIPLICITY_auxi[NEDGE_all] =  0;
+    int IEDGE_repeated                    =  0;
+    int iedge                             =  1;
+    krepeated                             =  0;
 
+    for (int i=0; i<NEDGE_all; i++) {
+	multiplicity = 0;
+	for (int j=i; j<NEDGE_all; j++) {
+	    if (j != i) {
+		if ( (CONN_EDGE_tmp[i][1) == CONN_EDGE_tmp[j][1)) && (CONN_EDGE_tmp[i][2) == CONN_EDGE_tmp[j][2))) {
+		    multiplicity                = multiplicity  + 1;
+		    krepeated                   = krepeated + 1;
+		    REPEATED_index[krepeated-1] = j;
+		    EDGE_MULTIPLICITY_auxi[i]   = multiplicity + 1;
+		}	
+	    }
+	}
+    }
     
     return 0;
 }
