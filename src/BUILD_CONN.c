@@ -308,6 +308,7 @@ int BUILD_EDGES(int **CONN, int nelem)
 	}
 	//printf("\n");
     }
+    
     /*
      * 2) Append the internal faces to CONN_FACE(NCONN_BDY_FACES+1:NFACES, 1:4)
      *
@@ -399,7 +400,7 @@ int BUILD_EDGES(int **CONN, int nelem)
     //VIEW_i2DMAT("CONN_FACE", CONN_FACE, 0, nfaces-1, 0, 3);
     
     /*
-     * Set repeated entries of CONN_EDGE_tmp to -1:
+     * Set repeated entries of CONN_FACE_all to -1:
      */
     int nrepeated = krepeated;
     for (int i=0; i<nrepeated; i++) {
@@ -529,6 +530,10 @@ int BUILD_EDGES(int **CONN, int nelem)
      *
      * Detect ALL edges, including the shared ones:
      */
+
+    FILE *input;
+    input = fopen ("EDGES-C.dat", "w" );
+    
     int nedge_all = nelem*12;
     int CONN_EDGE_tmp[nedge_all][2];
     int CONN_EDGE_all[nedge_all][2];
@@ -554,39 +559,97 @@ int BUILD_EDGES(int **CONN, int nelem)
 		CONN_EDGE_tmp[iedge_all][1] = CONN_EDGE_tmp[iedge_all][0];
 		CONN_EDGE_tmp[iedge_all][0] = tmp1;
 	    }
-		
 	    EDGE_in_ELEM[iedge_all] = iel;
-	    
+  
+	    printf("iedge = %d (%d, %d) is in elements %d\n", iedge_all+1,  CONN_EDGE_tmp[iedge_all][0], CONN_EDGE_tmp[iedge_all][1], EDGE_in_ELEM[iedge_all]);
+	    //fprintf(input, "iedge_all = %d (%d, %d)\n", iedge_all+1, CONN_EDGE_tmp[iedge_all][0], CONN_EDGE_tmp[iedge_all][1]);	    
+	  
 	    iedge_all = iedge_all + 1;
 	}
     }
-
-    int IEDGE_repeated                    =  0;
+    return 0;
+    krepeated                        =  0;
+    int IEDGE_repeated, multiplicity =  0;
     int EDGE_MULTIPLICITY_auxi[nedge_all];
-    int EDGE_REPEATED_auxi[nedge_all][2];
-    krepeated                             =  0;
-
-    iedge = 0;
-    for (int i=0; i<nedge_all; i++) {
-      int multiplicity = 0;
-      for (int j=i; j<nedge_all; j++) {
-	if (j != i) {
-	  if ( iAlmostEqual(CONN_EDGE_tmp[i][0], CONN_EDGE_tmp[j][0]) &&
-	       iAlmostEqual(CONN_EDGE_tmp[i][1], CONN_EDGE_tmp[j][1]) ) {
-		
-	    multiplicity                  = multiplicity  + 1;
-	    krepeated                     = krepeated + 1;
-	    REPEATED_index[krepeated-1]   = j;
-	    EDGE_MULTIPLICITY_auxi[iedge] = multiplicity + 1;
+    int EDGE_MULTIPLICITY[nedge_all];      //This is over-allocated but it will do.
+    //int EDGE_REPEATED_auxi[nedge_all][2];
+    int EDGE_REPEATED_index[nedge_all];
+    for (int i=1; i<=nedge_all; i++) {
+	multiplicity = 0;
+	//printf("iedge_all = %d (%d, %d)\n", i, CONN_EDGE_tmp[i-1][0], CONN_EDGE_tmp[i-1][1]);
+	for (int j=i; j<=nedge_all; j++) {
 	    
-	    printf("iedge=%d, EDGE_MULTIPLICITY %d -> [%d %d %d %d] repeated %d times (%d)\n", krepeated-1, REPEATED_index[krepeated-1], FACE_MULTIPLICITY_auxi[iedge], multiplicity + 1);
+	    //if (j != i) {
+		if ( iAlmostEqual(CONN_EDGE_tmp[i-1][0], CONN_EDGE_tmp[j-1][0]) && \
+		     iAlmostEqual(CONN_EDGE_tmp[i-1][1], CONN_EDGE_tmp[j-1][1]) ) {
+		    
+		    multiplicity                = multiplicity + 1;
+		    krepeated                   = krepeated + 1;
+		    EDGE_REPEATED_index[krepeated-1] = j;
+		    EDGE_MULTIPLICITY_auxi[i-1] = multiplicity + 1;
 
-	    iedge = iedge + 1;
-	    
-	  }	
+		    if( CONN_EDGE_tmp[j-1][0] == 18)
+			printf("iedge_all = %d -- jedge_all = %d: (%d, %d) =?= (%d, %d)\n", i, j, CONN_EDGE_tmp[j-1][0], CONN_EDGE_tmp[j-1][1], CONN_EDGE_tmp[i-1][0],CONN_EDGE_tmp[i-1][1]);
+		    
+		    //	}	
+	    }
 	}
-      }
     }
+    return 0;
+
+     /*
+     * Set repeated entries of CONN_EDGE_tmp to -1:
+     */
+    nrepeated = krepeated;
+    for (int i=0; i<nrepeated; i++) {
+	int irepeated_index = EDGE_REPEATED_index[i];
+	
+	CONN_EDGE_all[irepeated_index][0] = -1;
+	CONN_EDGE_all[irepeated_index][1] = -1;
+    }
+
+    /*--------------------------------------------------------------------------
+     * STORE EACH EDGE into CONN_EDGE(1:NEDGES, 1:2): OK
+     *--------------------------------------------------------------------------*/
+    nedges = 0;
+    iedge_all = 0;
+    for (int iel=0; iel<nelem; iel++) {
+	for (int iedg=0; iedg<12; iedg++) {	    
+	    if (CONN_EDGE_all[iedge_all][0] > 0) {
+		//Count unique edges
+		nedges++;
+	    }
+	    iedge_all++;
+	}
+    }
+    nedges = nedges - 1;
+    printf(" NEDGES = %d\n", nedges);
+    
+    MEMORY_ALLOCATE(8);
+    
+    iedge = 0;
+    iedge_all = 0;
+    for (int iel=0; iel<nelem; iel++) {
+	for (int iedg=0; iedg<12; iedg++) {
+	    
+	    if (CONN_EDGE_all[iedge_all][0] > 0) {
+		
+		CONN_EDGE[iedge][0]      = CONN_EDGE_all[iedge_all][0];
+		CONN_EDGE[iedge][1]      = CONN_EDGE_all[iedge_all][1];
+		EDGE_MULTIPLICITY[iedge] = EDGE_MULTIPLICITY_auxi[iedge_all];
+		
+		iedge++;
+	    }
+	    iedge_all++;
+	}
+    }
+
+    for (int iedge=0; iedge<nedges; iedge++) {
+	printf(" Edge %d - (%d, %d) counted %d times\n", iedge, CONN_EDGE[iedge][0], CONN_EDGE[iedge][1], EDGE_MULTIPLICITY[iedge]);
+    }
+    return 0;
+    
+    fclose(input);
     
     return 0;
 }
