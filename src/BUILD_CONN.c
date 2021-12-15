@@ -559,7 +559,7 @@ int BUILD_EDGES(int **CONN, int nelem)
 		CONN_EDGE_tmp[iedge_all][1] = CONN_EDGE_tmp[iedge_all][0];
 		CONN_EDGE_tmp[iedge_all][0] = tmp1;
 	    }
-	    EDGE_in_ELEM[iedge_all] = iel;
+	    EDGE_in_ELEM[iedge_all] = iel+1;
   
 	    printf("iedge = %d (%d, %d) is in elements %d\n", iedge_all+1,  CONN_EDGE_tmp[iedge_all][0], CONN_EDGE_tmp[iedge_all][1], EDGE_in_ELEM[iedge_all]);
 	    //fprintf(input, "iedge_all = %d (%d, %d)\n", iedge_all+1, CONN_EDGE_tmp[iedge_all][0], CONN_EDGE_tmp[iedge_all][1]);	    
@@ -567,33 +567,47 @@ int BUILD_EDGES(int **CONN, int nelem)
 	    iedge_all = iedge_all + 1;
 	}
     }
-    return 0;
+    
     krepeated                        =  0;
     int IEDGE_repeated, multiplicity =  0;
     int EDGE_MULTIPLICITY_auxi[nedge_all];
     int EDGE_MULTIPLICITY[nedge_all];      //This is over-allocated but it will do.
     //int EDGE_REPEATED_auxi[nedge_all][2];
     int EDGE_REPEATED_index[nedge_all];
-    for (int i=1; i<=nedge_all; i++) {
-	multiplicity = 0;
+    //for (int i=1; i<=nedge_all; i++) {
+    //multiplicity = 0;
 	//printf("iedge_all = %d (%d, %d)\n", i, CONN_EDGE_tmp[i-1][0], CONN_EDGE_tmp[i-1][1]);
-	for (int j=i; j<=nedge_all; j++) {
+	//	for (int j=i; j<=nedge_all; j++) {
 	    
-	    //if (j != i) {
-		if ( iAlmostEqual(CONN_EDGE_tmp[i-1][0], CONN_EDGE_tmp[j-1][0]) && \
-		     iAlmostEqual(CONN_EDGE_tmp[i-1][1], CONN_EDGE_tmp[j-1][1]) ) {
-		    
-		    multiplicity                = multiplicity + 1;
-		    krepeated                   = krepeated + 1;
-		    EDGE_REPEATED_index[krepeated-1] = j;
-		    EDGE_MULTIPLICITY_auxi[i-1] = multiplicity + 1;
+	
+    iedge_all = 0;
+    for (int iel=0; iel<nelem; iel++) {
+      for (int iedg=0; iedg<12; iedg++) {
+	
+	int jedge_all = 0;
+	for (int jel=iel; jel<nelem; jel++) {
+	  for (int jedg=0; jedg<12; jedg++) {
 
-		    if( CONN_EDGE_tmp[j-1][0] == 18)
-			printf("iedge_all = %d -- jedge_all = %d: (%d, %d) =?= (%d, %d)\n", i, j, CONN_EDGE_tmp[j-1][0], CONN_EDGE_tmp[j-1][1], CONN_EDGE_tmp[i-1][0],CONN_EDGE_tmp[i-1][1]);
-		    
-		    //	}	
-	    }
+	    //if( iel != jel) {
+	      
+	      if ( iAlmostEqual(CONN_EDGE_tmp[iedge_all][0], CONN_EDGE_tmp[jedge_all][0]) && \
+		   iAlmostEqual(CONN_EDGE_tmp[iedge_all][1], CONN_EDGE_tmp[jedge_all][1]) ) {
+		
+		//multiplicity                = multiplicity + 1;
+		//  krepeated                   = krepeated + 1;
+		//EDGE_REPEATED_index[krepeated-1] = j;
+		//EDGE_MULTIPLICITY_auxi[i-1] = multiplicity + 1;
+		
+		//if( CONN_EDGE_tmp[iedge_all][0] == 22 && CONN_EDGE_tmp[iedge_all][1] == 27)
+		printf("-iedge_all = %d -- jedge_all = %d: (%d, %d) =?= (%d, %d) in elem %d\n", iedge_all, jedge_all, CONN_EDGE_tmp[iedge_all][0], CONN_EDGE_tmp[iedge_all][1], CONN_EDGE_tmp[jedge_all][0], CONN_EDGE_tmp[jedge_all][1], EDGE_in_ELEM[iedge_all]);
+		
+		jedge_all = jedge_all + 1;
+		 }
+		//}
+	  }
 	}
+	iedge_all = iedge_all + 1;
+      }
     }
     return 0;
 
