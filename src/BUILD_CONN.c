@@ -92,7 +92,7 @@ int BUILD_EDGES(int **CONN, int nelem)
      */
     MEMORY_ALLOCATE(6);
 
-    VIEW_i2DMAT("CONN", CONN, 0,nelem-1, 0,7);
+    //VIEW_i2DMAT("CONN", CONN, 0,nelem-1, 0,7);
     
     for (iel = 0; iel<nelem; iel++)
 	{
@@ -442,13 +442,13 @@ int BUILD_EDGES(int **CONN, int nelem)
 
     //OK WORKING: CONN_FACE is now correctly populated and ordered.
     //Uncomment the following for loop to print it to screen.
-    for (int iface=0; iface<nfaces; iface++) {
+    /*for (int iface=0; iface<nfaces; iface++) {
 	if (iface < nbdy_faces) {
 	    printf(" BDY: CONN_FACE(%d,1:4) = %d %d %d %d - repeated %d times\n", iface, CONN_FACE[iface][0], CONN_FACE[iface][1], CONN_FACE[iface][2], CONN_FACE[iface][3], FACE_MULTIPLICITY_auxi[iface]);
 	} else {
 	    printf(" INT: CONN_FACE(%d,1:4) = %d %d %d %d - repeated %d times\n", iface, CONN_FACE[iface][0], CONN_FACE[iface][1], CONN_FACE[iface][2], CONN_FACE[iface][3], FACE_MULTIPLICITY_auxi[iface]);
 	}
-      } //OK CONN_FACE and FACE_MULTIPLICITY;
+	} //OK CONN_FACE and FACE_MULTIPLICITY;*/
     
     
     /*--------------------------------------------------------------------------
@@ -466,7 +466,8 @@ int BUILD_EDGES(int **CONN, int nelem)
 	    CONN_FACE_sort[i][j] = auxi[jj];
 	}
     }//OK
-    for (int iface=0; iface<nfaces; iface++) {
+
+    /*for (int iface=0; iface<nfaces; iface++) {
 	if (iface < nbdy_faces) {
 	    printf(" face %d: s BDY: CONN_FACE_sort(%d,1:4) = %d %d %d %d - repeated %d times\n", iface, iface, CONN_FACE_sort[iface][0], CONN_FACE_sort[iface][1], CONN_FACE_sort[iface][2], CONN_FACE_sort[iface][3], FACE_MULTIPLICITY_auxi[iface]);
 	    printf(" face %d: u BDY: CONN_FACE     (%d,1:4) = %d %d %d %d - repeated %d times\n", iface, iface, CONN_FACE[iface][0], CONN_FACE[iface][1], CONN_FACE[iface][2], CONN_FACE[iface][3], FACE_MULTIPLICITY_auxi[iface]);
@@ -474,7 +475,7 @@ int BUILD_EDGES(int **CONN, int nelem)
 	    printf(" face %d: s INT: CONN_FACE_sort(%d,1:4) = %d %d %d %d - repeated %d times\n", iface, iface, CONN_FACE_sort[iface][0], CONN_FACE_sort[iface][1], CONN_FACE_sort[iface][2], CONN_FACE_sort[iface][3], FACE_MULTIPLICITY_auxi[iface]);
 	    printf(" face %d: u INT: CONN_FACE     (%d,1:4) = %d %d %d %d - repeated %d times\n", iface, iface, CONN_FACE[iface][0], CONN_FACE[iface][1], CONN_FACE[iface][2], CONN_FACE[iface][3], FACE_MULTIPLICITY_auxi[iface]);
 	}
-    } //OK
+	}*/ //OK
     
     int IBDY_FACE = 0;
     for (int IFACE=0; IFACE<nfaces; IFACE++) {
@@ -492,11 +493,11 @@ int BUILD_EDGES(int **CONN, int nelem)
 		     ) {
 			    
 		    FACE_LtoG[iel][iface] = IFACE;
-		    printf("  --- FACE_LtoG[%d,%d] = %d -> [%d %d %d %d] \n", iel+1, iface+1, \
+		    /*printf("  --- FACE_LtoG[%d,%d] = %d -> [%d %d %d %d] \n", iel+1, iface+1, \
 			   FACE_LtoG[iel][iface], conn_face_el_sort[iel][iface][0], \
 			   conn_face_el_sort[iel][iface][1],		\
 			   conn_face_el_sort[iel][iface][2],		\
-			   conn_face_el_sort[iel][iface][3]);
+			   conn_face_el_sort[iel][iface][3]);*/
 		}
 	    }
 	}
@@ -619,7 +620,7 @@ int BUILD_EDGES(int **CONN, int nelem)
     }    
     
     //if (irank == ) printf(" N. unique edges (nedges) = %d\n", nedges);
-    printf(" N. unique edges (nedges) = %d\n", nedges);
+    printf(" # Number of unique edges\t%d\n", nedges);
     
     MEMORY_ALLOCATE(8); //allocate CONN_EDGES[nedges][nop+1];
         
@@ -644,18 +645,43 @@ int BUILD_EDGES(int **CONN, int nelem)
      *--------------------------------------------------------------------------*/
     for (int iedge=0; iedge<nedges; iedge++){
 	for (int iel=0; iel<nelem; iel++) {
-	    for (int iedg=0; iedg<12; iedg++) {
+	    for (int iedg_el=0; iedg_el<12; iedg_el++) {
 		
-		if ( (CONN_EDGE[iedge][0] == conn_edge_el[iel][iedg][0] && CONN_EDGE[iedge][1] == conn_edge_el[iel][iedg][1]) || \
-		     (CONN_EDGE[iedge][1] == conn_edge_el[iel][iedg][0] && CONN_EDGE[iedge][0] == conn_edge_el[iel][iedg][1]) ) {
+		if ( (CONN_EDGE[iedge][0] == conn_edge_el[iel][iedg_el][0] && CONN_EDGE[iedge][1] == conn_edge_el[iel][iedg_el][1]) || \
+		     (CONN_EDGE[iedge][1] == conn_edge_el[iel][iedg_el][0] && CONN_EDGE[iedge][0] == conn_edge_el[iel][iedg_el][1]) ) {
 		    
-		    EDGE_LtoG[iel][iedg] = iedge;
-		    printf("  --- EDGE_LtoG(%d,%d) = %d \n", iel, iedg, EDGE_LtoG[iel][iedg]);
+		    EDGE_LtoG[iel][iedg_el] = iedge;
+		    //printf("  --- EDGE_LtoG(iel=%d,iedg=%d) = %d with nodes --> (%d, %d) with multiplicity %d\n", iel+1, iedg_el+1, EDGE_LtoG[iel][iedg_el],  CONN_EDGE[iedge][0], CONN_EDGE[iedge][1], EDGE_MULTIPLICITY[iedge]);
 		}
 	    }
 	}
-    }
+    }//OK
+
     
+    /*-------------------------------------------------------------------------
+     * BUILD BDY_EDGE(1:NBDY_EDGES, 1:5): 
+     * NOTICE: This way of identifying boundary edges only works for structured
+     * grids with hexas.
+     *-------------------------------------------------------------------------*
+    int IBDY_EDGE = 0;
+    for (int iedge=0; iedge<nedges; iedge++){
+	if (EDGE_MULTIPLICITY[iedge] <= 3) {
+	    
+		 IBDY_EDGE = IBDY_EDGE + 1;
+		 
+		 BDY_EDGE[IBDY_EDGE][0] = iedge;
+		 BDY_EDGE[IBDY_EDGE][1] = CONN_EDGE[iedge][0];
+		 BDY_EDGE[IBDY_EDGE][2] = CONN_EDGE[iedge][1];
+		 BDY_EDGE[IBDY_EDGE][3] = -1; //IEL;
+		 BDY_EDGE[IBDY_EDGE][4] = 1;
+		 
+		 printf("  edge %d is a BDY EDGE with nodes (%d %d)\n", IEDGE, BDY_EDGE[IBDY_EDGE][1], BDY_EDGE[IBDY_EDGE][2]);
+	}
+    }
+    /*-------------------------------------------------------------------------
+     * END BUILD BDY_EDGE(1:NBDY_EDGES, 1:5)
+     *-------------------------------------------------------------------------*/
+        
     return 0;
 }
 
@@ -724,11 +750,11 @@ int ADD_HIGH_ORDER_NODES(void)
 		} //end iedg
 	} //end iel
     int NPcurrent = ip;
-    
+    */
 
     printf(" # POPULATE GRID with SPECTRAL NODES............................ DONE\n");
     printf(" #------------------------------------------------------------------#\n");
-    */
+    
     return 0;
     
 }
