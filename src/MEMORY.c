@@ -147,7 +147,13 @@ int MEMORY_ALLOCATE(int flag)
 		    CONN_EDGE[iedge][inode] = 0;
 		}
 	    }
-	    printf(" # Memory allocated (flag 8): CONN_EDGES[%d][%d]\n", nedges, (nop+1));
+	    
+	    EDGE_LtoG =  imatrix(0,nelem, 0,nedges);	    
+	    
+	    printf(" # Memory allocated (flag 8):\n");
+	    printf(" # \t\t CONN_EDGES[%d][%d]\n", nedges, (nop+1));
+	    printf(" # \t\t EDGE_LtoG[%d][%d]\n", nelem, nedges);
+
 	}
     
     return 0;
@@ -242,7 +248,11 @@ int MEMORY_DEALLOCATE(int flag)
      if(flag == 8)
 	{
 	    free_imatrix(CONN_EDGE, 0,nedges, 0, (nop+1)); //For hexa only for now
-	    printf(" # Freed memory (flag 8): free(CONN_EDGES)\n");
+	    free_imatrix(EDGE_LtoG, 0,nelem, 0,nedges);
+	    
+	    printf(" # Freed memory (flag 8):\n");
+	    printf(" # \t\t free(CONN_EDGES)\n");
+	    printf(" # \t\t free(EDGE_LtoG)\n");
 	}
     
      

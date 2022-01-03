@@ -529,11 +529,7 @@ int BUILD_EDGES(int **CONN, int nelem)
      *EDGE_MULTIPLICITY(1:NEDGES) = -1;
      *
      * Detect ALL edges, including the shared ones:
-     */
-
-    FILE *input;
-    input = fopen ("EDGES-C.dat", "w" );
-    
+     */    
     int nedge_all = nelem*12;
     int CONN_EDGE_tmp[nedge_all][2];
     int CONN_EDGE_all[nedge_all][2];
@@ -562,9 +558,8 @@ int BUILD_EDGES(int **CONN, int nelem)
 	    
 	    EDGE_in_ELEM[iedge_all] = iel;
 	    
-	    printf("iedge = %d (%d, %d) is in elements %d\n", iedge_all+1,  CONN_EDGE_tmp[iedge_all][0], CONN_EDGE_tmp[iedge_all][1], EDGE_in_ELEM[iedge_all]);
-	    //fprintf(input, "iedge_all = %d (%d, %d)\n", iedge_all+1, CONN_EDGE_tmp[iedge_all][0], CONN_EDGE_tmp[iedge_all][1]);	    
-	  
+	    //printf("iedge = %d (%d, %d) is in elements %d\n", iedge_all+1,  CONN_EDGE_tmp[iedge_all][0], CONN_EDGE_tmp[iedge_all][1], EDGE_in_ELEM[iedge_all]);
+	    
 	    iedge_all = iedge_all + 1;
 	}
     }
@@ -593,10 +588,7 @@ int BUILD_EDGES(int **CONN, int nelem)
 		    EDGE_REPEATED_index[krepeated - 1] = j;
 		    EDGE_MULTIPLICITY_auxi[i - 1]      = multiplicity + 1;
 
-		    //if(EDGE_MULTIPLICITY_auxi[i-1] == 4) {
-			printf("i = %d (%d, %d) - repeated %d times\n", i, CONN_EDGE_tmp[i-1][0] , CONN_EDGE_tmp[i-1][1], EDGE_MULTIPLICITY_auxi[i-1]);
-			fprintf(input, "i = %d (%d, %d) - repeated %d times\n", i, CONN_EDGE_tmp[i-1][0] , CONN_EDGE_tmp[i-1][1], EDGE_MULTIPLICITY_auxi[i-1]);
-			//	}
+		    //printf("i = %d (%d, %d) - repeated %d times\n", i, CONN_EDGE_tmp[i-1][0] , CONN_EDGE_tmp[i-1][1], EDGE_MULTIPLICITY_auxi[i-1]);
 		}	
 	    }
 	}
@@ -608,11 +600,11 @@ int BUILD_EDGES(int **CONN, int nelem)
     int irepeated_index;
     nrepeated = krepeated;
     for (int i=0; i<nrepeated; i++) {
-
+	
 	irepeated_index = EDGE_REPEATED_index[i];
-	fprintf(input, "%d irepeated_index = %d\n", i+1, irepeated_index);
-	CONN_EDGE_all[irepeated_index][0] = -1;
-	CONN_EDGE_all[irepeated_index][1] = -1;
+	//printf("%d irepeated_index = %d\n", i+1, irepeated_index);
+	CONN_EDGE_all[irepeated_index-1][0] = -1;
+	CONN_EDGE_all[irepeated_index-1][1] = -1;
     }
     
     /*--------------------------------------------------------------------------
@@ -625,7 +617,8 @@ int BUILD_EDGES(int **CONN, int nelem)
 	    nedges++;
 	}
     }    
-    nedges = nedges - 1;
+    
+    //if (irank == ) printf(" N. unique edges (nedges) = %d\n", nedges);
     printf(" N. unique edges (nedges) = %d\n", nedges);
     
     MEMORY_ALLOCATE(8); //allocate CONN_EDGES[nedges][nop+1];
@@ -638,29 +631,41 @@ int BUILD_EDGES(int **CONN, int nelem)
 	    if (CONN_EDGE_all[iedge_all][0] > 0) {		
 		CONN_EDGE[iedge][0]      = CONN_EDGE_all[iedge_all][0];
 		CONN_EDGE[iedge][1]      = CONN_EDGE_all[iedge_all][1];
-		EDGE_MULTIPLICITY[iedge] = EDGE_MULTIPLICITY_auxi[iedge_all-1];
-		printf("  IEDGE %d has multiplicity %d \n", iedge, EDGE_MULTIPLICITY[iedge]);		
+		EDGE_MULTIPLICITY[iedge] = EDGE_MULTIPLICITY_auxi[iedge_all];
+		//printf("  IEDGE %d has multiplicity %d = (%d, %d)\n", iedge, EDGE_MULTIPLICITY[iedge],CONN_EDGE[iedge][0],CONN_EDGE[iedge][1]);
 		iedge++;
 	    }
 	    iedge_all++;
 	}
+    }//OK EDGE_MULTIPLICITY[iedge], CONN_EDGE[iedge][0,1] are correctly populated
+   
+    /*--------------------------------------------------------------------------
+     * Populate EDGE_LtoG(1:nelem,1:12) OK
+     *--------------------------------------------------------------------------*/
+    for (int iedge=0; iedge<nedges; iedge++){
+	for (int iel=0; iel<nelem; iel++) {
+	    for (int iedg=0; iedg<12; iedg++) {
+		
+		if ( (CONN_EDGE[iedge][0] == conn_edge_el[iel][iedg][0] && CONN_EDGE[iedge][1] == conn_edge_el[iel][iedg][1]) || \
+		     (CONN_EDGE[iedge][1] == conn_edge_el[iel][iedg][0] && CONN_EDGE[iedge][0] == conn_edge_el[iel][iedg][1]) ) {
+		    
+		    EDGE_LtoG[iel][iedg] = iedge;
+		    printf("  --- EDGE_LtoG(%d,%d) = %d \n", iel, iedg, EDGE_LtoG[iel][iedg]);
+		}
+	    }
+	}
     }
-    return 0;
-    for (int iedge=0; iedge<nedges; iedge++) {
-	printf(" Edge %d - (%d, %d) counted %d times\n", iedge, CONN_EDGE[iedge][0], CONN_EDGE[iedge][1], EDGE_MULTIPLICITY[iedge]);
-    }
-    return 0;
-    
-    fclose(input);
     
     return 0;
 }
+
+
 
 int ADD_HIGH_ORDER_NODES(void)
 {
     /*--------------------------------------------------------------------------
      * Auxiliary elemental parameters/counters:
-     *--------------------------------------------------------------------------*
+     *--------------------------------------------------------------------------*/
     int ncorner_nodes            = 8;
     int nedge_internal_nodes     = (ngl-2);
     int nface_internal_nodes     = (ngl-2)*(ngl-2);
@@ -673,8 +678,7 @@ int ADD_HIGH_ORDER_NODES(void)
     
     printf(" #------------------------------------------------------------------#\n");
     printf(" # POPULATE GRID with SPECTRAL NODES............................\n");
-
-    printf(" nnodes = %d\n", nnodes);
+    //printf(" nnodes = %d %d %d\n", nnodes, ngl, nedges);
 
     /*--------------------------------------------------------------------------
      * Build high order grid points on every edges

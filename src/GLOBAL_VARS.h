@@ -145,6 +145,7 @@ int								\
     ***conn_face_edge_el,					\
     ***FACE_in_ELEM,						\
     **FACE_LtoG,						\
+    **EDGE_LtoG,						\
     *ELTYPE;
 
 char								    	\

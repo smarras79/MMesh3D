@@ -150,7 +150,7 @@ int main(int argc, char** argv) {
 	    BUILD_EDGES(CONN, nelem);
 	    
 	    ADD_HIGH_ORDER_NODES();
-
+	    
 	    
 	    MEMORY_DEALLOCATE(6);
 	} //END reading external grid
