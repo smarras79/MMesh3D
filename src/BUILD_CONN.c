@@ -561,7 +561,7 @@ int BUILD_EDGES(int **CONN, int nelem)
 	    CONN_EDGE_tmp[iedge_all][1] = conn_edge_el[iel][iedg][1];
 	    
 	    EDGE_in_ELEM[iedge_all] = iel;
-  
+	    
 	    printf("iedge = %d (%d, %d) is in elements %d\n", iedge_all+1,  CONN_EDGE_tmp[iedge_all][0], CONN_EDGE_tmp[iedge_all][1], EDGE_in_ELEM[iedge_all]);
 	    //fprintf(input, "iedge_all = %d (%d, %d)\n", iedge_all+1, CONN_EDGE_tmp[iedge_all][0], CONN_EDGE_tmp[iedge_all][1]);	    
 	  
@@ -574,7 +574,6 @@ int BUILD_EDGES(int **CONN, int nelem)
     int EDGE_MULTIPLICITY_auxi[nedge_all];
     int EDGE_MULTIPLICITY[nedge_all];      //This is over-allocated but it will do.
     int EDGE_REPEATED_index[nedge_all];
-
     
     for (int i=1; i<=nedge_all; i++) {
 	EDGE_MULTIPLICITY_auxi[i] = 0;
