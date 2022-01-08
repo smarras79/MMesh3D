@@ -19,17 +19,17 @@ int GMSH_IO(char *inputfile) {
      *          "Version 2 ASCII" format.
      */
     int node_dim;
-    int node_num;
     int element_order;
     int dummy;
 
     gmsh_size_read(inputfile, &nnodes, &node_dim, &nelem, &dummy);
-
+    
     MEMORY_ALLOCATE(1);
+    MEMORY_ALLOCATE(10);
     MEMORY_ALLOCATE(5);
     
-    gmsh_data_read(inputfile, node_dim, nnodes, nop, nelem);
-    
+    gmsh_data_read(inputfile, node_dim, nnodes, -1, nelem);
+
     printf(" #------------------------------------------------------\n");
     printf(" # GMSH grid read successfully from %s :\n #   number of nodes = %d\n #   number of elem = %d\n #   nsd = %d\n", inputfile,  nnodes, nelem, node_dim);
     printf(" #------------------------------------------------------\n");

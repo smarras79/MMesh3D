@@ -124,9 +124,10 @@ int main(int argc, char** argv) {
 	    READ_TOPOGRAPHY();
 
 	    /*************************************************************************************
-	     * Dynamic memory allocation of U,V,P,G,F and coordinates on the grid
+	     * Dynamic memory allocation of COORDS and CONN related arrays
 	     *************************************************************************************/
 	    MEMORY_ALLOCATE(1);
+	    MEMORY_ALLOCATE(10);
 	
 	    /*************************************************************************************
 	     * Build GRID coordinates and connectivity matrix:
@@ -145,10 +146,11 @@ int main(int argc, char** argv) {
 
 	} else {
 	    GMSH_IO(external_grid_file_name);
-
+	    
 	    //CGNS_ORDERING(CONN, nelem);
 	    BUILD_EDGES(CONN, nelem);
 	    
+	    MEMORY_ALLOCATE(11);
 	    ADD_HIGH_ORDER_NODES();
 	    
 	    
@@ -166,6 +168,7 @@ int main(int argc, char** argv) {
 	 *****************************************************/
 	printf(" #------------------------------------------------------------------#\n");
 	MEMORY_DEALLOCATE(1);
+	MEMORY_DEALLOCATE(10);
 	MEMORY_DEALLOCATE(2);
 	MEMORY_DEALLOCATE(0);
 	if (lread_external_grid == 1){	    

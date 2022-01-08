@@ -36,8 +36,6 @@ void dPRINT_UNSTRUCT_GRID_GMSH(char *grid_name, int array_numb, int coords_ncolu
 
 void dPRINT_UNSTRUCT_GRID_CONN(char *grid_name, int array_numb, int coords_ncolumns);
 
-void wrt2VTK(char *file_name);
-
 void dwrt2VTK(char *file_name);
 
 void dwrt2GMSH(char *file_name);

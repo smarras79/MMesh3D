@@ -463,7 +463,7 @@ void dPRINT_UNSTRUCT_GRID_VTK(char *grid_name, int array_numb, int coords_ncolum
 
 {
     unsigned int i, j, k;
-	
+    	
     //visit writer wants the COORDS and CONN elements in a sequential 1D array
     //int elem_visit_types[nelem+1];
 
@@ -483,7 +483,7 @@ void dPRINT_UNSTRUCT_GRID_VTK(char *grid_name, int array_numb, int coords_ncolum
 	    ELTYPE[i-1] = VISIT_WEDGE;
 	}
     }
-
+    
     /* Pass the mesh and data to visit_writer. */
     dwrt2VTK(grid_name);
 
@@ -790,91 +790,6 @@ void dGRID2ALYAFILE(char *outfile_msh_alya, double **COORDS, int **CONN, int nno
 }
 
 
-/*
- * This function writes a VTK file for data on
- * an unstructured grid.
- *
- * simone.marras@gmail.com
- */
-void wrt2VTK(char *file_name)
-{  
-    int i,ie;
-    int nsize, nfield_data;
-  
-    FILE *file_id;
-   
-    file_id = fopen(file_name, "w");
-    if(file_id == NULL)
-	printf("The file %s could not be open\n", file_name);
-    else{
-    
-	//Open VTK file
-	fprintf(file_id, "# vtk DataFile Version 2.0\n");
-	fprintf(file_id, "INIT data\n");
-	fprintf(file_id, "ASCII\n");
-	fprintf(file_id, "DATASET UNSTRUCTURED_GRID\n");
-    
-	//Write coordinates
-	if( nsd == 2 )
-	    {
-		fprintf(file_id, "POINTS %d float\n", nnodes);
-		for(i=1; i<=nnodes; i++)
-		    {
-			fprintf(file_id, " %lf %lf %lf\n", COORDS[i][2], COORDS[i][3], 0.0);
-		    }
-	
-		//Write coonectivity
-		nsize = 5*nelem;
-		fprintf(file_id, "CELLS %d %d\n", nelem,nsize);
-		for(ie=1; ie<=nelem; ie++)
-		    {
-			if( ELTYPE[ie] == VISIT_QUAD )
-			    fprintf(file_id, " %d %d %d %d %d\n", ELTYPE[ie], CONN[ie][2]-1, CONN[ie][3]-1, CONN[ie][4]-1, CONN[ie][5]-1);
-			else if( ELTYPE[ie] == VISIT_TRIANGLE )
-			    fprintf(file_id, " %d %d %d %d\n", ELTYPE[ie], CONN[ie][2]-1, CONN[ie][3]-1, CONN[ie][4]-1);
-		    }
-	
-		fprintf(file_id, "CELL_TYPES %d\n", nelem);
-		for(ie=1; ie<=nelem; ie++)
-		    fprintf(file_id, " %d\n", ELTYPE[ie]);
-	
-	    }
-	else if( nsd == 3 )
-	    {
-		fprintf(file_id, "POINTS %d float\n", nnodes);
-		for(i=1; i<=nnodes; i++)
-		    {
-			fprintf(file_id, " %lf %lf %lf\n", COORDS[i][2], COORDS[i][3], COORDS[i][4]);
-		    }
-	
-		//Write coonectivity
-		if( ELTYPE[1] == VISIT_HEXAHEDRON )
-		    nsize = 9*nelem;
-		else if( ELTYPE[1] == VISIT_WEDGE )
-		    nsize = 7*nelem;
-	
-		fprintf(file_id, "CELLS %d %d\n", nelem,nsize);
-		for(ie=1; ie<=nelem; ie++)
-		    {
-			if( ELTYPE[ie] == VISIT_HEXAHEDRON )
-			    fprintf(file_id, " %d %d %d %d %d %d %d %d %d\n", ELTYPE[ie], CONN[ie][2]-1, CONN[ie][3]-1, CONN[ie][4]-1, CONN[ie][5]-1, CONN[ie][6]-1, CONN[ie][7]-1, CONN[ie][8]-1, CONN[ie][9]-1);
-			else if( ELTYPE[ie] == VISIT_WEDGE )
-			    fprintf(file_id, " %d %d %d %d %d %d %d\n", ELTYPE[ie], CONN[ie][2]-1, CONN[ie][3]-1, CONN[ie][4]-1, CONN[ie][5]-1, CONN[ie][6]-1, CONN[ie][7]-1);
-		    }
-	
-		fprintf(file_id, "CELL_TYPES %d\n", nelem);
-		for(ie=1; ie<=nelem; ie++)
-		    {
-			fprintf(file_id, " %d\n", ELTYPE[ie]);
-		    }
-	    }
-    }
-    fclose(file_id);
-  
-    return;
-}
-
-
 void dwrt2VTK_nx_ny_nz(char *file_name)
 {  
     int i,j,ie,inode;
@@ -1004,66 +919,68 @@ void dwrt2VTK(char *file_name)
 	fprintf(file_id, "INIT data\n");
 	fprintf(file_id, "ASCII\n");
 	fprintf(file_id, "DATASET UNSTRUCTURED_GRID\n");
-    
-	//Write coordinates
-	if( nsd == 2 )
-	    {
-		fprintf(file_id, "POINTS %d float\n", nnodes);
-		for(i=1; i<=nnodes; i++)
-		    {
-			fprintf(file_id, " %.12f %.12f %.12f\n", COORDS[i][0], COORDS[i][1], 0.0);
-		    }
-    
-		//Write coonectivity
-		nsize = 5*nelem;
-		fprintf(file_id, "CELLS %d %d\n", nelem, nsize);
-		for(ie=1; ie<=nelem; ie++)
-		    {
-			if( ELTYPE[ie] == VISIT_QUAD )
-			    fprintf(file_id, " %d %d %d %d %d\n", ie, CONN[ie][0]-1, CONN[ie][1]-1, CONN[ie][2]-1, CONN[ie][3]-1);
-			else if( ELTYPE[ie] == VISIT_TRIANGLE )
-			    fprintf(file_id, " %d %d %d %d\n", ie, CONN[ie][0]-1, CONN[ie][1]-1, CONN[ie][2]-1);
-		    }
-        
-		fprintf(file_id, "CELL_TYPES %d\n", nelem);
-		for(ie=1; ie<=nelem; ie++)
-		    fprintf(file_id, " %d\n", ELTYPE[ie]);
-        
-            }
-        else if( nsd == 3 )
-            {
-		fprintf(file_id, "POINTS %d double\n", nnodes);
-		for (i=0; i<nnodes; i++){
-		    fprintf(file_id, " %.12f %.12f %.12f\n", COORDS[i][0], COORDS[i][1], COORDS[i][2]);
-		}
-            
-		/*//COORDS --> COORDS1d:
-		j=1;
-		for (i=0; i<nnodes; i++){
-                    
-                    COORDS1d[j]   = COORDS[i][2];
-                    COORDS1d[j+1] = COORDS[i][3];
-                    COORDS1d[j+2] = COORDS[i][4];
-                    j=j+3;
-		}
-              
-		// Write the Coordinates 1D array to file
-		VECT2F_dVECT("COORDS1d.dat", COORDS1d, 1,nnodes*3);
-        */
 
-		//Write coonectivity
-		nsize = 9*nelem; //this is valid for hexa only
-		fprintf(file_id, "CELLS %d %d\n", nelem, nsize);
-		for(ie=0; ie<nelem; ie++)
-		    {
-			fprintf(file_id, " %d %d %d %d %d %d %d %d %d\n", 8, CONN[ie][0]-1, CONN[ie][1]-1, CONN[ie][2]-1, CONN[ie][3]-1, CONN[ie][4]-1, CONN[ie][5]-1, CONN[ie][6]-1, CONN[ie][7]-1);
+	if (nop < 2) {
+	    //Write coordinates
+	    if( nsd == 2 )
+		{
+		    fprintf(file_id, "POINTS %d float\n", nnodes);
+		    for(i=1; i<=nnodes; i++)
+			{
+			    fprintf(file_id, " %.12f %.12f %.12f\n", COORDS[i][0], COORDS[i][1], 0.0);
+			}
+    
+		    //Write coonectivity
+		    nsize = 5*nelem;
+		    fprintf(file_id, "CELLS %d %d\n", nelem, nsize);
+		    for(ie=1; ie<=nelem; ie++)
+			{
+			    if( ELTYPE[ie] == VISIT_QUAD )
+				fprintf(file_id, " %d %d %d %d %d\n", ie, CONN[ie][0]-1, CONN[ie][1]-1, CONN[ie][2]-1, CONN[ie][3]-1);
+			    else if( ELTYPE[ie] == VISIT_TRIANGLE )
+				fprintf(file_id, " %d %d %d %d\n", ie, CONN[ie][0]-1, CONN[ie][1]-1, CONN[ie][2]-1);
+			}
+        
+		    fprintf(file_id, "CELL_TYPES %d\n", nelem);
+		    for(ie=1; ie<=nelem; ie++)
+			fprintf(file_id, " %d\n", ELTYPE[ie]);
+        
+		}
+	    else if( nsd == 3 )
+		{
+		    fprintf(file_id, "POINTS %d double\n", nnodes);
+		    for (i=0; i<nnodes; i++){
+			fprintf(file_id, " %.12f %.12f %.12f\n", COORDS[i][0], COORDS[i][1], COORDS[i][2]);
 		    }
+            
+		    /*//COORDS --> COORDS1d:
+		      j=1;
+		      for (i=0; i<nnodes; i++){
+                    
+		      COORDS1d[j]   = COORDS[i][2];
+		      COORDS1d[j+1] = COORDS[i][3];
+		      COORDS1d[j+2] = COORDS[i][4];
+		      j=j+3;
+		      }
               
-		fprintf(file_id, "CELL_TYPES %d\n", nelem);
-		for(ie=0; ie<nelem; ie++)
-		    fprintf(file_id, " %d\n", VISIT_HEXAHEDRON);
+		      // Write the Coordinates 1D array to file
+		      VECT2F_dVECT("COORDS1d.dat", COORDS1d, 1,nnodes*3);
+		    */
+
+		    //Write coonectivity
+		    nsize = 9*nelem; //this is valid for hexa only
+		    fprintf(file_id, "CELLS %d %d\n", nelem, nsize);
+		    for(ie=0; ie<nelem; ie++)
+			{
+			    fprintf(file_id, " %d %d %d %d %d %d %d %d %d\n", 8, CONN[ie][0]-1, CONN[ie][1]-1, CONN[ie][2]-1, CONN[ie][3]-1, CONN[ie][4]-1, CONN[ie][5]-1, CONN[ie][6]-1, CONN[ie][7]-1);
+			}
+              
+		    fprintf(file_id, "CELL_TYPES %d\n", nelem);
+		    for(ie=0; ie<nelem; ie++)
+			fprintf(file_id, " %d\n", VISIT_HEXAHEDRON);
                 
-	    }
+		}
+	}	
     }
     fclose(file_id);
   

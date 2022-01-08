@@ -61,7 +61,7 @@ nnodesx_obs,							\
     obs_wS,								\
     nnodes_g,								\
     nnodes,								\
-    nnodes_sem,								\
+    nnodes_ho,								\
     nnodesx,								\
     nnodesy,								\
     nnodesz,								\
@@ -121,7 +121,9 @@ double									\
     *lagrange,								\
     *dlagrange,								\
     **COORDS,								\
+    **COORDS_HO,							\
     *COORDS1d,								\
+    *COORDS1d_HO,							\
     **BDY_COORDS,							\
     **BDYFLAG,								\
     **PHI,								\

@@ -53,10 +53,6 @@ int MEMORY_ALLOCATE(int flag)
 	}
     if(flag == 1)
 	{
-	    /*coordinates*/
-	    COORDS   = dmatrix(0,nnodes,0,nsd+1);
-	    COORDS1d = dvector(0,nnodes*(nsd+1));
-      
 	    /*coonectivity*/
 	    CONN = imatrix(0,nelem,0,EL_NODES+1); //For hexa only for now
 	    for(iel=0; iel<=nelem; iel++){
@@ -72,14 +68,32 @@ int MEMORY_ALLOCATE(int flag)
 	    BDYFLAG = dmatrix(0, nnodes,0,nsd+1);
 
 	    printf(" # Memory allocated (flag 1):\n");
-	    printf(" # \t\t COORDS[nnodes+1][nsd+1]\n");
-	    printf(" # \t\t COORDS1d[nnodes*(nsd+1)]\n");
 	    printf(" # \t\t CONN[nelem+1][EL_NODES+1]\n");
 	    printf(" # \t\t ELTYPE[nelem+1]\n");
 	    printf(" # \t\t BDYFLAG[nnodes+1][nsd+1]\n");
-	    
+	}
+    
+    if(flag == 10)
+	{
+	    /*coordinates*/
+	    COORDS   = dmatrix(0,nnodes,0,nsd);
+	    COORDS1d = dvector(0,nnodes*nsd);
+      
+	    printf(" # Memory allocated (flag 10):\n");
+	    printf(" # \t\t COORDS[nnodes][nsd]\n");
+	    printf(" # \t\t COORDS1d[nnodes*nsd]\n");
 	}
 
+    if(flag == 11)
+	{   //High Order
+	    COORDS_HO   = dmatrix(0,nnodes,0,nsd);
+	    COORDS1d_HO = dvector(0,nnodes*nsd);
+	    
+	    printf(" # Memory allocated (flag 11):\n");
+	    printf(" # \t\t COORDS_HO[nnodes][nsd]\n");
+	    printf(" # \t\t COORDS1d_HO[nnodes*nsd]\n");
+	}
+    
     if(flag == 2)
 	{     
 	    //Allocate space for the array of boundary coordinates to be read in input:
@@ -177,6 +191,8 @@ int MEMORY_DEALLOCATE(int flag)
 	    free(outfile_msh_vtk);
 	    free(outfile_msh_alya);
   
+	    free_dvector(parameters,0,NUMBER_OF_PARAMETERS);
+	    
 	    for(i=0; i<PROB_ENTRIES; i++)
 		free(problem[i]);
 
@@ -184,19 +200,32 @@ int MEMORY_DEALLOCATE(int flag)
 	}
     if(flag == 1)
 	{
-	    free_dvector(parameters,0,NUMBER_OF_PARAMETERS);
-	    free_dvector(COORDS1d,  0,nnodes*(nsd+1));
-	    free_ivector(ELTYPE,    0,nelem+1);
-	    free_dmatrix(COORDS,    0,nnodes,     0,nsd+1);
-	    free_imatrix(CONN,      0,nelem,      0,EL_NODES+1);
-	    // free_dmatrix(BDY_COORDS,0,NBDY_NODES, 0,nsd);
-
+	    free_imatrix(CONN,    0, nelem, 0,EL_NODES+1);
+	    free_ivector(ELTYPE,  0, nelem+1);
+	    free_dmatrix(BDYFLAG, 0, nnodes,0, nsd+1);
+	    
 	    printf(" # Freed memory (flag 1):\n");
-	    printf(" # \t\t free(COORDS)\n");
-	    printf(" # \t\t free(COORDS1d)\n");
 	    printf(" # \t\t free(CONN)\n");
 	    printf(" # \t\t free(ELTYPE)\n");
 	    printf(" # \t\t free(BDYFLAG)\n");
+	}
+    if(flag == 10)
+	{
+	    free_dmatrix(COORDS,    0,nnodes,     0,nsd);
+	    free_dvector(COORDS1d,  0,nnodes*nsd);
+
+	    printf(" # Freed memory (flag 10):\n");
+	    printf(" # \t\t free(COORDS)\n");
+	    printf(" # \t\t free(COORDS1d)\n");
+	}
+    if(flag == 11)
+	{   //High Order
+	    free_dmatrix(COORDS_HO, 0,nnodes, 0,nsd);
+	    free_dvector(COORDS1d_HO, 0,nnodes*nsd);
+
+	    printf(" # Freed memory (flag 1):\n");
+	    printf(" # \t\t free(COORDS_HO)\n");
+	    printf(" # \t\t free(COORDS1d_HO)\n");
 	}
     if(flag == 2)
 	{     

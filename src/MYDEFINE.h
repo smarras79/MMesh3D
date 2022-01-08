@@ -29,3 +29,14 @@
 /* Physical quantities */
 #define earth_radius        6.37122e+6
 #define earth_gravity       9.81
+
+#define max(a,b)				\
+    ({ __typeof__ (a) _a = (a);			\
+	__typeof__ (b) _b = (b);		\
+	_a > _b ? _a : _b; })
+
+#define min(a,b)				\
+    ({ __typeof__ (a) _a = (a);			\
+	__typeof__ (b) _b = (b);		\
+	_a < _b ? _a : _b; })
+

@@ -1,13 +1,17 @@
 #
 # Set USER_NAME and set your own CC if not defined yet
 #
-USER_NAME="sm_imac"
-#USER_NAME="sm_macair"
+USER_NAME = "sm_imac"
+#USER_NAME = "sm_macair"
+
+#
+# ADD YOUR CC value below with your choice of USER_NAME
+#
 $(info USER_NAME=$(USER_NAME))
 ifeq ($(USER_NAME),"sm_macair")
-   CC = /opt/homebrew/Cellar/openmpi/4.1.2/bin/mpicc
+	CC = /opt/homebrew/Cellar/openmpi/4.1.2/bin/mpicc
 else ifeq ($(USER_NAME),"sm_imac")
-   CC = /Users/simone/mylibs/openmpi-4.1.0/build_gcc9/bin/mpicc
+	CC = /Users/simone/mylibs/openmpi-4.1.0/build_gcc9/bin/mpicc
 else
 missing_cc_error:
 	@echo " ERROR in Makefile!"

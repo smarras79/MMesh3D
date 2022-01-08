@@ -59,11 +59,11 @@ st_lgl BUILD_LGL(size_t p)
     lgl.weights = (double*) malloc( sizeof(double) * lgl.size);
     
     //LGL nodes
-    ivalue = LegendreGaussLobattoNodesAndWeights(lgl, nop);
+    LegendreGaussLobattoNodesAndWeights(lgl, nop);
     
     //LG nodes
-    //ivalue = LegendreGaussNodesAndWeights(lgl, nop);
-    
+    //LegendreGaussNodesAndWeights(lgl, nop);
+
     return lgl;
 }
 
