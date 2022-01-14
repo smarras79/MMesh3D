@@ -12,6 +12,8 @@ ifeq ($(USER_NAME),"sm_macair")
 	CC = /opt/homebrew/Cellar/openmpi/4.1.2/bin/mpicc
 else ifeq ($(USER_NAME),"sm_imac")
 	CC = /Users/simone/mylibs/openmpi-4.1.0/build_gcc9/bin/mpicc
+else ifeq ($(USER_NAME),"sm_eddy")
+	CC = 
 else
 missing_cc_error:
 	@echo " ERROR in Makefile!"
