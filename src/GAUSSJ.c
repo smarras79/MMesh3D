@@ -1,7 +1,7 @@
 /* From the NRUTIL book: */
 
 #include <math.h>
-#include "nrutil.h"
+#include "NRUTIL.h"
 
 #define SWAP(a,b) {float temp=(a);(a)=(b);(b)=temp;}
 

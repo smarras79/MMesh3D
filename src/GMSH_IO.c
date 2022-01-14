@@ -2450,7 +2450,7 @@ double s_to_r8 ( char *s, int *lchar, int *error )
 			}
 		    else
 			{
-			    rexp = pow ( ( double ) 10.0, ( double ) ( jsgn * jtop ) );
+			    rexp = pow( ( double ) 10.0, ( double ) ( jsgn * jtop ) );
 			}
 		}
 	    else
@@ -2463,7 +2463,7 @@ double s_to_r8 ( char *s, int *lchar, int *error )
 			{
 			    rexp = jsgn * jtop;
 			    rexp = rexp / jbot;
-			    rexp = pow ( ( double ) 10.0, ( double ) rexp );
+			    rexp = pow( ( double ) 10.0, ( double ) rexp );
 			}
 		}
 

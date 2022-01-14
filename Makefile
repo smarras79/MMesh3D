@@ -1,7 +1,8 @@
 #
 # Set USER_NAME and set your own CC if not defined yet
 #
-USER_NAME = "sm_imac"
+USER_NAME = "sm_eddy"
+#USER_NAME = "sm_imac"
 #USER_NAME = "sm_macair"
 
 #
@@ -12,6 +13,8 @@ ifeq ($(USER_NAME),"sm_macair")
 	CC = /opt/homebrew/Cellar/openmpi/4.1.2/bin/mpicc
 else ifeq ($(USER_NAME),"sm_imac")
 	CC = /Users/simone/mylibs/openmpi-4.1.0/build_gcc9/bin/mpicc
+else ifeq ($(USER_NAME),"sm_eddy")
+	CC = /opt/intel/oneapi/mpi/2021.3.0//bin/mpicc
 else
 missing_cc_error:
 	@echo " ERROR in Makefile!"
@@ -45,8 +48,8 @@ LFLAGS =
 # define any libraries to link into executable:
 #   if I want to link in libraries (libx.so or libx.a) I use the -llibname 
 #   option, something like (this will link in libmylib.so and libm.so:
-LIBS =
-#LIBS = -lp4est -lsc -lz
+LIBS = -lm
+#LIBS = -lp4est -lsc -lz -lm
 
 
 SRC =./src

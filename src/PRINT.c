@@ -6,8 +6,8 @@
 
 #include "visit_writer.h"
 #include "PRINT.h"
-#include "mydefine.h"
-#include "global_vars.h"
+#include "MYDEFINE.h"
+#include "GLOBAL_VARS.h"
 
 void MAT2F_f2DMAT(char *mat_name, float **A, int min_rows, int max_rows, int min_cols, int max_cols)
 {
