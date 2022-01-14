@@ -694,6 +694,7 @@ int BUILD_EDGES(int **CONN, int nelem)
 
 int ADD_HIGH_ORDER_NODES(void)
 {
+    if (nop < 2) return 0;
     
     printf(" #------------------------------------------------------------------#\n");
     printf(" # POPULATE GRID with SPECTRAL NODES............................\n");
@@ -734,7 +735,7 @@ int ADD_HIGH_ORDER_NODES(void)
      
     /*--------------------------------------------------------------------------
      * Build high order grid points on every edges
-     --------------------------------------------------------------------------*/  
+     --------------------------------------------------------------------------*/
     int ip = nnodes_linear + 1; //we start populating from the low order numbering  
     for(int iedge_g = 0; iedge_g<nedges; iedge_g++) {
 	
