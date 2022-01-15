@@ -713,14 +713,20 @@ int ADD_HIGH_ORDER_NODES(void)
 
     //Update nnodes to total nnodes for high order grids
     nnodes = nnodes_linear + tot_edges_internal_nodes + tot_faces_internal_nodes + nvolume_internal_nodes;
+
+    printf(" # Total number of unique linear nodes    %d\n", nnodes_linear);
+    printf(" # Total number of unique nodes on edges  %d\n", tot_edges_internal_nodes);
+    printf(" # Total number of unique nodes on faces  %d\n", tot_faces_internal_nodes);
+    printf(" # Total number of unique nodes in volume %d\n", nvolume_internal_nodes);
     printf(" # Total number of unique high-order nodes %d\n", nnodes);
     
     //Create coordinates and weights of LGL points along 1D reference element of order nop. E.g. o-x--x-o for nop=3
     lgl = BUILD_LGL(nop);
     
-    FILE *fileid, *fileidHO;
+    FILE *fileid, *fileidHO_edges,  *fileidHO_faces;
     fileid   = fopen("COORDS_LO.dat", "w");
-    fileidHO = fopen("COORDS_HO.dat", "w");
+    fileidHO_edges = fopen("COORDS_HO_edges.dat", "w");
+    fileidHO_faces = fopen("COORDS_HO_faces.dat", "w");
 
     /*
      * 1. Allocate COORDS_HO
@@ -738,25 +744,30 @@ int ADD_HIGH_ORDER_NODES(void)
     /*--------------------------------------------------------------------------
      * Build high order grid points on every edges
      --------------------------------------------------------------------------*/
-    int ip = nnodes_linear + 1; //we start populating from the low order numbering  
+    double x1, y1, z1;
+    double x2, y2, z2;
+    double xi;
+    int ip1, ip2;
+    
+    int ip = nnodes_linear + 1; //we start populating from the low order numbering
     for(int iedge_g = 0; iedge_g<nedges; iedge_g++) {
 	
-	int ip1 = min(CONN_EDGE[iedge_g][0], CONN_EDGE[iedge_g][1]) - 1;
-	int ip2 = max(CONN_EDGE[iedge_g][0], CONN_EDGE[iedge_g][1]) - 1;
+	ip1 = min(CONN_EDGE[iedge_g][0], CONN_EDGE[iedge_g][1]) - 1;
+	ip2 = max(CONN_EDGE[iedge_g][0], CONN_EDGE[iedge_g][1]) - 1;
 	
-	double x1  = COORDS[ip1][0], y1  = COORDS[ip1][1], z1  = COORDS[ip1][2];
-	double x2  = COORDS[ip2][0], y2  = COORDS[ip2][1], z2  = COORDS[ip2][2];
+	x1  = COORDS[ip1][0], y1  = COORDS[ip1][1], z1  = COORDS[ip1][2];
+	x2  = COORDS[ip2][0], y2  = COORDS[ip2][1], z2  = COORDS[ip2][2];
 	//printf(" IP1 %d = (%f %f %f) --- IP2 %d = (%f %f %f)\n", ip1+1,  x1, y1, z1, ip2+1, x2, y2, z2);
 	//OK
 	
 	/*
 	 * Plot LGL points on edges:
 	 */
-	for(int l = 1; l<ngl; l++) {
+	for(int l=1; l<ngl-1; l++) {
 	    
 	    //printf(" #\t LGL nodes: X_LG[%d] = %.16f; w_LG[%d] = %.16f\n", l, lgl.ksi[l], l, lgl.weights[l]);
 	    
-	    double xi = lgl.ksi[l];
+	    xi = lgl.ksi[l];
 	    
 	    COORDS_HO[ip][0] = x1*(1.0 - xi)*0.5 + (1.0 + xi)*x2*0.5;
 	    COORDS_HO[ip][1] = y1*(1.0 - xi)*0.5 + (1.0 + xi)*y2*0.5;
@@ -764,58 +775,94 @@ int ADD_HIGH_ORDER_NODES(void)
 	    //EDGE_POINT_CONN[iedge_g][l] = IP;
 	    //EDGE_CONN[iedge_g][l] = IP;
 	    
-	    fprintf(fileidHO, " %f %f %f\n", COORDS_HO[ip][0], COORDS_HO[ip][1], COORDS_HO[ip][2]);
+	    fprintf(fileidHO_edges, " %d %f %f %f\n", ip, COORDS_HO[ip][0], COORDS_HO[ip][1], COORDS_HO[ip][2]);
+	    //printf(" ngl %d, iedge %d, ilgl %d, %d %f %f %f\n", ngl, iedge_g, l, ip, COORDS_HO[ip][0], COORDS_HO[ip][1], COORDS_HO[ip][2]);
 	    
 	    ip = ip + 1; //Initialized to highest low order value of npoin.
 	    //iconn = iconn + 1;
 	}
     }
-    fclose(fileid);
-    fclose(fileidHO);
     
-    /*
-    for(int iel = 0; iel<nelem; iel++)
-	{
-	    int iconn = 9;
-	    for(int iedg = 0; iedg<12; iedg++)
-		{
-		    iedge_g = EDGE_LtoG[iel][iedg];
-		    
-		    printf(" iedge_l %d of iel %d is GLOBAL iedge_g %d = (%d, %d)\n",iedg+1, iel+1, iedge_g, CONN_EDGE[iedge_g][0], CONN_EDGE[iedge_g][1]);
-		    /*if (EDGE_FLAG[iedge_g] < 0) {
-			EDGE_FLAG[iedge_g] = 1;
-			
-			int ip1 = min(CONN_EDGE[iedge_g][1], CONN_EDGE[iedge_g][2]);
-			int ip2 = max(CONN_EDGE[iedge_g][1], CONN_EDGE[iedge_g][2]);
-			
-			double x1  = COORDS[ip1][0], y1  = COORDS[ip1][1], z1  = COORDS[ip1][2];
-			double x2  = COORDS[ip2][0], y2  = COORDS[ip2][1], z2  = COORDS[ip2][2];
-			
-			/*
-			 * Plot LGL points on edges:
-			 *
-			for(int l = 2; l<=ngl-1; l++)
-			    {
-				/*
-				xi = x_LGL[l];
-				
-				xx[l] = x1*(1.0 - xi)*0.5 + (1.0 + xi)*x2*0.5;
-				yy[l] = y1*(1.0 - xi)*0.5 + (1.0 + xi)*y2*0.5;
-				zz[l] = z1*(1.0 - xi)*0.5 + (1.0 + xi)*z2*0.5;
-				COORDS[IP][2) = xx[l];
-				COORDS[IP][3) = yy[l];
-				COORDS[IP][4) = zz[l];
-				EDGE_POINT_CONN[iedge_g][l] = IP;
-				EDGE_CONN[iedge_g][l] = IP;
-				
-				IP = IP + 1; //Initialized to highest low order value of npoin.
-				iconn = iconn + 1;
-				*
-			    }
-			    }//	end if
-		} //end iedg
-		} //end iel*/
-//int NPcurrent = ip;
+    /*--------------------------------------------------------------------------
+     * Populate Faces with high-order points:
+     *--------------------------------------------------------------------------*/
+    double xa, ya, za;
+    double xb, yb, zb;
+    double xc, yc, zc;
+    double xd, yd, zd;
+    double zeta;
+        
+    int iconn, iconn_face_internal;
+    int ip3, ip4;
+
+    ip = nnodes_linear + tot_edges_internal_nodes + 1;
+    for(int iface=0; iface<nfaces; iface++) {
+	    	
+	/*--------------------------------------------------------------------------
+	 * Corners ordered counter-clockwise
+	 *--------------------------------------------------------------------------*/
+	ip1 = CONN_FACE[iface][0]-1;
+	ip2 = CONN_FACE[iface][1]-1;
+	ip3 = CONN_FACE[iface][2]-1;
+	ip4 = CONN_FACE[iface][3]-1;
+	//printf(" ip1, ip2, ip3, ip4 = %d %d %d %d\n", ip1+1, ip2+1, ip3+1, ip4+1);
+	
+	xa = COORDS[ip1][0]; ya = COORDS[ip1][1]; za = COORDS[ip1][2];
+	xb = COORDS[ip2][0]; yb = COORDS[ip2][1]; zb = COORDS[ip2][2];
+	xc = COORDS[ip3][0]; yc = COORDS[ip3][1]; zc = COORDS[ip3][2];
+	xd = COORDS[ip4][0]; yd = COORDS[ip4][1]; zd = COORDS[ip4][2];
+	
+	//iconn = iconnCurrent + 1;
+	//iconn_face_internal = 1;
+	for(int k=1; k<ngl-1; k++) {
+	    zeta = lgl.ksi[k];
+
+	    for(int i=1; i<ngl-1; i++) {
+		xi = lgl.ksi[i];
+		
+		COORDS_HO[ip][0] = xa*(1 - xi)*(1 - zeta)*0.25 +	\
+		    xb*(1 + xi)*(1 - zeta)*0.25 +			\
+		    xc*(1 + xi)*(1 + zeta)*0.25 +			\
+		    xd*(1 - xi)*(1 + zeta)*0.25;
+		
+		
+		COORDS_HO[ip][1] = ya*(1 - xi)*(1 - zeta)*0.25 +	\
+		    yb*(1 + xi)*(1 - zeta)*0.25 +			\
+		    yc*(1 + xi)*(1 + zeta)*0.25 +			\
+		    yd*(1 - xi)*(1 + zeta)*0.25;
+		
+		
+		COORDS_HO[ip][2] = za*(1 - xi)*(1 - zeta)*0.25 +	\
+		    zb*(1 + xi)*(1 - zeta)*0.25 +			\
+		    zc*(1 + xi)*(1 + zeta)*0.25 +			\
+		    zd*(1 - xi)*(1 + zeta)*0.25;
+		
+		fprintf(fileidHO_faces, " %d %f %f %f\n", ip, COORDS_HO[ip][0], COORDS_HO[ip][1], COORDS_HO[ip][2]);
+			    
+		/*
+		 * Add internal LGL points to CONN:
+		 */
+		//FACE_POINT_CONN[iface][i][k] = IP;
+		//FACE_CONN[iface][iconn_face_internal] = IP;
+			    
+		ip = ip + 1;
+		//iconn = iconn + 1;
+		//iconn_face_internal = iconn_face_internal + 1;
+	    }
+	}
+    }
+    return 0;
+    if( ip != nnodes_linear+tot_edges_internal_nodes+tot_faces_internal_nodes+1) {
+	printf(" !!!! ERROR in BUILD_CONN.c at line ~857 \n !!!! ip %d != %d nnodes_linear+tot_edges_internal_nodes+tot_faces_internal_nodes+1\n", ip,  nnodes_linear+tot_edges_internal_nodes+tot_faces_internal_nodes+1);
+	printf(" !!!! The program will EXIT now\n");
+	exit(1);
+    }
+  
+    fclose(fileid);
+    fclose(fileidHO_edges);
+    fclose(fileidHO_faces);
+    
+    //int NPcurrent = ip;
     
     printf(" # POPULATE GRID with SPECTRAL NODES............................ DONE\n");
     printf(" #------------------------------------------------------------------#\n");
