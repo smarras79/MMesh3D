@@ -719,7 +719,7 @@ int ADD_HIGH_ORDER_NODES(void)
     lgl = BUILD_LGL(nop);
     
     FILE *fileid;
-    fileid = fopen("COORDS_HO.dat", "w");
+    fileid = fopen("COORDS_LO.dat", "w");
 
     /*
      * 1. Allocate COORDS_HO
@@ -731,6 +731,7 @@ int ADD_HIGH_ORDER_NODES(void)
 	COORDS_HO[ip][0] = COORDS[ip][0];
 	COORDS_HO[ip][1] = COORDS[ip][1];
 	COORDS_HO[ip][2] = COORDS[ip][2];
+	fprintf(fileid, " %f %f %f\n", COORDS_HO[ip][0], COORDS_HO[ip][1], COORDS_HO[ip][2]);	    
     }
      
     /*--------------------------------------------------------------------------
@@ -743,9 +744,9 @@ int ADD_HIGH_ORDER_NODES(void)
 
 	int ip1 = min(CONN_EDGE[iedge_g][0], CONN_EDGE[iedge_g][1]);
 	int ip2 = max(CONN_EDGE[iedge_g][0], CONN_EDGE[iedge_g][1]);
-			
 	double x1  = COORDS[ip1][0], y1  = COORDS[ip1][1], z1  = COORDS[ip1][2];
 	double x2  = COORDS[ip2][0], y2  = COORDS[ip2][1], z2  = COORDS[ip2][2];
+	printf(" IP1 IP2 %d %d - %f %f\n", ip1, ip2, x1, x2);
 	
 	/*
 	 * Plot LGL points on edges:
@@ -762,7 +763,7 @@ int ADD_HIGH_ORDER_NODES(void)
 	    //EDGE_POINT_CONN[iedge_g][l] = IP;
 	    //EDGE_CONN[iedge_g][l] = IP;
 	    
-	    fprintf(fileid, " %f %f %f\n", COORDS_HO[ip][0], COORDS_HO[ip][1], COORDS_HO[ip][2]);
+	    //fprintf(fileid, " %f %f %f\n", COORDS_HO[ip][0], COORDS_HO[ip][1], COORDS_HO[ip][2]);
 	    
 	    ip = ip + 1; //Initialized to highest low order value of npoin.
 	    //iconn = iconn + 1;
