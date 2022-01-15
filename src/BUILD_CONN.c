@@ -639,7 +639,7 @@ int BUILD_EDGES(int **CONN, int nelem)
 		CONN_EDGE[iedge_g][0]      = CONN_EDGE_all[iedge_all][0];
 		CONN_EDGE[iedge_g][1]      = CONN_EDGE_all[iedge_all][1];
 		EDGE_MULTIPLICITY[iedge_g] = EDGE_MULTIPLICITY_auxi[iedge_all];
-		//printf("  IEDGE %d has multiplicity %d = (%d, %d)\n", iedge_g, EDGE_MULTIPLICITY[iedge_g],CONN_EDGE[iedge_g][0],CONN_EDGE[iedge_g][1]);
+		//printf("  IEDGE %d has multiplicity %d = (%d, %d)\n", iedge_g+1, EDGE_MULTIPLICITY[iedge_g],CONN_EDGE[iedge_g][0],CONN_EDGE[iedge_g][1]);
 		iedge_g++;
 	    }
 	    iedge_all++;
@@ -718,8 +718,9 @@ int ADD_HIGH_ORDER_NODES(void)
     //Create coordinates and weights of LGL points along 1D reference element of order nop. E.g. o-x--x-o for nop=3
     lgl = BUILD_LGL(nop);
     
-    FILE *fileid;
-    fileid = fopen("COORDS_LO.dat", "w");
+    FILE *fileid, *fileidHO;
+    fileid   = fopen("COORDS_LO.dat", "w");
+    fileidHO = fopen("COORDS_HO.dat", "w");
 
     /*
      * 1. Allocate COORDS_HO
@@ -731,22 +732,22 @@ int ADD_HIGH_ORDER_NODES(void)
 	COORDS_HO[ip][0] = COORDS[ip][0];
 	COORDS_HO[ip][1] = COORDS[ip][1];
 	COORDS_HO[ip][2] = COORDS[ip][2];
-	fprintf(fileid, " %f %f %f\n", COORDS_HO[ip][0], COORDS_HO[ip][1], COORDS_HO[ip][2]);	    
+	fprintf(fileid, " %f %f %f\n", COORDS_HO[ip][0], COORDS_HO[ip][1], COORDS_HO[ip][2]);
     }
-     
+
     /*--------------------------------------------------------------------------
      * Build high order grid points on every edges
      --------------------------------------------------------------------------*/
     int ip = nnodes_linear + 1; //we start populating from the low order numbering  
     for(int iedge_g = 0; iedge_g<nedges; iedge_g++) {
 	
-	//	printf(" iedge_g %d = (%d, %d)\n", iedge_g, CONN_EDGE[iedge_g][0], CONN_EDGE[iedge_g][1]);
-
-	int ip1 = min(CONN_EDGE[iedge_g][0], CONN_EDGE[iedge_g][1]);
-	int ip2 = max(CONN_EDGE[iedge_g][0], CONN_EDGE[iedge_g][1]);
+	int ip1 = min(CONN_EDGE[iedge_g][0], CONN_EDGE[iedge_g][1]) - 1;
+	int ip2 = max(CONN_EDGE[iedge_g][0], CONN_EDGE[iedge_g][1]) - 1;
+	
 	double x1  = COORDS[ip1][0], y1  = COORDS[ip1][1], z1  = COORDS[ip1][2];
 	double x2  = COORDS[ip2][0], y2  = COORDS[ip2][1], z2  = COORDS[ip2][2];
-	printf(" IP1 IP2 %d %d - %f %f\n", ip1, ip2, x1, x2);
+	//printf(" IP1 %d = (%f %f %f) --- IP2 %d = (%f %f %f)\n", ip1+1,  x1, y1, z1, ip2+1, x2, y2, z2);
+	//OK
 	
 	/*
 	 * Plot LGL points on edges:
@@ -763,13 +764,14 @@ int ADD_HIGH_ORDER_NODES(void)
 	    //EDGE_POINT_CONN[iedge_g][l] = IP;
 	    //EDGE_CONN[iedge_g][l] = IP;
 	    
-	    //fprintf(fileid, " %f %f %f\n", COORDS_HO[ip][0], COORDS_HO[ip][1], COORDS_HO[ip][2]);
+	    fprintf(fileidHO, " %f %f %f\n", COORDS_HO[ip][0], COORDS_HO[ip][1], COORDS_HO[ip][2]);
 	    
 	    ip = ip + 1; //Initialized to highest low order value of npoin.
 	    //iconn = iconn + 1;
 	}
     }
     fclose(fileid);
+    fclose(fileidHO);
     
     /*
     for(int iel = 0; iel<nelem; iel++)
