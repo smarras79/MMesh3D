@@ -723,10 +723,12 @@ int ADD_HIGH_ORDER_NODES(void)
     //Create coordinates and weights of LGL points along 1D reference element of order nop. E.g. o-x--x-o for nop=3
     lgl = BUILD_LGL(nop);
     
-    FILE *fileid, *fileidHO_edges,  *fileidHO_faces;
-    fileid   = fopen("COORDS_LO.dat", "w");
+    FILE *fileid, *fileidHO_edges,  *fileidHO_faces, *fileidHO_vol;
+    
+    fileid         = fopen("COORDS_LO.dat", "w");
     fileidHO_edges = fopen("COORDS_HO_edges.dat", "w");
     fileidHO_faces = fopen("COORDS_HO_faces.dat", "w");
+    fileidHO_vol   = fopen("COORDS_HO_vol.dat", "w");
 
     /*
      * 1. Allocate COORDS_HO
@@ -740,7 +742,7 @@ int ADD_HIGH_ORDER_NODES(void)
 	COORDS_HO[ip][2] = COORDS[ip][2];
 	fprintf(fileid, " %f %f %f\n", COORDS_HO[ip][0], COORDS_HO[ip][1], COORDS_HO[ip][2]);
     }
-
+    
     /*--------------------------------------------------------------------------
      * Build high order grid points on every edges
      --------------------------------------------------------------------------*/
@@ -772,14 +774,12 @@ int ADD_HIGH_ORDER_NODES(void)
 	    COORDS_HO[ip][0] = x1*(1.0 - xi)*0.5 + (1.0 + xi)*x2*0.5;
 	    COORDS_HO[ip][1] = y1*(1.0 - xi)*0.5 + (1.0 + xi)*y2*0.5;
 	    COORDS_HO[ip][2] = z1*(1.0 - xi)*0.5 + (1.0 + xi)*z2*0.5;
-	    //EDGE_POINT_CONN[iedge_g][l] = IP;
-	    //EDGE_CONN[iedge_g][l] = IP;
 	    
 	    fprintf(fileidHO_edges, " %d %f %f %f\n", ip, COORDS_HO[ip][0], COORDS_HO[ip][1], COORDS_HO[ip][2]);
 	    //printf(" ngl %d, iedge %d, ilgl %d, %d %f %f %f\n", ngl, iedge_g, l, ip, COORDS_HO[ip][0], COORDS_HO[ip][1], COORDS_HO[ip][2]);
-	    
+
+	    //iconn = iconn + 1;	    
 	    ip = ip + 1; //Initialized to highest low order value of npoin.
-	    //iconn = iconn + 1;
 	}
     }
     
@@ -813,7 +813,7 @@ int ADD_HIGH_ORDER_NODES(void)
 	xd = COORDS[ip4][0]; yd = COORDS[ip4][1]; zd = COORDS[ip4][2];
 	
 	//iconn = iconnCurrent + 1;
-	//iconn_face_internal = 1;
+	//iconn_face_internal = 0;
 	for(int k=1; k<ngl-1; k++) {
 	    zeta = lgl.ksi[k];
 
@@ -843,14 +843,103 @@ int ADD_HIGH_ORDER_NODES(void)
 		 * Add internal LGL points to CONN:
 		 */
 		//FACE_POINT_CONN[iface][i][k] = IP;
-		//FACE_CONN[iface][iconn_face_internal] = IP;
-			    
+				    
 		ip = ip + 1;
 		//iconn = iconn + 1;
 		//iconn_face_internal = iconn_face_internal + 1;
 	    }
 	}
     }
+
+    /*--------------------------------------------------------------------------
+     * Populate internal/Volume high-order points:
+     *--------------------------------------------------------------------------*/
+    int ip5, ip6, ip7, ip8;
+    
+    double xe, ye, ze;
+    double xf, yf, zf;
+    double xg, yg, zg;
+    double xh, yh, zh;
+    double eta;
+    
+    //int ivol_start         = nnodes_linear + nedge_internal_nodes*12 + nface_internal_nodes*6 + 1;
+    //int iconn_volume_index = nnodes_linear + nedge_internal_nodes*12 + nface_internal_nodes*6 + 1;
+    
+    ip = nnodes_linear + tot_edges_internal_nodes + tot_faces_internal_nodes + 1;
+    ip = 0;
+    for (int iel=0; iel<nelem; iel++) {
+	
+	/*printf(" CONN[%d] = (%d %d %d %d %d %d %d %d)\n", iel, CONN[iel][0],CONN[iel][1],CONN[iel][2],CONN[iel][3],CONN[iel][4], \
+	  CONN[iel][5],CONN[iel][6],CONN[iel][7]);*/
+	
+	/*--------------------------------------------------------------------------
+	 * Volume:
+	 *--------------------------------------------------------------------------*/
+	//iconn  = iconn_volume_index + 1;
+
+	ip1 = CONN[iel][0]-1; ip2 = CONN[iel][1]-1; ip3 = CONN[iel][2]-1; ip4 = CONN[iel][3]-1;
+	ip5 = CONN[iel][4]-1; ip6 = CONN[iel][5]-1; ip7 = CONN[iel][6]-1; ip8 = CONN[iel][7]-1;
+	
+	xa = COORDS[ip1][0]; ya = COORDS[ip1][1]; za = COORDS[ip1][2];
+	xb = COORDS[ip2][0]; yb = COORDS[ip2][1]; zb = COORDS[ip2][2];
+	xc = COORDS[ip3][0]; yc = COORDS[ip3][1]; zc = COORDS[ip3][2];
+	xd = COORDS[ip4][0]; yd = COORDS[ip4][1]; zd = COORDS[ip4][2];
+	xe = COORDS[ip5][0]; ye = COORDS[ip5][1]; ze = COORDS[ip5][2];
+	xf = COORDS[ip6][0]; yf = COORDS[ip6][1]; zf = COORDS[ip6][2];
+	xg = COORDS[ip7][0]; yg = COORDS[ip7][1]; zg = COORDS[ip7][2];
+	xh = COORDS[ip8][0]; yh = COORDS[ip8][1]; zh = COORDS[ip8][2];
+
+	iconn = ncorner_nodes + tot_edges_internal_nodes + tot_faces_internal_nodes + 1;
+	
+	for(int k=1; k<ngl-1; k++) {
+	    zeta = lgl.ksi[k];
+	    
+	    for(int j=1; j<ngl-1; j++) {
+		eta = lgl.ksi[j];
+		
+		for(int i=1; i<ngl-1; i++) {
+		    xi = lgl.ksi[i];
+		
+		    COORDS_HO[ip][0] = xa*(1 - xi)*(1 - eta)*(1 - zeta)*0.125 +	\
+			xb*(1 + xi)*(1 - eta)*(1 - zeta)*0.125 +	\
+			xc*(1 + xi)*(1 + eta)*(1 - zeta)*0.125 +	\
+			xd*(1 - xi)*(1 + eta)*(1 - zeta)*0.125 +	\
+			xe*(1 - xi)*(1 - eta)*(1 + zeta)*0.125 +	\
+			xf*(1 + xi)*(1 - eta)*(1 + zeta)*0.125 +	\
+			xg*(1 + xi)*(1 + eta)*(1 + zeta)*0.125 +	\
+			xh*(1 - xi)*(1 + eta)*(1 + zeta)*0.125;
+		    
+		    COORDS_HO[ip][1]  = ya*(1 - xi)*(1 - eta)*(1 - zeta)*0.125 + \
+			yb*(1 + xi)*(1 - eta)*(1 - zeta)*0.125 +	\
+			yc*(1 + xi)*(1 + eta)*(1 - zeta)*0.125 +	\
+			yd*(1 - xi)*(1 + eta)*(1 - zeta)*0.125 +	\
+			ye*(1 - xi)*(1 - eta)*(1 + zeta)*0.125 +	\
+			yf*(1 + xi)*(1 - eta)*(1 + zeta)*0.125 +	\
+			yg*(1 + xi)*(1 + eta)*(1 + zeta)*0.125 +	\
+			yh*(1 - xi)*(1 + eta)*(1 + zeta)*0.125;
+		    
+		    COORDS_HO[ip][2] = za*(1 - xi)*(1 - eta)*(1 - zeta)*0.125 + \
+			zb*(1 + xi)*(1 - eta)*(1 - zeta)*0.125 +	\
+			zc*(1 + xi)*(1 + eta)*(1 - zeta)*0.125 +	\
+			zd*(1 - xi)*(1 + eta)*(1 - zeta)*0.125 +	\
+			ze*(1 - xi)*(1 - eta)*(1 + zeta)*0.125 +	\
+			zf*(1 + xi)*(1 - eta)*(1 + zeta)*0.125 +	\
+			zg*(1 + xi)*(1 + eta)*(1 + zeta)*0.125 +	\
+			zh*(1 - xi)*(1 + eta)*(1 + zeta)*0.125;
+		    
+		    fprintf(fileidHO_vol, " %d %f %f %f\n", ip, COORDS_HO[ip][0], COORDS_HO[ip][1], COORDS_HO[ip][2]);
+				
+		    //IPrenumbered = IP;
+		    //CONN_renumbered(IEL, iconn) = IP;
+				
+		    ip = ip + 1;
+		    //iconn = iconn + 1;
+		}
+	    }
+	}
+    }
+    
+    
     return 0;
     if( ip != nnodes_linear+tot_edges_internal_nodes+tot_faces_internal_nodes+1) {
 	printf(" !!!! ERROR in BUILD_CONN.c at line ~857 \n !!!! ip %d != %d nnodes_linear+tot_edges_internal_nodes+tot_faces_internal_nodes+1\n", ip,  nnodes_linear+tot_edges_internal_nodes+tot_faces_internal_nodes+1);
@@ -861,6 +950,7 @@ int ADD_HIGH_ORDER_NODES(void)
     fclose(fileid);
     fclose(fileidHO_edges);
     fclose(fileidHO_faces);
+    fclose(fileidHO_vol);
     
     //int NPcurrent = ip;
     

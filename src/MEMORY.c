@@ -145,13 +145,13 @@ int MEMORY_ALLOCATE(int flag)
 	}
     if(flag == 7)
 	{
-	    CONN_FACE = imatrix(0,nfaces, 0, (nop+1)*(nop+1)); //For hexa only for now
+	    CONN_FACE = imatrix(0,nfaces, 0, ngl*ngl); //For hexa only for now
 	    for(int iface=0; iface<nfaces; iface++){
-		for(int inode=0; inode<((nop+1)*(nop+1)); inode++){
+		for(int inode=0; inode<(ngl*ngl); inode++){
 		    CONN_FACE[iface][inode] = 0;
 		}
 	    }
-	    printf(" # Memory allocated (flag 7): CONN_FACES[%d][%d]\n", nfaces, (nop+1)*(nop+1));
+	    printf(" # Memory allocated (flag 7): CONN_FACES[%d][%d]\n", nfaces, ngl*ngl);
 	}
     if(flag == 8)
 	{
@@ -271,7 +271,7 @@ int MEMORY_DEALLOCATE(int flag)
 	}
      if(flag == 7)
 	{
-	    free_imatrix(CONN_FACE, 0,nfaces, 0,((nop+1)*(nop+1))); //For hexa only for now
+	    free_imatrix(CONN_FACE, 0,nfaces, 0,ngl*ngl); //For hexa only for now
 	    printf(" # Freed memory (flag 7): free(CONN_FACE)\n");
 	}
      if(flag == 8)
