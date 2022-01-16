@@ -746,6 +746,8 @@ int ADD_HIGH_ORDER_NODES(void)
     /*--------------------------------------------------------------------------
      * Build high order grid points on every edges
      --------------------------------------------------------------------------*/
+    int EDGE_POINT_CONN[nedges][ngl];
+    
     double x1, y1, z1;
     double x2, y2, z2;
     double xi;
@@ -765,6 +767,8 @@ int ADD_HIGH_ORDER_NODES(void)
 	/*
 	 * Plot LGL points on edges:
 	 */
+	EDGE_POINT_CONN[iedge_g][0]     = ip1+1;
+	EDGE_POINT_CONN[iedge_g][ngl-1] = ip2+1;
 	for(int l=1; l<ngl-1; l++) {
 	    
 	    //printf(" #\t LGL nodes: X_LG[%d] = %.16f; w_LG[%d] = %.16f\n", l, lgl.ksi[l], l, lgl.weights[l]);
@@ -778,6 +782,9 @@ int ADD_HIGH_ORDER_NODES(void)
 	    fprintf(fileidHO_edges, " %d %f %f %f\n", ip, COORDS_HO[ip][0], COORDS_HO[ip][1], COORDS_HO[ip][2]);
 	    //printf(" ngl %d, iedge %d, ilgl %d, %d %f %f %f\n", ngl, iedge_g, l, ip, COORDS_HO[ip][0], COORDS_HO[ip][1], COORDS_HO[ip][2]);
 
+	    
+	    EDGE_POINT_CONN[iedge_g][l] = ip;
+	    
 	    //iconn = iconn + 1;	    
 	    ip = ip + 1; //Initialized to highest low order value of npoin.
 	}
@@ -786,6 +793,8 @@ int ADD_HIGH_ORDER_NODES(void)
     /*--------------------------------------------------------------------------
      * Populate Faces with high-order points:
      *--------------------------------------------------------------------------*/
+    int FACE_POINT_CONN[nfaces][ngl][ngl];
+    
     double xa, ya, za;
     double xb, yb, zb;
     double xc, yc, zc;
@@ -811,6 +820,11 @@ int ADD_HIGH_ORDER_NODES(void)
 	xb = COORDS[ip2][0]; yb = COORDS[ip2][1]; zb = COORDS[ip2][2];
 	xc = COORDS[ip3][0]; yc = COORDS[ip3][1]; zc = COORDS[ip3][2];
 	xd = COORDS[ip4][0]; yd = COORDS[ip4][1]; zd = COORDS[ip4][2];
+
+	FACE_POINT_CONN[iface][1][1]     = ip1+1;
+	FACE_POINT_CONN[iface][ngl][1]   = ip2+1;
+	FACE_POINT_CONN[iface][1][ngl]   = ip3+1;
+	FACE_POINT_CONN[iface][ngl][ngl] = ip4+1;
 	
 	//iconn = iconnCurrent + 1;
 	//iconn_face_internal = 0;
@@ -842,7 +856,7 @@ int ADD_HIGH_ORDER_NODES(void)
 		/*
 		 * Add internal LGL points to CONN:
 		 */
-		//FACE_POINT_CONN[iface][i][k] = IP;
+		FACE_POINT_CONN[iface][i][k] = ip;
 				    
 		ip = ip + 1;
 		//iconn = iconn + 1;
@@ -854,6 +868,8 @@ int ADD_HIGH_ORDER_NODES(void)
     /*--------------------------------------------------------------------------
      * Populate internal/Volume high-order points:
      *--------------------------------------------------------------------------*/
+    int CONN_HO[nelem][ngl][ngl][ngl];
+
     int ip5, ip6, ip7, ip8;
     
     double xe, ye, ze;
@@ -879,6 +895,16 @@ int ADD_HIGH_ORDER_NODES(void)
 
 	ip1 = CONN[iel][0]-1; ip2 = CONN[iel][1]-1; ip3 = CONN[iel][2]-1; ip4 = CONN[iel][3]-1;
 	ip5 = CONN[iel][4]-1; ip6 = CONN[iel][5]-1; ip7 = CONN[iel][6]-1; ip8 = CONN[iel][7]-1;
+
+	CONN_HO[iel][0][0][0]         = ip1+1;
+	CONN_HO[iel][ngl-1][0][0]     = ip2+1;
+	CONN_HO[iel][ngl-1][ngl-1][0] = ip3+1;
+	CONN_HO[iel][0][ngl-1][0]     = ip4+1;
+	
+	CONN_HO[iel][0][0][ngl-1]         = ip5+1;
+	CONN_HO[iel][ngl-1][0][ngl-1]     = ip6+1;
+	CONN_HO[iel][ngl-1][ngl-1][ngl-1] = ip7+1;
+	CONN_HO[iel][0][ngl-1][ngl-1]     = ip8+1; //CHECK THESE VALUES AND THEIR ORDER against GMSH
 	
 	xa = COORDS[ip1][0]; ya = COORDS[ip1][1]; za = COORDS[ip1][2];
 	xb = COORDS[ip2][0]; yb = COORDS[ip2][1]; zb = COORDS[ip2][2];
@@ -928,7 +954,9 @@ int ADD_HIGH_ORDER_NODES(void)
 			zh*(1 - xi)*(1 + eta)*(1 + zeta)*0.125;
 		    
 		    fprintf(fileidHO_vol, " %d %f %f %f\n", ip, COORDS_HO[ip][0], COORDS_HO[ip][1], COORDS_HO[ip][2]);
-				
+
+		    CONN_HO[iel][i][j][k] = ip;
+		    
 		    //IPrenumbered = IP;
 		    //CONN_renumbered(IEL, iconn) = IP;
 				
