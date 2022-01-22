@@ -974,13 +974,13 @@ int ADD_HIGH_ORDER_NODES(void)
      * 2. FACES
      * 3. VOLUME
      *
-     *--------------------------------------------------------------------------*/  
+     *--------------------------------------------------------------------------*
     for(int iel=0; iel<nelem; iel++) {
 	printf(" IEL: %d\n", iel);
 
 	/*
 	 * add edge internal nodes to CONN
-	 */
+	 *
 	iconn = ncorner_nodes;
 	for(int iedg_el=0; iedg_el<12; iedg_el++) {
 
