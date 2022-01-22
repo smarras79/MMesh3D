@@ -17,6 +17,8 @@ int GMSH_IO(char *inputfile) {
      *
      * WARNING: the *.msh file needs to be exported from GMSH in the
      *          "Version 2 ASCII" format.
+     *          CHECK   'Save all elements'
+     *          UNCHECK 'Save parameteric coordinates'
      */
     int node_dim;
     int element_order;
