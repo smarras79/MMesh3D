@@ -1,13 +1,13 @@
-nelemx = 180;
+nelemx = 10;
 nelemy =  1;
-nelemz = 35;
+nelemz = 45;
 
 xmin =      0;
-xmax = 150000; //200000;
+xmax = 15000; //200000;
 ymin =      0;
-ymax =  12000;
+ymax =  1200;
 zmin =      0;
-zmax =  24000;
+zmax =  2400;
 gridsize = xmax / nelemx;
 
 gridsize_bottom = 1000;
@@ -48,12 +48,13 @@ surfaceVector = Extrude {0,(ymax-ymin),0} {
 //Coherence;
 
 //    Physical Volume("internal") = 1;
-    Physical Surface("left") = {21};
+/*    Physical Surface("left") = {21};
     Physical Surface("right") = {29};
     Physical Surface("bottom") = {25};
     Physical Surface("top") = {33};
     Physical Surface("front") = {12};
     Physical Surface("back") = {34};
+    */
   //+
 Show "*";
 //+

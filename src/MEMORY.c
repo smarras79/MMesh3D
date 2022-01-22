@@ -139,7 +139,7 @@ int MEMORY_ALLOCATE(int flag)
 	    
 	    printf(" # Memory allocated (flag 6):\n");
 	    printf(" # \t\t FACE_LtoG[nelem][6]\n");
-	    printf(" # \t\t FACE_in_ELEM[nelem][12][2]\n");
+	    printf(" # \t\t FACE_in_ELEM[nelem][6][2]\n");
 	    printf(" # \t\t conn_edge_el[nelem][12][2]\n");
 	    printf(" # \t\t conn_face_el[nelem][6][4]\n");
 	}
