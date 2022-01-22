@@ -30,8 +30,16 @@ cd MMesh3D
 
 *Run
 ```
-cd MMesh3D/runs
+>> cd MMesh3D/runs
 >> mpirun -np 4 ./MMesh3D.a Input_meshparam.inp
+```
+
+*Run with GDB debugger:
+First make sure that you have the proper debug flags activated in your compilation flags (-g and others)
+```
+>> cd MMesh3D/run
+>> gdb --args ./MMesh3D.a Input_meshparam.inp
+>> (gdb) run
 ```
 
 *Visualization
