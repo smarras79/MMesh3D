@@ -2,6 +2,14 @@ import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
+plt.close('all')
+
+print_lables=False
+
+#
+# Load coords
+#
+# 1) Low order:
 coords_lo = np.loadtxt('COORDS_LO.dat', usecols=range(4))
 
 x=coords_lo[:,0];
@@ -14,15 +22,59 @@ ax3d = fig.add_subplot(projection='3d')
 
 ax3d.scatter(x, y, z, marker='o')
 
-for xcoords, ycoords, zcoords, label in zip(x, y, z, ip):
-    ax3d.text(xcoords, ycoords, zcoords, int(label))
+if (print_lables == True):
+    for xcoords, ycoords, zcoords, label in zip(x, y, z, ip):
+        ax3d.text(xcoords, ycoords, zcoords, int(label))
 
+
+# 2) high order edges
+del x, y, z, ip
+coords_ho = np.loadtxt('COORDS_HO_edges.dat', usecols=range(4))
+
+x=coords_ho[:,0];
+y=coords_ho[:,1];
+z=coords_ho[:,2];
+ip=coords_ho[:,3]+1;
+
+ax3d.scatter(x, y, z, marker='x')
+
+if (print_lables == True):
+    for xcoords, ycoords, zcoords, label in zip(x, y, z, ip):
+        ax3d.text(xcoords, ycoords, zcoords, int(label))
+
+
+# 3) high order faces
+del coords_ho
+del x, y, z, ip
+coords_ho = np.loadtxt('COORDS_HO_faces.dat', usecols=range(4))
+
+x=coords_ho[:,0];
+y=coords_ho[:,1];
+z=coords_ho[:,2];
+ip=coords_ho[:,3]+1;
+
+ax3d.scatter(x, y, z, marker='s')
+
+if (print_lables == True):
+    for xcoords, ycoords, zcoords, label in zip(x, y, z, ip):
+        ax3d.text(xcoords, ycoords, zcoords, int(label))
+
+
+# 4 high order internal
+del coords_ho
+del x, y, z, ip
+coords_ho = np.loadtxt('COORDS_HO_vol.dat', usecols=range(4))
+
+x=coords_ho[:,0];
+y=coords_ho[:,1];
+z=coords_ho[:,2];
+ip=coords_ho[:,3]+1;
+
+ax3d.scatter(x, y, z, marker='s')
+
+if (print_lables == True):
+    for xcoords, ycoords, zcoords, label in zip(x, y, z, ip):
+        ax3d.text(xcoords, ycoords, zcoords, int(label))
+        
+        
 plt.show()
-#for i in x: 
-#    scatter(x(i), y(i), z(i), 140, 'Filled'); hold on
-#    print(i)
-   # ipstr   = ip(i);
-    
-   # dx    = 0.015*max(x); dy = 0.015*max(y); 0.001*max(z); % displacement so the text
-   # tx = text(x(i)+dx, y(i)+dy, z(i)+dz, int2str(ipstr), 'FontSize', 12);
-#end
