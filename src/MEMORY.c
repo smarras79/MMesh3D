@@ -122,7 +122,7 @@ int MEMORY_ALLOCATE(int flag)
     if(flag == 5)
 	{
 	    CONN_BDY_FACES = imatrix(0,nbdy_faces, 0,(nop+1)*(nop+1)); //For hexa only for now
-	    for(int ibdy_face=0; ibdy_face<=nbdy_faces; ibdy_face++){
+	    for(int ibdy_face=0; ibdy_face<nbdy_faces; ibdy_face++){
 		for(inode=0; inode<((nop+1)*(nop+1)); inode++){
 		    CONN_BDY_FACES[ibdy_face][inode] = 0;
 		}

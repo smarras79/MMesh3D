@@ -425,7 +425,8 @@ void gmsh_data_read ( char *gmsh_filename, int node_dim, int node_num, int eleme
 			}
 		}
 	}
-    
+    printf(" IBDY FACESSSSSS %d. ELEN3d %d\n", ibdy_face, ielem3d);
+    return;
     fclose ( input );
     
     /*for (int i=0; i<nelem; i++){
@@ -649,9 +650,9 @@ void gmsh_size_read ( char *gmsh_filename, int *node_num, int *node_dim, int *el
 			     */
 			    count = Count_TotalWords(text_pointer + offset);
 			    //printf(" -total words: %d\n ", count);
-
+			    
 			    sscanf (text_pointer + offset, "%d%n", &val, &nchr);
-			    if (count == 8) {
+			    if (count == 8) {				
 				ibdy_edge++;
 			    }
 			    if (count == 10) {
@@ -664,7 +665,7 @@ void gmsh_size_read ( char *gmsh_filename, int *node_num, int *node_dim, int *el
 			}
 		}
 	}
-    
+    //printf(" -BDY EDGE, FACE, TOT ELEM, GMSH IO: %d %d %d\n ", ibdy_edge, ibdy_face, ielem3d); //OK
     fclose ( input );
     
     //Store global value of nelem (conforming):

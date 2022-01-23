@@ -83,6 +83,36 @@ int CGNS_ORDERING(int **CONN, int nelem)
 
 int BUILD_EDGES(int **CONN, int nelem)
 {
+
+    
+    /*****/
+    int *arr1;
+    int *arr2;
+    bool yes;
+    
+    arr1 = ivector(0,5);
+    arr2 = ivector(0,5);
+    arr1[0] = 0;
+    arr1[1] = 2;
+    arr1[2] = 4;
+    arr1[3] = 6;
+    arr1[4] = 8;
+    arr2[0] = 8;
+    arr2[1] = 4;
+    arr2[2] = 6;
+    arr2[3] = 2;
+    arr2[4] = 0;
+    
+    
+    if(isSubset(arr1, arr2, 5, 5))
+	printf("\n YESS Array2 is a subset of Array1\n ");
+    else
+	printf("\n NOOO Array2 is not a subset of Array1\n");
+    
+    free_ivector(arr1, 0,5);
+    free_ivector(arr2, 0,5);
+    /*****/
+    
     /*
      * Get the boundary nodes and the element to which they belong:
      */
@@ -237,6 +267,11 @@ int BUILD_EDGES(int **CONN, int nelem)
     //VIEW_i3DMAT("CONN_FACE_EL_SORT", conn_face_el_sort, 0, nelem-1, 0, 5, 0, 3);
     //printf(" END SORT\n");
     //END sorting
+
+
+    /// BUG!!!1 THIS ONLY WORKS WITH CARTESIAN GRIDS.
+    //// REWRITE IT. That's why the number of internal faces is not counted correctly
+    printf(" BUGGGG TO BE FIXED HERE. BUILD_CONN.C line 275\n\n\n\n");
     
     iface = 0;
     for(int iel=0; iel<nelem; iel++) {
@@ -350,8 +385,9 @@ int BUILD_EDGES(int **CONN, int nelem)
     }//OK
     
     /*for (int i=0; i<iface_all; i++) {
-	printf(" %d %d %d %d %d\n", i, CONN_FACE_tmp[i][0], CONN_FACE_tmp[i][1], CONN_FACE_tmp[i][2],  CONN_FACE_tmp[i][3]);
-	}*/
+	printf(" CONN_FACE_tmp %d %d %d %d %d\n", i, CONN_FACE_tmp[i][0], CONN_FACE_tmp[i][1], CONN_FACE_tmp[i][2],  CONN_FACE_tmp[i][3]);
+	}
+    */
     //int nface_all = iface_all;  /* NOTICE: nface_all are ALL of the faces,
     //				     * including the repeated faces. 
     //				     * nfaces are only the faces counted once.*/
@@ -370,7 +406,7 @@ int BUILD_EDGES(int **CONN, int nelem)
     int krepeated      = 0;
 
     printf(" # Number of all faces\t\t%d\n # number of unique faces\t%d\n # Number of interlan faces\t%d\n # Number of boundary faces\t%d\n", nface_all, nfaces, nint_faces, nbdy_faces);
-    
+
     iface = 0;
     for (int i=1; i<=nface_all; i++) {
 	int multiplicity = 0;
@@ -388,15 +424,16 @@ int BUILD_EDGES(int **CONN, int nelem)
 		    
 		    FACE_MULTIPLICITY_auxi[nbdy_faces + iface] = multiplicity + 1;
 
-		    CONN_FACE[nbdy_faces + iface][0] =  CONN_FACE_tmp[j-1][0];
+		    /* CONN_FACE[nbdy_faces + iface][0] =  CONN_FACE_tmp[j-1][0];
 		    CONN_FACE[nbdy_faces + iface][1] =  CONN_FACE_tmp[j-1][1];
 		    CONN_FACE[nbdy_faces + iface][2] =  CONN_FACE_tmp[j-1][3];
 		    CONN_FACE[nbdy_faces + iface][3] =  CONN_FACE_tmp[j-1][2];
-		    
+		    */
 		    /*printf("k=%d, REPEATED_index %d -> [%d %d %d %d] repeated %d times (%d)\n", krepeated-1, REPEATED_index[krepeated-1], \
 			   CONN_FACE_tmp[j-1][0], CONN_FACE_tmp[j-1][1], CONN_FACE_tmp[j-1][2], CONN_FACE_tmp[j-1][3], \
 			   FACE_MULTIPLICITY_auxi[nbdy_faces + iface], multiplicity + 1);
 		    */
+		    printf("nbdy_faces + iface = %d %d %d\n", iface, nbdy_faces, nfaces);
 		    iface = iface + 1;
 		}
 	    }
@@ -404,7 +441,7 @@ int BUILD_EDGES(int **CONN, int nelem)
     } //OK (DO NOT CALL "CGNS_ORDERING(CONN, nelem)"!!!!!)
     //printf(" NBDY FACEs + IFACE = %d\n", nbdy_faces + iface);
     //VIEW_i2DMAT("CONN_FACE", CONN_FACE, 0, nfaces-1, 0, 3);
-    
+    return 0;
     /*
      * Set repeated entries of CONN_FACE_all to -1:
      */
@@ -689,6 +726,27 @@ int BUILD_EDGES(int **CONN, int nelem)
      *-------------------------------------------------------------------------*/
         
     return 0;
+}
+
+// C program to check if an array is a subset of another array
+
+bool isSubset(int *arr1, int *arr2, int m, int n)
+{
+    int i = 0;
+    int j = 0;
+    for (i = 0; i < n; i++)
+	{
+	    for (j = 0; j < m; j++)
+		{
+		    if(arr2[i] == arr1[j])
+			break;
+		}
+
+	    if (j == m)
+		return 0;
+	}
+    
+    return 1;
 }
 
 
