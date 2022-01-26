@@ -425,8 +425,6 @@ void gmsh_data_read ( char *gmsh_filename, int node_dim, int node_num, int eleme
 			}
 		}
 	}
-    printf(" IBDY FACESSSSSS %d. ELEN3d %d\n", ibdy_face, ielem3d);
-    return;
     fclose ( input );
     
     /*for (int i=0; i<nelem; i++){

@@ -83,36 +83,6 @@ int CGNS_ORDERING(int **CONN, int nelem)
 
 int BUILD_EDGES(int **CONN, int nelem)
 {
-
-    
-    /*****/
-    int *arr1;
-    int *arr2;
-    bool yes;
-    
-    arr1 = ivector(0,5);
-    arr2 = ivector(0,5);
-    arr1[0] = 0;
-    arr1[1] = 2;
-    arr1[2] = 4;
-    arr1[3] = 6;
-    arr1[4] = 8;
-    arr2[0] = 8;
-    arr2[1] = 4;
-    arr2[2] = 6;
-    arr2[3] = 2;
-    arr2[4] = 0;
-    
-    
-    if(isSubset(arr1, arr2, 5, 5))
-	printf("\n YESS Array2 is a subset of Array1\n ");
-    else
-	printf("\n NOOO Array2 is not a subset of Array1\n");
-    
-    free_ivector(arr1, 0,5);
-    free_ivector(arr2, 0,5);
-    /*****/
-    
     /*
      * Get the boundary nodes and the element to which they belong:
      */
@@ -268,13 +238,7 @@ int BUILD_EDGES(int **CONN, int nelem)
     //printf(" END SORT\n");
     //END sorting
 
-
-    /// BUG!!!1 THIS ONLY WORKS WITH CARTESIAN GRIDS.
-    //// REWRITE IT. That's why the number of internal faces is not counted correctly
-    printf(" BUGGGG TO BE FIXED HERE. BUILD_CONN.C line 275\n\n\n\n");
-
-    /************************/
-    // BUG FIX WIP
+    //Count (unique) internal faces --> iface
     iface = 0;
     for(int iel=0; iel<nelem; iel++) {
 	for (int ifac=0; ifac<NELFACES; ifac++) {
@@ -284,7 +248,8 @@ int BUILD_EDGES(int **CONN, int nelem)
 		    if(     conn_face_el_sort[iel][ifac][0] == conn_face_el_sort[jel][jfac][0] && \
 			    conn_face_el_sort[iel][ifac][1] == conn_face_el_sort[jel][jfac][1] && \
 			    conn_face_el_sort[iel][ifac][2] == conn_face_el_sort[jel][jfac][2] && \
-			    conn_face_el_sort[iel][ifac][3] == conn_face_el_sort[jel][jfac][3] && iel != jel) {
+			    conn_face_el_sort[iel][ifac][3] == conn_face_el_sort[jel][jfac][3] && \
+			    iel != jel) {
 			
 			FACE_in_ELEM[iel][ifac][0] = iel;
 			FACE_in_ELEM[iel][ifac][1] = jel;
@@ -379,7 +344,7 @@ int BUILD_EDGES(int **CONN, int nelem)
     int iface_repeated = 0;
     int krepeated      = 0;
 
-    printf(" # Number of all faces\t\t%d\n # number of unique faces\t%d\n # Number of interlan faces\t%d\n # Number of boundary faces\t%d\n", nface_all, nfaces, nint_faces, nbdy_faces);
+    printf(" # Number of all faces\t\t%d\n # number of unique faces\t%d\n # Number of internal faces\t%d\n # Number of boundary faces\t%d\n", nface_all, nfaces, nint_faces, nbdy_faces);
 
     iface = 0;
     for (int i=1; i<=nface_all; i++) {
@@ -407,7 +372,7 @@ int BUILD_EDGES(int **CONN, int nelem)
 			   CONN_FACE_tmp[j-1][0], CONN_FACE_tmp[j-1][1], CONN_FACE_tmp[j-1][2], CONN_FACE_tmp[j-1][3], \
 			   FACE_MULTIPLICITY_auxi[nbdy_faces + iface], multiplicity + 1);
 		    */
-		    printf("nbdy_faces + iface = %d %d %d\n", iface, nbdy_faces, nfaces);
+		    //printf("nbdy_faces + iface = %d %d %d\n", iface, nbdy_faces, nfaces);
 		    iface = iface + 1;
 		}
 	    }
@@ -415,7 +380,7 @@ int BUILD_EDGES(int **CONN, int nelem)
     } //OK (DO NOT CALL "CGNS_ORDERING(CONN, nelem)"!!!!!)
     //printf(" NBDY FACEs + IFACE = %d\n", nbdy_faces + iface);
     //VIEW_i2DMAT("CONN_FACE", CONN_FACE, 0, nfaces-1, 0, 3);
-    return 0;
+    
     /*
      * Set repeated entries of CONN_FACE_all to -1:
      */

@@ -3,7 +3,7 @@ nelemy =  2;
 nelemz = 3;
 
 xmin =      0;
-xmax = 2000; //15000; //200000;
+xmax = 15000; //200000;
 ymin =      0;
 ymax =  2200;
 zmin =      0;
@@ -11,7 +11,7 @@ zmax =  2400;
 gridsize = xmax / nelemx;
 
 gridsize_bottom = 1000;
-gridsize_top    = 500;
+gridsize_top    = 1750;
 
 Point(1) = {xmin, ymin, zmin, gridsize_bottom};
 Point(2) = {xmax, ymin, zmin, gridsize_bottom};
