@@ -272,61 +272,35 @@ int BUILD_EDGES(int **CONN, int nelem)
     /// BUG!!!1 THIS ONLY WORKS WITH CARTESIAN GRIDS.
     //// REWRITE IT. That's why the number of internal faces is not counted correctly
     printf(" BUGGGG TO BE FIXED HERE. BUILD_CONN.C line 275\n\n\n\n");
-    
+
+    /************************/
+    // BUG FIX WIP
     iface = 0;
     for(int iel=0; iel<nelem; iel++) {
-	for(int jel=0; jel<nelem; jel++) {
-
-	    if(     conn_face_el_sort[iel][BOTT][0] == conn_face_el_sort[jel][TOP][0] && \
-		    conn_face_el_sort[iel][BOTT][1] == conn_face_el_sort[jel][TOP][1] && \
-		    conn_face_el_sort[iel][BOTT][2] == conn_face_el_sort[jel][TOP][2] && \
-		    conn_face_el_sort[iel][BOTT][3] == conn_face_el_sort[jel][TOP][3])
-		{	
-		    FACE_in_ELEM[iel][BOTT][0] = iel;
-		    FACE_in_ELEM[iel][BOTT][1] = jel;
-				
-		    FACE_in_ELEM[jel][TOP][0] = jel;
-		    FACE_in_ELEM[jel][TOP][1] = iel;
-
-		    //printf(" SHARED FACE:  face %d of ELEMENT %d is shared with face %d of ELEMENT %d\n", BOTT+1,iel+1, TOP+1, jel+1);
-						
-		    iface = iface + 1;
+	for (int ifac=0; ifac<NELFACES; ifac++) {
+	    for(int jel=iel; jel<nelem; jel++) {
+		for (int jfac=0; jfac<NELFACES; jfac++) {
+		    
+		    if(     conn_face_el_sort[iel][ifac][0] == conn_face_el_sort[jel][jfac][0] && \
+			    conn_face_el_sort[iel][ifac][1] == conn_face_el_sort[jel][jfac][1] && \
+			    conn_face_el_sort[iel][ifac][2] == conn_face_el_sort[jel][jfac][2] && \
+			    conn_face_el_sort[iel][ifac][3] == conn_face_el_sort[jel][jfac][3] && iel != jel) {
 			
-		} else if (conn_face_el_sort[iel][EAST][0] == conn_face_el_sort[jel][WEST][0] && \
-			   conn_face_el_sort[iel][EAST][1] == conn_face_el_sort[jel][WEST][1] && \
-			   conn_face_el_sort[iel][EAST][2] == conn_face_el_sort[jel][WEST][2] && \
-			   conn_face_el_sort[iel][EAST][3] == conn_face_el_sort[jel][WEST][3])
-		{
+			FACE_in_ELEM[iel][ifac][0] = iel;
+			FACE_in_ELEM[iel][ifac][1] = jel;
 			
-		    FACE_in_ELEM[iel][EAST][0] = iel;
-		    FACE_in_ELEM[iel][EAST][1] = jel;
+			FACE_in_ELEM[jel][jfac][0] = jel;
+			FACE_in_ELEM[jel][jfac][1] = iel;
 			
-		    FACE_in_ELEM[jel][WEST][0] = jel;
-		    FACE_in_ELEM[jel][WEST][1] = iel;
+			//printf(" SHARED FACE:  face %d of ELEMENT %d is shared with face %d of ELEMENT %d - (%d %d %d %d) = (%d %d %d %d)\n", ifac+1,iel+1, jfac+1, jel+1, conn_face_el_sort[iel][ifac][0], conn_face_el_sort[iel][ifac][1], conn_face_el_sort[iel][ifac][2], conn_face_el_sort[iel][ifac][3],  conn_face_el_sort[jel][jfac][0], conn_face_el_sort[jel][jfac][1], conn_face_el_sort[jel][jfac][2], conn_face_el_sort[jel][jfac][3]);
 			
-		    //printf(" SHARED FACE:  face %d of ELEMENT %d is shared with face %d of ELEMENT %d\n", EAST+1, iel+1, WEST+1, jel+1);
-				
-		    iface = iface + 1;
-			
-		} else if  (conn_face_el_sort[iel][SOUTH][0] == conn_face_el_sort[jel][NORTH][0] && \
-			    conn_face_el_sort[iel][SOUTH][1] == conn_face_el_sort[jel][NORTH][1] && \
-			    conn_face_el_sort[iel][SOUTH][2] == conn_face_el_sort[jel][NORTH][2] && \
-			    conn_face_el_sort[iel][SOUTH][3] == conn_face_el_sort[jel][NORTH][3])
-		{
-			
-		    FACE_in_ELEM[iel][SOUTH][0] = iel;
-		    FACE_in_ELEM[iel][SOUTH][1] = jel;
-			
-		    FACE_in_ELEM[jel][NORTH][0] = jel;
-		    FACE_in_ELEM[jel][NORTH][1] = iel;
-			
-		    //printf(" SHARED FACE:  face %d of ELEMENT %d is shared with face %d of ELEMENT %d\n", SOUTH+1, iel+1, NORTH+1, jel+1);
-
-		    iface = iface + 1;
+			iface = iface + 1;
+		    }
 		}
+	    }
 	}
-    }
-    int face_direction[6] = {SOUTH, EAST, NORTH, WEST, BOTT, TOP};
+    } //OK this works for any unstructured and structured grid.
+    
     int nint_faces        = iface;
     nfaces                = nint_faces + nbdy_faces;
     
