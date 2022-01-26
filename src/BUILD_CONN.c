@@ -363,11 +363,11 @@ int BUILD_EDGES(int **CONN, int nelem)
 		    
 		    FACE_MULTIPLICITY_auxi[nbdy_faces + iface] = multiplicity + 1;
 
-		    /* CONN_FACE[nbdy_faces + iface][0] =  CONN_FACE_tmp[j-1][0];
+		    CONN_FACE[nbdy_faces + iface][0] =  CONN_FACE_tmp[j-1][0];
 		    CONN_FACE[nbdy_faces + iface][1] =  CONN_FACE_tmp[j-1][1];
 		    CONN_FACE[nbdy_faces + iface][2] =  CONN_FACE_tmp[j-1][3];
 		    CONN_FACE[nbdy_faces + iface][3] =  CONN_FACE_tmp[j-1][2];
-		    */
+		    
 		    /*printf("k=%d, REPEATED_index %d -> [%d %d %d %d] repeated %d times (%d)\n", krepeated-1, REPEATED_index[krepeated-1], \
 			   CONN_FACE_tmp[j-1][0], CONN_FACE_tmp[j-1][1], CONN_FACE_tmp[j-1][2], CONN_FACE_tmp[j-1][3], \
 			   FACE_MULTIPLICITY_auxi[nbdy_faces + iface], multiplicity + 1);
@@ -393,46 +393,6 @@ int BUILD_EDGES(int **CONN, int nelem)
 	CONN_FACE_all[irepeated_index][3] = -1;
     }
     
-    /* /\* THIS WAS THE OLD WAY AS IN THE MATLAB CODE BUT IT'S NOT NECESSARY.*\/ */
-    /* /\*  * STORE EACH FACE into CONN_FACE(1:`, 1:4): *\/ */
-    /* /\*  * *\/ */
-    /* /\* int FACE_MULTIPLICITY[nface_all]; //overallocated *\/ */
-    /* /\* int ifac = 0; *\/ */
-    /* /\* for (int iface_all=0; iface_all<nface_all; iface_all++) { *\/ */
-    /* /\* 	//if (CONN_FACE_all[iface_all][0] > 0) { *\/ */
-    /* /\* 	if (FACE_MULTIPLICITY_auxi[nbdy_faces+iface_all] > 0) { *\/ */
-		    
-    /* /\* 	    //CONN_FACE[ifac][0] = CONN_FACE_all[iface_all][0]; *\/ */
-    /* /\* 	    //CONN_FACE[ifac][1] = CONN_FACE_all[iface_all][1]; *\/ */
-    /* /\* 	    //CONN_FACE[ifac][2] = CONN_FACE_all[iface_all][2]; *\/ */
-    /* /\* 	    //CONN_FACE[ifac][3] = CONN_FACE_all[iface_all][3]; *\/ */
-
-    /* /\* 	    //CONN_FACE[ifac][0] = CONN_FACE_tmp[iface_all][0]; *\/ */
-    /* /\* 	    //CONN_FACE[ifac][1] = CONN_FACE_tmp[iface_all][1]; *\/ */
-    /* /\* 	    //CONN_FACE[ifac][2] = CONN_FACE_tmp[iface_all][2]; *\/ */
-    /* /\* 	    //CONN_FACE[ifac][3] = CONN_FACE_tmp[iface_all][3]; *\/ */
-	    
-    /* /\* 	    FACE_MULTIPLICITY[nbdy_faces + ifac] = FACE_MULTIPLICITY_auxi[iface_all]; *\/ */
-	
-    /* /\* 	    // FACE_in_ELEM[ifac][0] = FACE_in_ELEM[iface_all][0]; *\/ */
-    /* /\* 	    // FACE_in_ELEM[ifac][1] = FACE_in_ELEM[iface_all][1]; *\/ */
-	    
-    /* /\* 	    ifac = ifac + 1; *\/ */
-    /* /\* 	} *\/ */
-    /* /\* 	}*\\/ *\/ */
-
-
-    //OK WORKING: CONN_FACE is now correctly populated and ordered.
-    //Uncomment the following for loop to print it to screen.
-    /*for (int iface=0; iface<nfaces; iface++) {
-	if (iface < nbdy_faces) {
-	    printf(" BDY: CONN_FACE(%d,1:4) = %d %d %d %d - repeated %d times\n", iface, CONN_FACE[iface][0], CONN_FACE[iface][1], CONN_FACE[iface][2], CONN_FACE[iface][3], FACE_MULTIPLICITY_auxi[iface]);
-	} else {
-	    printf(" INT: CONN_FACE(%d,1:4) = %d %d %d %d - repeated %d times\n", iface, CONN_FACE[iface][0], CONN_FACE[iface][1], CONN_FACE[iface][2], CONN_FACE[iface][3], FACE_MULTIPLICITY_auxi[iface]);
-	}
-	} //OK CONN_FACE and FACE_MULTIPLICITY;*/
-    
-    
     /*--------------------------------------------------------------------------
      * Populate FACE_LtoG(1:NEL,1:6) OK
      *--------------------------------------------------------------------------*/
@@ -448,16 +408,7 @@ int BUILD_EDGES(int **CONN, int nelem)
 	    CONN_FACE_sort[i][j] = auxi[jj];
 	}
     }//OK
-
-    /*for (int iface=0; iface<nfaces; iface++) {
-	if (iface < nbdy_faces) {
-	    printf(" face %d: s BDY: CONN_FACE_sort(%d,1:4) = %d %d %d %d - repeated %d times\n", iface, iface, CONN_FACE_sort[iface][0], CONN_FACE_sort[iface][1], CONN_FACE_sort[iface][2], CONN_FACE_sort[iface][3], FACE_MULTIPLICITY_auxi[iface]);
-	    printf(" face %d: u BDY: CONN_FACE     (%d,1:4) = %d %d %d %d - repeated %d times\n", iface, iface, CONN_FACE[iface][0], CONN_FACE[iface][1], CONN_FACE[iface][2], CONN_FACE[iface][3], FACE_MULTIPLICITY_auxi[iface]);
-	} else {
-	    printf(" face %d: s INT: CONN_FACE_sort(%d,1:4) = %d %d %d %d - repeated %d times\n", iface, iface, CONN_FACE_sort[iface][0], CONN_FACE_sort[iface][1], CONN_FACE_sort[iface][2], CONN_FACE_sort[iface][3], FACE_MULTIPLICITY_auxi[iface]);
-	    printf(" face %d: u INT: CONN_FACE     (%d,1:4) = %d %d %d %d - repeated %d times\n", iface, iface, CONN_FACE[iface][0], CONN_FACE[iface][1], CONN_FACE[iface][2], CONN_FACE[iface][3], FACE_MULTIPLICITY_auxi[iface]);
-	}
-	}*/ //OK
+    
     
     int IBDY_FACE = 0;
     for (int iface=0; iface<nfaces; iface++) {
@@ -667,27 +618,6 @@ int BUILD_EDGES(int **CONN, int nelem)
     return 0;
 }
 
-// C program to check if an array is a subset of another array
-
-bool isSubset(int *arr1, int *arr2, int m, int n)
-{
-    int i = 0;
-    int j = 0;
-    for (i = 0; i < n; i++)
-	{
-	    for (j = 0; j < m; j++)
-		{
-		    if(arr2[i] == arr1[j])
-			break;
-		}
-
-	    if (j == m)
-		return 0;
-	}
-    
-    return 1;
-}
-
 
 int ADD_HIGH_ORDER_NODES(void)
 {
@@ -738,8 +668,9 @@ int ADD_HIGH_ORDER_NODES(void)
 	COORDS_HO[ip][1] = COORDS[ip][1];
 	COORDS_HO[ip][2] = COORDS[ip][2];
 	fprintf(fileid, " %f %f %f %d\n", COORDS_HO[ip][0], COORDS_HO[ip][1], COORDS_HO[ip][2], ip);
+	//printf( " %f %f %f %d\n", COORDS_HO[ip][0], COORDS_HO[ip][1], COORDS_HO[ip][2], ip); //ok
     }
-    
+
     /*--------------------------------------------------------------------------
      * Build high order grid points on every edges
      --------------------------------------------------------------------------*/
@@ -780,12 +711,12 @@ int ADD_HIGH_ORDER_NODES(void)
 	    fprintf(fileidHO_edges, " %f %f %f %d\n", COORDS_HO[ip][0], COORDS_HO[ip][1], COORDS_HO[ip][2], ip);
 	    
 	    EDGE_POINT_CONN[iedge_g][l] = ip;
-	    //printf(" ngl=%d, iedge=%d, ilgl=%d, ip=%d (%f %f %f)\n", ngl, iedge_g, l, EDGE_POINT_CONN[iedge_g][l] , COORDS_HO[ip][0], COORDS_HO[ip][1], COORDS_HO[ip][2]);
+	    printf(" ngl=%d, iedge=%d, ilgl=%d, ip=%d (%f %f %f)\n", ngl, iedge_g, l, EDGE_POINT_CONN[iedge_g][l] , COORDS_HO[ip][0], COORDS_HO[ip][1], COORDS_HO[ip][2]);
 	    //iconn = iconn + 1;	    
 	    ip = ip + 1; //Initialized to highest low order value of npoin.
 	}
     }
-
+    
     /*--------------------------------------------------------------------------
      * Populate Faces with high-order points:
      *--------------------------------------------------------------------------*/
@@ -801,7 +732,9 @@ int ADD_HIGH_ORDER_NODES(void)
     int iconn, iconn_face_internal;
     int ip3, ip4;
     
-    ip = nnodes_linear + tot_edges_internal_nodes;
+
+    ip2 = nnodes_linear + tot_edges_internal_nodes;
+    printf(" IP=%d nfaces = %d\n", ip, nfaces);
     for(int iface=0; iface<nfaces; iface++) {
 	    	
 	/*--------------------------------------------------------------------------
@@ -811,7 +744,7 @@ int ADD_HIGH_ORDER_NODES(void)
 	ip2 = CONN_FACE[iface][1]-1;
 	ip3 = CONN_FACE[iface][2]-1;
 	ip4 = CONN_FACE[iface][3]-1;
-	//printf(" ip1, ip2, ip3, ip4 = %d %d %d %d\n", ip1+1, ip2+1, ip3+1, ip4+1);
+	//printf(" iface=%d -- ip1, ip2, ip3, ip4 = %d %d %d %d\n", iface, ip1, ip2, ip3, ip4);
 	
 	xa = COORDS[ip1][0]; ya = COORDS[ip1][1]; za = COORDS[ip1][2];
 	xb = COORDS[ip2][0]; yb = COORDS[ip2][1]; zb = COORDS[ip2][2];
@@ -822,6 +755,7 @@ int ADD_HIGH_ORDER_NODES(void)
 	FACE_POINT_CONN[iface][ngl][1]   = ip2+1;
 	FACE_POINT_CONN[iface][1][ngl]   = ip3+1;
 	FACE_POINT_CONN[iface][ngl][ngl] = ip4+1;
+	
 	
 	//iconn = iconnCurrent + 1;
 	//iconn_face_internal = 0;
@@ -849,6 +783,7 @@ int ADD_HIGH_ORDER_NODES(void)
 		    zd*(1 - xi)*(1 + zeta)*0.25;
 		
 		fprintf(fileidHO_faces, " %f %f %f %d\n", COORDS_HO[ip][0], COORDS_HO[ip][1], COORDS_HO[ip][2], ip);
+		printf(" %f %f %f %d\n", COORDS_HO[ip][0], COORDS_HO[ip][1], COORDS_HO[ip][2], ip);
 			    
 		/*
 		 * Add internal LGL points to CONN:
@@ -861,7 +796,7 @@ int ADD_HIGH_ORDER_NODES(void)
 	    }
 	}
     }
-    
+
     /*--------------------------------------------------------------------------
      * Populate internal/Volume high-order points:
      *--------------------------------------------------------------------------*/
@@ -951,7 +886,7 @@ int ADD_HIGH_ORDER_NODES(void)
 		    
 		    fprintf(fileidHO_vol, " %f %f %f %d\n", COORDS_HO[ip][0], COORDS_HO[ip][1], COORDS_HO[ip][2], ip);
 
-		    CONN_HO[iel][i][j][k] = ip;
+		    //CONN_HO[iel][i][j][k] = ip;
 		    
 		    //IPrenumbered = IP;
 		    //CONN_renumbered(IEL, iconn) = IP;
@@ -1049,4 +984,24 @@ int ADD_HIGH_ORDER_NODES(void)
     
     return 0;
     
+}
+
+// C program to check if an array is a subset of another array
+bool isSubset(int *arr1, int *arr2, int m, int n)
+{
+    int i = 0;
+    int j = 0;
+    for (i = 0; i < n; i++)
+	{
+	    for (j = 0; j < m; j++)
+		{
+		    if(arr2[i] == arr1[j])
+			break;
+		}
+
+	    if (j == m)
+		return 0;
+	}
+    
+    return 1;
 }

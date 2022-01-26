@@ -4,7 +4,8 @@ from matplotlib.text import Text
 from mpl_toolkits.mplot3d import Axes3D
 from numpy.random import rand
 
-print_lables=True
+#print_lables=True
+print_lables=False
 
 
 plt.close('all')
