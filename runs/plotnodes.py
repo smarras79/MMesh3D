@@ -11,7 +11,7 @@ print_lables=False
 plt.close('all')
 fig = plt.figure()
 ax3d = fig.add_subplot(projection='3d')
-
+ax3d.set_box_aspect(aspect = (1,1,1))
 
 
 #
@@ -89,5 +89,13 @@ if (print_lables == True):
 #    print("X=",x[point_index], " Y=",y[point_index], " Z=",z[point_index], " PointIdx=", point_index)
 #
 #fig.canvas.mpl_connect('pick_event', onpick3)
-            
+
+# Make axes limits 
+my_aspect_ratio = max(x)/max(z)
+ax3d.set_box_aspect((my_aspect_ratio, 1, 1))
+
+ax3d.axes.set_xlim3d(left=0.9*min(x), right=1.1*max(x)) 
+#ax3d.axes.set_ylim3d(bottom=0.9*min(y), top=1.1*max(y))
+#ax3d.axes.set_zlim3d(bottom=0.9*min(z), top=1.1*max(z))
+
 plt.show()
