@@ -711,7 +711,9 @@ int ADD_HIGH_ORDER_NODES(void)
 	    fprintf(fileidHO_edges, " %f %f %f %d\n", COORDS_HO[ip][0], COORDS_HO[ip][1], COORDS_HO[ip][2], ip);
 	    
 	    EDGE_POINT_CONN[iedge_g][l] = ip;
-	    printf(" ngl=%d, iedge=%d, ilgl=%d, ip=%d (%f %f %f)\n", ngl, iedge_g, l, EDGE_POINT_CONN[iedge_g][l] , COORDS_HO[ip][0], COORDS_HO[ip][1], COORDS_HO[ip][2]);
+
+	    //printf(" ngl=%d, iedge=%d, ilgl=%d, ip=%d (%f %f %f)\n", ngl, iedge_g, l, EDGE_POINT_CONN[iedge_g][l] , COORDS_HO[ip][0], COORDS_HO[ip][1], COORDS_HO[ip][2]);
+	    
 	    //iconn = iconn + 1;	    
 	    ip = ip + 1; //Initialized to highest low order value of npoin.
 	}
@@ -733,8 +735,7 @@ int ADD_HIGH_ORDER_NODES(void)
     int ip3, ip4;
     
 
-    ip2 = nnodes_linear + tot_edges_internal_nodes;
-    printf(" IP=%d nfaces = %d\n", ip, nfaces);
+    ip = nnodes_linear + tot_edges_internal_nodes;
     for(int iface=0; iface<nfaces; iface++) {
 	    	
 	/*--------------------------------------------------------------------------
@@ -783,7 +784,7 @@ int ADD_HIGH_ORDER_NODES(void)
 		    zd*(1 - xi)*(1 + zeta)*0.25;
 		
 		fprintf(fileidHO_faces, " %f %f %f %d\n", COORDS_HO[ip][0], COORDS_HO[ip][1], COORDS_HO[ip][2], ip);
-		printf(" %f %f %f %d\n", COORDS_HO[ip][0], COORDS_HO[ip][1], COORDS_HO[ip][2], ip);
+		//printf(" %f %f %f %d\n", COORDS_HO[ip][0], COORDS_HO[ip][1], COORDS_HO[ip][2], ip);
 			    
 		/*
 		 * Add internal LGL points to CONN:
