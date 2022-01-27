@@ -7,7 +7,14 @@ from numpy.random import rand
 #print_lables=True
 print_lables=False
 
+plot_edge_nodes = True
+plot_face_nodes = False
+plot_vol_nodes = False
 
+
+#
+# USER: DO NO TOUCH from here on!
+#
 plt.close('all')
 fig = plt.figure()
 ax3d = fig.add_subplot(projection='3d')
@@ -31,55 +38,58 @@ if (print_lables == True):
     for xcoords, ycoords, zcoords, label in zip(x, y, z, ip):
         ax3d.text(xcoords, ycoords, zcoords, int(label))
 
-# 2) high order edges
-del x, y, z, ip
-coords_ho = np.loadtxt('COORDS_HO_edges.dat', usecols=range(4))
-
-x=coords_ho[:,0];
-y=coords_ho[:,1];
-z=coords_ho[:,2];
-ip=coords_ho[:,3]+1;
-
-#ax3d.scatter(x, y, z, marker='x')
-line = ax3d.scatter(x, y, z, marker='x', picker=True, pickradius=5)  # 5 points tolerance
-
-if (print_lables == True):
-    for xcoords, ycoords, zcoords, label in zip(x, y, z, ip):
-        ax3d.text(xcoords, ycoords, zcoords, int(label))
-        
+if (plot_edge_nodes == True):
+    # 2) high order edges
+    del x, y, z, ip
+    coords_ho = np.loadtxt('COORDS_HO_edges.dat', usecols=range(4))
     
-# 3) high order faces
-del coords_ho
-del x, y, z, ip
-coords_ho = np.loadtxt('COORDS_HO_faces.dat', usecols=range(4))
-
-x=coords_ho[:,0];
-y=coords_ho[:,1];
-z=coords_ho[:,2];
-ip=coords_ho[:,3]+1;
-
-ax3d.scatter(x, y, z, marker='s')
-
-if (print_lables == True):
-    for xcoords, ycoords, zcoords, label in zip(x, y, z, ip):
-        ax3d.text(xcoords, ycoords, zcoords, int(label))
+    x=coords_ho[:,0];
+    y=coords_ho[:,1];
+    z=coords_ho[:,2];
+    ip=coords_ho[:,3]+1;
+    
+    #ax3d.scatter(x, y, z, marker='x')
+    line = ax3d.scatter(x, y, z, marker='x', picker=True, pickradius=5)  # 5 points tolerance
+    
+    if (print_lables == True):
+        for xcoords, ycoords, zcoords, label in zip(x, y, z, ip):
+            ax3d.text(xcoords, ycoords, zcoords, int(label))
         
+
+if (plot_face_nodes == True):
+    # 3) high order faces
+    del coords_ho
+    del x, y, z, ip
+    coords_ho = np.loadtxt('COORDS_HO_faces.dat', usecols=range(4))
+    
+    x=coords_ho[:,0];
+    y=coords_ho[:,1];
+    z=coords_ho[:,2];
+    ip=coords_ho[:,3]+1;
+    
+    ax3d.scatter(x, y, z, marker='s')
+    
+    if (print_lables == True):
+        for xcoords, ycoords, zcoords, label in zip(x, y, z, ip):
+            ax3d.text(xcoords, ycoords, zcoords, int(label))
         
-# 4 high order internal
-del coords_ho
-del x, y, z, ip
-coords_ho = np.loadtxt('COORDS_HO_vol.dat', usecols=range(4))
 
-x=coords_ho[:,0];
-y=coords_ho[:,1];
-z=coords_ho[:,2];
-ip=coords_ho[:,3]+1;
-
-ax3d.scatter(x, y, z, marker='s')
-
-if (print_lables == True):
-    for xcoords, ycoords, zcoords, label in zip(x, y, z, ip):
-        ax3d.text(xcoords, ycoords, zcoords, int(label))
+if (plot_vol_nodes == True):
+    # 4 high order internal
+    del coords_ho
+    del x, y, z, ip
+    coords_ho = np.loadtxt('COORDS_HO_vol.dat', usecols=range(4))
+    
+    x=coords_ho[:,0];
+    y=coords_ho[:,1];
+    z=coords_ho[:,2];
+    ip=coords_ho[:,3]+1;
+    
+    ax3d.scatter(x, y, z, marker='s')
+    
+    if (print_lables == True):
+        for xcoords, ycoords, zcoords, label in zip(x, y, z, ip):
+            ax3d.text(xcoords, ycoords, zcoords, int(label))
 
 # PICK currently not working correctly.
 # The values that it returns are incorrect.
