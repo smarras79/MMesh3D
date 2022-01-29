@@ -1,14 +1,14 @@
 // Gmsh project created on Fri Oct  1 15:50:24 2021
-nelx  = 2;
+nelx  = 1;
 nely  = 1;
 nelz  = 1;
 
 xmin =  0;
-xmax = 10;
+xmax = 4000;
 ymin =  0;
-ymax = 10;
+ymax = 1000;
 zmin =  0;
-zmax = 10;
+zmax = 2000;
 
 lc1 = 1000;
 

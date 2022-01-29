@@ -4,8 +4,8 @@ from matplotlib.text import Text
 from mpl_toolkits.mplot3d import Axes3D
 from numpy.random import rand
 
-#print_lables=True
-print_lables=False
+print_lables=True
+#print_lables=False
 
 plot_edge_nodes = True
 plot_face_nodes = False
@@ -58,7 +58,6 @@ if (plot_edge_nodes == True):
 
 if (plot_face_nodes == True):
     # 3) high order faces
-    del coords_ho
     del x, y, z, ip
     coords_ho = np.loadtxt('COORDS_HO_faces.dat', usecols=range(4))
     
@@ -76,7 +75,6 @@ if (plot_face_nodes == True):
 
 if (plot_vol_nodes == True):
     # 4 high order internal
-    del coords_ho
     del x, y, z, ip
     coords_ho = np.loadtxt('COORDS_HO_vol.dat', usecols=range(4))
     
@@ -104,8 +102,9 @@ if (plot_vol_nodes == True):
 my_aspect_ratio = max(x)/max(z)
 ax3d.set_box_aspect((my_aspect_ratio, 1, 1))
 
-ax3d.axes.set_xlim3d(left=0.9*min(x), right=1.1*max(x)) 
-#ax3d.axes.set_ylim3d(bottom=0.9*min(y), top=1.1*max(y))
-#ax3d.axes.set_zlim3d(bottom=0.9*min(z), top=1.1*max(z))
+eps = 1000
+ax3d.axes.set_xlim3d(left=min(x)-eps, right=max(x)+eps) 
+#ax3d.axes.set_ylim3d(bottom=min(y)-eps, top=max(y)+eps)
+#ax3d.axes.set_zlim3d(bottom=min(z)-eps, top=max(z)+eps)
 
 plt.show()
