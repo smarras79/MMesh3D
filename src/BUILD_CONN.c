@@ -181,28 +181,28 @@ int BUILD_EDGES(int **CONN, int nelem)
 	
 	/*for (int iface=0; iface<6; iface++)
 	    {
-		iedge_g = 0;
-		conn_face_edge_el[iel][iface][iedge_g][0] = conn_face_el[iel][iface][1];
-		conn_face_edge_el[iel][iface][iedge_g][1] = conn_face_el[iel][iface][2];
-		conn_face_edge_el[iel][iface][iedge_g][2] = iel;
+		iedg_el = 0;
+		conn_face_edge_el[iel][iface][iedg_el][0] = conn_face_el[iel][iface][1];
+		conn_face_edge_el[iel][iface][iedg_el][1] = conn_face_el[iel][iface][2];
+		conn_face_edge_el[iel][iface][iedg_el][2] = iel;
 		
-		iedge_g = 1;
-		conn_face_edge_el[iel][iface][iedge_g][0] = conn_face_el[iel][iface][2];
-		conn_face_edge_el[iel][iface][iedge_g][1] = conn_face_el[iel][iface][3];
-		conn_face_edge_el[iel][iface][iedge_g][2] = iel;
-		//fprintf[' edge %d of face %d of element %d has points [%d][%d]\n'][iedge_g][iface][iel][conn_face_edge_el[iel][iface][iedge_g][0]][conn_face_edge_el[iel][iface][iedge_g][1]];
+		iedg_el = 1;
+		conn_face_edge_el[iel][iface][iedg_el][0] = conn_face_el[iel][iface][2];
+		conn_face_edge_el[iel][iface][iedg_el][1] = conn_face_el[iel][iface][3];
+		conn_face_edge_el[iel][iface][iedg_el][2] = iel;
+		//fprintf[' edge %d of face %d of element %d has points [%d][%d]\n'][iedg_el][iface][iel][conn_face_edge_el[iel][iface][iedg_el][0]][conn_face_edge_el[iel][iface][iedg_el][1]];
 		
-		iedge_g = 2;
-		conn_face_edge_el[iel][iface][iedge_g][0] = conn_face_el[iel][iface][3];
-		conn_face_edge_el[iel][iface][iedge_g][1] = conn_face_el[iel][iface][4];
-		conn_face_edge_el[iel][iface][iedge_g][2] = iel;
-		//fprintf[' edge %d of face %d of element %d has points [%d][%d]\n'][iedge_g][iface][iel][conn_face_edge_el[iel][iface][iedge_g][0]][conn_face_edge_el[iel][iface][iedge_g][1]];
+		iedg_el = 2;
+		conn_face_edge_el[iel][iface][iedg_el][0] = conn_face_el[iel][iface][3];
+		conn_face_edge_el[iel][iface][iedg_el][1] = conn_face_el[iel][iface][4];
+		conn_face_edge_el[iel][iface][iedg_el][2] = iel;
+		//fprintf[' edge %d of face %d of element %d has points [%d][%d]\n'][iedg_el][iface][iel][conn_face_edge_el[iel][iface][iedg_el][0]][conn_face_edge_el[iel][iface][iedg_el][1]];
 		
-		iedge_g = 3;
-		conn_face_edge_el[iel][iface][iedge_g][0] = conn_face_el[iel][iface][4];
-		conn_face_edge_el[iel][iface][iedge_g][1] = conn_face_el[iel][iface][1];
-		conn_face_edge_el[iel][iface][iedge_g][2] = iel;
-		//fprintf[' edge %d of face %d of element %d has points [%d][%d]\n'][iedge_g][iface][iel][conn_face_edge_el[iel][iface][iedge_g][0]][conn_face_edge_el[iel][iface][iedge_g][1]];
+		iedg_el = 3;
+		conn_face_edge_el[iel][iface][iedg_el][0] = conn_face_el[iel][iface][4];
+		conn_face_edge_el[iel][iface][iedg_el][1] = conn_face_el[iel][iface][1];
+		conn_face_edge_el[iel][iface][iedg_el][2] = iel;
+		//fprintf[' edge %d of face %d of element %d has points [%d][%d]\n'][iedg_el][iface][iel][conn_face_edge_el[iel][iface][iedg_el][0]][conn_face_edge_el[iel][iface][iedg_el][1]];
 		}*/
 	}
 
@@ -419,31 +419,31 @@ int BUILD_EDGES(int **CONN, int nelem)
 			CONN_FACE_sort[iface][1] == conn_face_el_sort[iel][ifac_el][1] && \
 			CONN_FACE_sort[iface][2] == conn_face_el_sort[iel][ifac_el][3] && \
 			CONN_FACE_sort[iface][3] == conn_face_el_sort[iel][ifac_el][2]) ||
-		     (  CONN_FACE_sort[iface][0] == conn_face_el_sort[iel][ifac_el][0] && \
-			CONN_FACE_sort[iface][1] == conn_face_el_sort[iel][ifac_el][1] && \
-			CONN_FACE_sort[iface][2] == conn_face_el_sort[iel][ifac_el][2] && \
-			CONN_FACE_sort[iface][3] == conn_face_el_sort[iel][ifac_el][3])
+		      (  CONN_FACE_sort[iface][0] == conn_face_el_sort[iel][ifac_el][0] && \
+			 CONN_FACE_sort[iface][1] == conn_face_el_sort[iel][ifac_el][1] && \
+			 CONN_FACE_sort[iface][2] == conn_face_el_sort[iel][ifac_el][2] && \
+			 CONN_FACE_sort[iface][3] == conn_face_el_sort[iel][ifac_el][3])
 		     ) {
 			    
 		    FACE_LtoG[iel][ifac_el] = iface;
-		    /*printf("  --- FACE_LtoG[%d][%d] = %d -> [%d %d %d %d] \n", iel+1, ifac_el+1, \
-		      FACE_LtoG[iel][ifac_el], conn_face_el_sort[iel][ifac_el][0], \
-		      conn_face_el_sort[iel][ifac_el][1],		\
-		      conn_face_el_sort[iel][ifac_el][2],		\
-		      conn_face_el_sort[iel][ifac_el][3]);
-		    */
+		    /*printf("  --- FACE_LtoG[%d,%d] = %d -> [%d %d %d %d] \n", iel+1, ifac_el+1, \
+			   FACE_LtoG[iel][ifac_el], conn_face_el_sort[iel][ifac_el][0], \
+			   conn_face_el_sort[iel][ifac_el][1],		\
+			   conn_face_el_sort[iel][ifac_el][2],		\
+			   conn_face_el_sort[iel][ifac_el][3]);*/
 		}
 	    }
 	}
+
 	/* UNCOMMENT this part to populate CONN_BDY_FACE[0:NBDY_FACES][0:3]
 	   if it is not coming from the GMSH file 
 	   
 	   if (FACE_MULTIPLICITY_auxi[iface] == 0) { //CHECK THE SIZE OF THIS FIRST
-	   CONN_BDY_FACE[IBDY_FACE][0] = CONN_FACE[iface][0];
-	   CONN_BDY_FACE[IBDY_FACE][1] = CONN_FACE[iface][1];
-	   CONN_BDY_FACE[IBDY_FACE][2] = CONN_FACE[iface][2];
-	   CONN_BDY_FACE[IBDY_FACE][3] = CONN_FACE[iface][3];
-	   IBDY_FACE = IBDY_FACE + 1;
+	      CONN_BDY_FACE[IBDY_FACE][0] = CONN_FACE[iface][0];
+	      CONN_BDY_FACE[IBDY_FACE][1] = CONN_FACE[iface][1];
+	      CONN_BDY_FACE[IBDY_FACE][2] = CONN_FACE[iface][2];
+	      CONN_BDY_FACE[IBDY_FACE][3] = CONN_FACE[iface][3];
+	      IBDY_FACE = IBDY_FACE + 1;
            }
 	*/
     }
@@ -572,7 +572,7 @@ int BUILD_EDGES(int **CONN, int nelem)
 	    iedge_all++;
 	}
     }//OK EDGE_MULTIPLICITY[iedge_g], CONN_EDGE[iedge_g][0,1] are correctly populated
-   
+    
     /*--------------------------------------------------------------------------
      * Populate EDGE_LtoG(1:nelem,1:12) OK
      *--------------------------------------------------------------------------*/
@@ -650,6 +650,7 @@ int ADD_HIGH_ORDER_NODES(void)
 	    }
 	}
     }
+    
     //Update nnodes to total nnodes for high order grids
     nnodes = nnodes_linear + tot_edges_internal_nodes + tot_faces_internal_nodes + nvolume_internal_nodes;
 
@@ -695,49 +696,10 @@ int ADD_HIGH_ORDER_NODES(void)
     int ip1, ip2;
     
     int ip = nnodes_linear; //we start populating from the low order numbering
-    for (int iel=0; iel<nelem; iel++) {	 
-	for(int iedg_el=0; iedg_el<12; iedg_el++) {
 
-	    ip1 = min(conn_edge_el[iel][iedg_el][0], conn_edge_el[iel][iedg_el][1]) - 1;
-	    ip2 = max(conn_edge_el[iel][iedg_el][0], conn_edge_el[iel][iedg_el][1]) - 1;
-	    
-	    //ip1 = min(CONN_EDGE[iedge_g][0], CONN_EDGE[iedge_g][1]) - 1;
-	    //ip2 = max(CONN_EDGE[iedge_g][0], CONN_EDGE[iedge_g][1]) - 1;
-	    
-	    x1  = COORDS[ip1][0], y1  = COORDS[ip1][1], z1  = COORDS[ip1][2];
-	    x2  = COORDS[ip2][0], y2  = COORDS[ip2][1], z2  = COORDS[ip2][2];
-	    //printf(" IP1 %d = (%f %f %f) --- IP2 %d = (%f %f %f)\n", ip1+1,  x1, y1, z1, ip2+1, x2, y2, z2);
-	    //OK
-	    
-	    /*
-	     * Plot LGL points on edges:
-	     */
-	    //EDGE_POINT_CONN[iedge_g][0]     = ip1+1;
-	    //EDGE_POINT_CONN[iedge_g][ngl-1] = ip2+1;
-	    for(int l=1; l<ngl-1; l++) {
-		
-		//printf(" #\t LGL nodes: X_LG[%d] = %.16f; w_LG[%d] = %.16f\n", l, lgl.ksi[l], l, lgl.weights[l]);
-	    
-		xi = lgl.ksi[l];
-	    
-		COORDS_HO[ip][0] = x1*(1.0 - xi)*0.5 + (1.0 + xi)*x2*0.5;
-		COORDS_HO[ip][1] = y1*(1.0 - xi)*0.5 + (1.0 + xi)*y2*0.5;
-		COORDS_HO[ip][2] = z1*(1.0 - xi)*0.5 + (1.0 + xi)*z2*0.5;
-	    
-		fprintf(fileidHO_edges, " %f %f %f %d\n", COORDS_HO[ip][0], COORDS_HO[ip][1], COORDS_HO[ip][2], ip);
-	    
-		//EDGE_POINT_CONN[iedge_g][l] = ip;
 
-		//printf(" ngl=%d, iedge=%d, ilgl=%d, ip=%d (%f %f %f)\n", ngl, iedge_g, l, EDGE_POINT_CONN[iedge_g][l] , COORDS_HO[ip][0], COORDS_HO[ip][1], COORDS_HO[ip][2]);
-	    
-		//iconn = iconn + 1;	    
-		ip = ip + 1; //Initialized to highest low order value of npoin.
-	    }
-	}
-    }
-    
-    /*for(int iedge_g = 0; iedge_g<nedges; iedge_g++) {
-	
+    for(int iedge_g = 0; iedge_g<nedges; iedge_g++) {
+
 	ip1 = min(CONN_EDGE[iedge_g][0], CONN_EDGE[iedge_g][1]) - 1;
 	ip2 = max(CONN_EDGE[iedge_g][0], CONN_EDGE[iedge_g][1]) - 1;
 	
@@ -748,7 +710,7 @@ int ADD_HIGH_ORDER_NODES(void)
 	
 	/*
 	 * Plot LGL points on edges:
-	 *
+	 */
 	EDGE_POINT_CONN[iedge_g][0]     = ip1+1;
 	EDGE_POINT_CONN[iedge_g][ngl-1] = ip2+1;
 	for(int l=1; l<ngl-1; l++) {
@@ -761,16 +723,65 @@ int ADD_HIGH_ORDER_NODES(void)
 	    COORDS_HO[ip][1] = y1*(1.0 - xi)*0.5 + (1.0 + xi)*y2*0.5;
 	    COORDS_HO[ip][2] = z1*(1.0 - xi)*0.5 + (1.0 + xi)*z2*0.5;
 	    
-	    fprintf(fileidHO_edges, " %f %f %f %d\n", COORDS_HO[ip][0], COORDS_HO[ip][1], COORDS_HO[ip][2], ip);
+	    fprintf(fileidHO_edges, " %f %f %f %d\n",			\
+		    COORDS_HO[ip][0], COORDS_HO[ip][1], COORDS_HO[ip][2], ip);
 	    
 	    EDGE_POINT_CONN[iedge_g][l] = ip;
-
-	    //printf(" ngl=%d, iedge=%d, ilgl=%d, ip=%d (%f %f %f)\n", ngl, iedge_g, l, EDGE_POINT_CONN[iedge_g][l] , COORDS_HO[ip][0], COORDS_HO[ip][1], COORDS_HO[ip][2]);
 	    
-	    //iconn = iconn + 1;	    
+	    //printf(" ngl=%d, iedge=%d, ilgl=%d, ip=%d (%f %f %f)\n", ngl, iedge_g, l, EDGE_POINT_CONN[iedge_g][l] , COORDS_HO[ip][0], COORDS_HO[ip][1], COORDS_HO[ip][2]);
 	    ip = ip + 1; //Initialized to highest low order value of npoin.
 	}
-    }*/
+    }
+    
+    for(int iel=0; iel<nelem; iel++) {
+	for(int iedg_el=0; iedg_el<12; iedg_el++) {
+
+	    iedge_g = EDGE_LtoG[iel][iedg_el];
+
+	    for(int l=1; l<ngl-1; l++) {
+		ip = EDGE_POINT_CONN[iedge_g][l];
+
+		if (iedg_el+1 == 1) {
+		    CONN_HO[iel][ngl-1][0][l] = ip;
+	    
+		} else if (iedg_el+1 == 2) {
+		    CONN_HO[iel][l][0][0] = ip;
+		
+		} else if (iedg_el+1 == 3) {
+		    CONN_HO[iel][0][0][l] = ip;
+		    //printf(" CONN_HO[%d][0][0][%d] = %d", iel, l, CONN_HO[iel][0][0][l]+1);
+		} else if (iedg_el+1 == 4) {
+		    CONN_HO[iel][l][0][ngl-1] = ip;
+		
+		} else if (iedg_el+1 == 5) {
+		    CONN_HO[iel][ngl-1][ngl-1][l] = ip;
+		
+		} else if (iedg_el+1 == 6) {
+		    CONN_HO[iel][l][ngl-1][0] = ip;
+
+		} else if (iedg_el+1 == 7) {
+		    CONN_HO[iel][0][ngl-1][l] = ip;
+		
+		} else if (iedg_el+1 == 8) {
+		    CONN_HO[iel][l][ngl-1][ngl-1] = ip;
+		
+		} else if (iedg_el+1 == 9) {
+		    CONN_HO[iel][ngl-1][l][ngl-1] = ip;
+		
+		} else if (iedg_el+1 == 10) {
+		    CONN_HO[iel][ngl-1][l][0] = ip;
+		
+		} else if (iedg_el+1 == 11) {
+		    CONN_HO[iel][0][l][0] = ip;
+		
+		} else if (iedg_el+1 == 12) {
+		    CONN_HO[iel][0][l][ngl-1] = ip;
+
+		}
+	    }
+	}
+	printf(" \n");
+    }
     
     /*--------------------------------------------------------------------------
      * Populate Faces with high-order points:
@@ -784,110 +795,110 @@ int ADD_HIGH_ORDER_NODES(void)
     double xd, yd, zd;
     double zeta;
         
-    int iface, iconn, iconn_face_internal;
-    int ip3, ip4;
-    
+    int iconn, iconn_face_internal;
+    int ip3, ip4;  
+
     ip = nnodes_linear + tot_edges_internal_nodes;
-    for (int iel=0; iel<nelem; iel++) {
+    printf(" IP=%d nfaces = %d\n", ip, nfaces);
+    for(int iface=0; iface<nfaces; iface++) {
+	    	
+	/*--------------------------------------------------------------------------
+	 * Corners ordered counter-clockwise
+	 *--------------------------------------------------------------------------*/
+	ip1 = CONN_FACE[iface][0]-1;
+	ip2 = CONN_FACE[iface][1]-1;
+	ip3 = CONN_FACE[iface][2]-1;
+	ip4 = CONN_FACE[iface][3]-1;
+	//printf(" iface=%d -- ip1, ip2, ip3, ip4 = %d %d %d %d\n", iface, ip1, ip2, ip3, ip4);
+	
+	xa = COORDS[ip1][0]; ya = COORDS[ip1][1]; za = COORDS[ip1][2];
+	xb = COORDS[ip2][0]; yb = COORDS[ip2][1]; zb = COORDS[ip2][2];
+	xc = COORDS[ip3][0]; yc = COORDS[ip3][1]; zc = COORDS[ip3][2];
+	xd = COORDS[ip4][0]; yd = COORDS[ip4][1]; zd = COORDS[ip4][2];
 
-	//printf(" iel %d\n", iel);
-	for(int ifac=0; ifac<NELFACES; ifac++) {
-	    
-	    //printf(" ifac %d\n", ifac);
-	    //printf("  conn_face_el[%d][%d][1:4] = %d %d %d %d\n", iel, ifac, conn_face_el[iel][ifac][0], conn_face_el[iel][ifac][1], conn_face_el[iel][ifac][2], conn_face_el[iel][ifac][3]);
-	    /*--------------------------------------------------------------------------
-	     * Corners ordered counter-clockwise
-	     *--------------------------------------------------------------------------*/
-	    
-	    /*//WARNING: FACE_LtoG orders the points in opposite direction from the righ-hand-rule
-	      iface = FACE_LtoG[iel][ifac];
-	      ip1 = CONN_FACE[iface][0]-1;
-	      ip2 = CONN_FACE[iface][1]-1;
-	      ip3 = CONN_FACE[iface][2]-1;
-	      ip4 = CONN_FACE[iface][3]-1;
-
-	      FACE_POINT_CONN[iface][1][1]     = ip1+1;
-	      FACE_POINT_CONN[iface][ngl][1]   = ip2+1;
-	      FACE_POINT_CONN[iface][1][ngl]   = ip3+1;
-	      FACE_POINT_CONN[iface][ngl][ngl] = ip4+1;
-	      printf(" IFACE=%d -- ip1, ip2, ip3, ip4 = %d %d %d %d\n\n", iface,  ip1+1, ip2+1, ip3+1, ip4+1);
-	    */
-
-	    
-	    ip1 = conn_face_el[iel][ifac][0]-1;
-	    ip2 = conn_face_el[iel][ifac][1]-1;
-	    ip3 = conn_face_el[iel][ifac][2]-1;
-	    ip4 = conn_face_el[iel][ifac][3]-1;
-	    //printf(" ifac=%d -- ip1, ip2, ip3, ip4 = %d %d %d %d\n", ifac, ip1+1, ip2+1, ip3+1, ip4+1);
-	    
-	    
-	    xa = COORDS[ip1][0]; ya = COORDS[ip1][1]; za = COORDS[ip1][2];
-	    xb = COORDS[ip2][0]; yb = COORDS[ip2][1]; zb = COORDS[ip2][2];
-	    xc = COORDS[ip3][0]; yc = COORDS[ip3][1]; zc = COORDS[ip3][2];
-	    xd = COORDS[ip4][0]; yd = COORDS[ip4][1]; zd = COORDS[ip4][2];
-
-	    //iconn = iconnCurrent + 1;
-	    //iconn_face_internal = 0;
-	    for(int i=1; i<ngl-1; i++) {
-		xi = lgl.ksi[i];
+	FACE_POINT_CONN[iface][0][0]         = ip1+1;
+	FACE_POINT_CONN[iface][ngl-1][0]     = ip2+1;
+	FACE_POINT_CONN[iface][0][ngl-1]     = ip3+1;
+	FACE_POINT_CONN[iface][ngl-1][ngl-1] = ip4+1;
+	
+	
+	//iconn = iconnCurrent + 1;
+	//iconn_face_internal = 0;
+	for(int i=1; i<ngl-1; i++) {
+	    xi = lgl.ksi[i];
 		
-		for(int k=1; k<ngl-1; k++) {
-		    zeta = lgl.ksi[k];
+	    for(int k=1; k<ngl-1; k++) {
+		zeta = lgl.ksi[k];
 		
-		    COORDS_HO[ip][0] = xa*(1 - xi)*(1 - zeta)*0.25 +	\
-			xb*(1 + xi)*(1 - zeta)*0.25 +			\
-			xc*(1 + xi)*(1 + zeta)*0.25 +			\
-			xd*(1 - xi)*(1 + zeta)*0.25;
+		COORDS_HO[ip][0] = xa*(1 - xi)*(1 - zeta)*0.25 +	\
+		    xb*(1 + xi)*(1 - zeta)*0.25 +			\
+		    xc*(1 + xi)*(1 + zeta)*0.25 +			\
+		    xd*(1 - xi)*(1 + zeta)*0.25;
+				
+		COORDS_HO[ip][1] = ya*(1 - xi)*(1 - zeta)*0.25 +	\
+		    yb*(1 + xi)*(1 - zeta)*0.25 +			\
+		    yc*(1 + xi)*(1 + zeta)*0.25 +			\
+		    yd*(1 - xi)*(1 + zeta)*0.25;
 		
+		COORDS_HO[ip][2] = za*(1 - xi)*(1 - zeta)*0.25 +	\
+		    zb*(1 + xi)*(1 - zeta)*0.25 +			\
+		    zc*(1 + xi)*(1 + zeta)*0.25 +			\
+		    zd*(1 - xi)*(1 + zeta)*0.25;
 		
-		    COORDS_HO[ip][1] = ya*(1 - xi)*(1 - zeta)*0.25 +	\
-			yb*(1 + xi)*(1 - zeta)*0.25 +			\
-			yc*(1 + xi)*(1 + zeta)*0.25 +			\
-			yd*(1 - xi)*(1 + zeta)*0.25;
-		
-		
-		    COORDS_HO[ip][2] = za*(1 - xi)*(1 - zeta)*0.25 +	\
-			zb*(1 + xi)*(1 - zeta)*0.25 +			\
-			zc*(1 + xi)*(1 + zeta)*0.25 +			\
-			zd*(1 - xi)*(1 + zeta)*0.25;
-		
-		    fprintf(fileidHO_faces, " %f %f %f %d\n", COORDS_HO[ip][0], COORDS_HO[ip][1], COORDS_HO[ip][2], ip);
-		    //printf(" %f %f %f %d\n", COORDS_HO[ip][0], COORDS_HO[ip][1], COORDS_HO[ip][2], ip);
+		fprintf(fileidHO_faces, " %f %f %f %d\n", COORDS_HO[ip][0], COORDS_HO[ip][1], COORDS_HO[ip][2], ip);
+		//printf(" %f %f %f %d\n", COORDS_HO[ip][0], COORDS_HO[ip][1], COORDS_HO[ip][2], ip);
 			    
-		    /*
-		     * Add internal LGL points to CONN:
-		     */
-		    if (ifac == 0){
-			CONN_HO[iel][i][0][k] = ip;		
-			//printf(" %d", CONN_HO[iel][i][0][k]+1);
-		    } else if (ifac == 1) {
-			CONN_HO[iel][i][k][0] = ip;	
-			//printf(" %d", CONN_HO[iel][i][k][0]+1);
-		    } else if (ifac == 2) {
-			CONN_HO[iel][ngl-1][i][k] = ip;	
-			//printf(" %d", CONN_HO[iel][ngl][i][k]+1);
-		    } else if (ifac == 3) {
-			CONN_HO[iel][i][k][ngl-1] = ip;	
-			//printf(" %d", CONN_HO[iel][i][k][ngl]+1);
-		    } else if (ifac == 4) {
-			CONN_HO[iel][0][i][k] = ip;	
-			//printf(" %d", CONN_HO[iel][0][i][k]+1);
-		    } else if (ifac == 5) {
-			CONN_HO[iel][i][ngl-1][k] = ip;	
-			//printf(" %d", CONN_HO[iel][i][ngl][k]+1);
-		    }
-		    //FACE_POINT_CONN[iface][i][k] = ip+1;
+		/*
+		 * Add internal LGL points to CONN:
+		 */
+		FACE_POINT_CONN[iface][i][k] = ip;
 				    
-		    ip = ip + 1;
-		    //iconn = iconn + 1;
-		    //iconn_face_internal = iconn_face_internal + 1;
-		}
-	    }	    
-	    //printf(" \n ");
+		ip = ip + 1;
+		//iconn = iconn + 1;
+		//iconn_face_internal = iconn_face_internal + 1;
+	    }
 	}
-	//printf(" \n ");
     }
-    
+
+    int iface_g;
+    for(int iel=0; iel<nelem; iel++) {
+	printf(" IEL %d\n", iel);
+	for(int ifac_el=0; ifac_el<NELFACES; ifac_el++) {
+
+	    iface_g = FACE_LtoG[iel][ifac_el];
+
+	    printf(" ifac_el = %d ", ifac_el);
+	    printf(" (%d %d %d %d) -  " , CONN_FACE[iface_g][0], CONN_FACE[iface_g][1], CONN_FACE[iface_g][2], CONN_FACE[iface_g][3]);
+	    
+	    for(int l=1; l<ngl-1; l++) {
+		for(int m=1; m<ngl-1; m++) {
+		
+		    ip = FACE_POINT_CONN[iface_g][l][m]+1;
+		    printf(" %d ", ip);
+		    if (ifac_el+1 == 1) {
+			CONN_HO[iel][ngl-1][l][m] = ip;
+	    
+		    } else if (ifac_el+1 == 2) {
+			CONN_HO[iel][l][m][0] = ip;
+		    
+		    } else if (ifac_el+1 == 3) {
+			CONN_HO[iel][0][l][m] = ip;
+			//	printf(" - CONN_HO[%d][0][%d][%d] = %d", iel, l, m, CONN_HO[iel][ngl-1][l][m]+1);
+		    } else if (ifac_el+1 == 4) {
+			CONN_HO[iel][l][m][ngl-1] = ip;
+		
+		    } else if (ifac_el+1 == 5) {
+			CONN_HO[iel][l][0][m] = ip;
+		
+		    } else if (ifac_el+1 == 6) {
+			CONN_HO[iel][l][ngl-1][m] = ip;
+		    }
+		}
+	    }
+	printf(" \n");
+	}
+    }
+
     /*--------------------------------------------------------------------------
      * Populate internal/Volume high-order points:
      *--------------------------------------------------------------------------*/
@@ -904,7 +915,7 @@ int ADD_HIGH_ORDER_NODES(void)
     
     ip = nnodes_linear + tot_edges_internal_nodes + tot_faces_internal_nodes;
     for (int iel=0; iel<nelem; iel++) {
-	//printf(" VOLUME: IEL %d\n", iel);
+	
 	/*printf(" CONN[%d] = (%d %d %d %d %d %d %d %d)\n", iel, CONN[iel][0],CONN[iel][1],CONN[iel][2],CONN[iel][3],CONN[iel][4], \
 	  CONN[iel][5],CONN[iel][6],CONN[iel][7]);*/
 	
@@ -912,6 +923,7 @@ int ADD_HIGH_ORDER_NODES(void)
 	 * Volume:
 	 *--------------------------------------------------------------------------*/
 	//iconn  = iconn_volume_index + 1;
+
 	ip1 = CONN[iel][0]-1; ip2 = CONN[iel][1]-1; ip3 = CONN[iel][2]-1; ip4 = CONN[iel][3]-1;
 	ip5 = CONN[iel][4]-1; ip6 = CONN[iel][5]-1; ip7 = CONN[iel][6]-1; ip8 = CONN[iel][7]-1;
 
@@ -923,22 +935,17 @@ int ADD_HIGH_ORDER_NODES(void)
 	xf = COORDS[ip6][0]; yf = COORDS[ip6][1]; zf = COORDS[ip6][2];
 	xg = COORDS[ip7][0]; yg = COORDS[ip7][1]; zg = COORDS[ip7][2];
 	xh = COORDS[ip8][0]; yh = COORDS[ip8][1]; zh = COORDS[ip8][2];
-
-	//Corner points of IEL:
-	CONN_HO[iel][0][0][0]             = ip1;
-	CONN_HO[iel][ngl-1][0][0]         = ip2;
-	CONN_HO[iel][ngl-1][ngl-1][0]     = ip3;
-	CONN_HO[iel][0][ngl-1][0]         = ip4;
+	
+	CONN_HO[iel][0][0][0]         = ip1;
+	CONN_HO[iel][ngl-1][0][0]     = ip2;
+	CONN_HO[iel][ngl-1][ngl-1][0] = ip3;
+	CONN_HO[iel][0][ngl-1][0]     = ip4;
 	
 	CONN_HO[iel][0][0][ngl-1]         = ip5;
 	CONN_HO[iel][ngl-1][0][ngl-1]     = ip6;
 	CONN_HO[iel][ngl-1][ngl-1][ngl-1] = ip7;
 	CONN_HO[iel][0][ngl-1][ngl-1]     = ip8; //CHECK THESE VALUES AND THEIR ORDER against GMSH
 
-	printf(" ooooooo iel=%d [%d %d %d %d %d %d %d %d]\n", iel, 		\
-	       1+CONN_HO[iel][0][0][0], 1+CONN_HO[iel][ngl-1][0][0], 1+CONN_HO[iel][ngl-1][0][ngl-1], 1+CONN_HO[iel][0][0][ngl-1], \
-	       1+CONN_HO[iel][0][ngl-1][0], 1+CONN_HO[iel][ngl-1][ngl-1][0], 1+CONN_HO[iel][ngl-1][ngl-1][ngl-1], 1+CONN_HO[iel][0][ngl-1][ngl-1]);
-	
 	iconn = ncorner_nodes + tot_edges_internal_nodes + tot_faces_internal_nodes + 1;
 	
 	for(int k=1; k<ngl-1; k++) {
@@ -980,34 +987,26 @@ int ADD_HIGH_ORDER_NODES(void)
 		    fprintf(fileidHO_vol, " %f %f %f %d\n", COORDS_HO[ip][0], COORDS_HO[ip][1], COORDS_HO[ip][2], ip);
 
 		    CONN_HO[iel][i][j][k] = ip;
-		    //printf(" %d", CONN_HO[iel][i][j][k]+1);
-		    //CONN_renumbered(iel, iconn) = ip;
-				
+		    				
 		    ip = ip + 1;
-		    //iconn = iconn + 1;
 		}
 	    }
 	}
-	printf("\n");
     }
-    ///
-    for (int iel=0; iel<nelem; iel++) {
-	printf(" VOLUME: IEL %d\n", iel);
 
-	for(int i=0; i<ngl; i++) {	    
-	    for(int j=0; j<ngl; j++) {
+    printf(" CONN_HO FULL\n");
+    for (int iel=0; iel<nelem; iel++) {
+	for(int j=0; j<ngl; j++) {
+	    for(int i=0; i<ngl; i++) {
 		for(int k=0; k<ngl; k++) {
-		    printf(" %d ",  CONN_HO[iel][i][j][k]+1);
-		    //printf(" %d %d %d %d %d %d %d %d",		\
-		    //	   CONN_HO[iel][0][0][0]+1, CONN_HO[iel][ngl-1][0][0]+1, CONN_HO[iel][ngl-1][0][ngl-1]+1, CONN_HO[iel][0][0][ngl-1]+1, \
-		    CONN_HO[iel][0][ngl-1][0]+1, CONN_HO[iel][ngl-1][ngl-1][0]+1, CONN_HO[iel][ngl-1][ngl-1][ngl-1]+1, CONN_HO[iel][0][ngl-1][ngl-1]+1);
+		    printf(" %d  " , CONN_HO[iel][i][j][k]+1);
+		    
 		}
 	    }
+	    printf("\n");
 	}
-	printf("\n");
-    }
-    return 0;
-    ///
+	printf("\n ");
+     }
     
     /*--------------------------------------------------------------------------
      * Re-loop through elements to populate CONN with high order points:
@@ -1031,7 +1030,7 @@ int ADD_HIGH_ORDER_NODES(void)
 	    for(int l=1; l<ngl-1; l++) {
 		
 		CONN[iel][iconn] = EDGE_POINT_CONN[iedge_g][l];
-		//printf(" %d ", CONN[iel][iconn]);
+		printf(" %d ", CONN[iel][iconn]);
 		//printf(" iedg_el=%d iconn=%d; conn=%d ", iedg_el, iconn, CONN[iel][iconn]);
 		iconn = iconn + 1;
 	    }
@@ -1062,7 +1061,7 @@ int ADD_HIGH_ORDER_NODES(void)
 	    }
 	    }
 	printf(" \n");
-	}*/
+    }
     for(int iel=0; iel<nelem; iel++) {
 	
 	printf(" IELLLL %d\n", iel);
@@ -1070,7 +1069,7 @@ int ADD_HIGH_ORDER_NODES(void)
 	    printf(" %d ", CONN[iel][i]);
 	}
 	printf(" \n");
-    }
+    }*/
     
     
     /*if( ip != nnodes_linear+tot_edges_internal_nodes+tot_faces_internal_nodes+1) {
