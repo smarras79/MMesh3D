@@ -7,8 +7,8 @@ from numpy.random import rand
 print_lables=True
 #print_lables=False
 
-plot_edge_nodes = True
-plot_face_nodes = False
+plot_edge_nodes = False
+plot_face_nodes = True
 plot_vol_nodes = False
 
 
@@ -102,8 +102,10 @@ if (plot_vol_nodes == True):
 my_aspect_ratio = max(x)/max(z)
 ax3d.set_box_aspect((my_aspect_ratio, 1, 1))
 
-eps = 1000
-ax3d.axes.set_xlim3d(left=min(x)-eps, right=max(x)+eps) 
+xmax = max(x)
+xmin = min(x)
+eps = 0.1*(xmax - xmin)
+ax3d.axes.set_xlim3d(left=xmin-eps, right=xmax+eps) 
 #ax3d.axes.set_ylim3d(bottom=min(y)-eps, top=max(y)+eps)
 #ax3d.axes.set_zlim3d(bottom=min(z)-eps, top=max(z)+eps)
 

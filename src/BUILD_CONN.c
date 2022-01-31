@@ -821,9 +821,6 @@ int ADD_HIGH_ORDER_NODES(void)
 	FACE_POINT_CONN[iface][0][ngl-1]     = ip3+1;
 	FACE_POINT_CONN[iface][ngl-1][ngl-1] = ip4+1;
 	
-	
-	//iconn = iconnCurrent + 1;
-	//iconn_face_internal = 0;
 	for(int i=1; i<ngl-1; i++) {
 	    xi = lgl.ksi[i];
 		
@@ -854,8 +851,6 @@ int ADD_HIGH_ORDER_NODES(void)
 		FACE_POINT_CONN[iface][i][k] = ip;
 				    
 		ip = ip + 1;
-		//iconn = iconn + 1;
-		//iconn_face_internal = iconn_face_internal + 1;
 	    }
 	}
     }
@@ -1007,83 +1002,11 @@ int ADD_HIGH_ORDER_NODES(void)
 	}
 	printf("\n ");
      }
-    
-    /*--------------------------------------------------------------------------
-     * Re-loop through elements to populate CONN with high order points:
-     *
-     * 1. EDGES
-     * 2. FACES
-     * 3. VOLUME
-     *
-     *--------------------------------------------------------------------------*
-    for(int iel=0; iel<nelem; iel++) {
-	printf(" IEL: %d\n", iel);
-
-	/*
-	 * add edge internal nodes to CONN
-	 *
-	iconn = ncorner_nodes;
-	for(int iedg_el=0; iedg_el<12; iedg_el++) {
-
-	    iedge_g = EDGE_LtoG[iel][iedg_el];
-	    
-	    for(int l=1; l<ngl-1; l++) {
-		
-		CONN[iel][iconn] = EDGE_POINT_CONN[iedge_g][l];
-		printf(" %d ", CONN[iel][iconn]);
-		//printf(" iedg_el=%d iconn=%d; conn=%d ", iedg_el, iconn, CONN[iel][iconn]);
-		iconn = iconn + 1;
-	    }
-	}
-	printf(" -- ");
-    }
-    /*
-    for(int iel=0; iel<nelem; iel++) {
-	printf(" IEL: %d\n", iel);
-	
-	/*
-	 * add face internal nodes to CONN
-	 *
-	int iface_g;
-	iconn = ncorner_nodes + 12*(ngl-2) + 1;
-	for(int ifac_el=0; ifac_el<6; ifac_el++) {
-
-	    iface_g = FACE_LtoG[iel][ifac_el];
-
-	    for(int l=1; l<ngl-1; l++) {
-		for(int k=1; k<ngl-1; k++) {
-		
-		    CONN[iel][iconn] = FACE_POINT_CONN[iface_g][l][k];
-		    printf(" %d ", CONN[iel][iconn]);
-		    
-		    iconn = iconn + 1; 
-		}
-	    }
-	    }
-	printf(" \n");
-    }
-    for(int iel=0; iel<nelem; iel++) {
-	
-	printf(" IELLLL %d\n", iel);
-	for(int i=0; i<8; i++) {
-	    printf(" %d ", CONN[iel][i]);
-	}
-	printf(" \n");
-    }*/
-    
-    
-    /*if( ip != nnodes_linear+tot_edges_internal_nodes+tot_faces_internal_nodes+1) {
-	printf(" !!!! ERROR in BUILD_CONN.c at line ~857 \n !!!! ip %d != %d nnodes_linear+tot_edges_internal_nodes+tot_faces_internal_nodes+1\n", ip,  nnodes_linear+tot_edges_internal_nodes+tot_faces_internal_nodes+1);
-	printf(" !!!! The program will EXIT now\n");
-	exit(1);
-	}*/
-  
+      
     fclose(fileid);
     fclose(fileidHO_edges);
     fclose(fileidHO_faces);
     fclose(fileidHO_vol);
-    
-    //int NPcurrent = ip;
 
     free_imatrix(EDGE_POINT_CONN,  0,nedges, 0,ngl);
     free_i3tensor(FACE_POINT_CONN, 0,nfaces, 0,ngl, 0,ngl);

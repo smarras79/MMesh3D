@@ -6,7 +6,7 @@ PROBLEM:
 END_PROBLEM
 
 READ_EXTERNAL_GRID
- read_GMSH          ./gmsh_grids/hexa_UNSTR.msh
+ read_GMSH          ./gmsh_grids/hexa_oneblock-1x1x1.msh
 END_READ_EXTERNAL_GRID
 
 PROBLEM_DEFINITION:
@@ -16,7 +16,7 @@ PROBLEM_DEFINITION:
  nelemx:              20
  nelemy:              20
  nelemz:              4
- nop:                 2
+ nop:                 4
  PERIODICX:           Off
  PERIODICY:           Off
  PERIODICZ:           Off
@@ -53,7 +53,5 @@ END_OUTPUT_FILESs
 
 #END_INPUT_FILE.inp
 
-# read_GMSH          ./gmsh_grids/hexa_oneblock-2x1x1.msh
-# read_GMSH          ./gmsh_grids/hexa_UNSTR_coarse.msh
-# read_GMSH          ./gmsh_grids/hexa_UNSTR_coarse2.msh
+# read_GMSH          ./gmsh_grids/hexa_oneblock-2x1x1.ms
 # read_GMSH          ./gmsh_grids/hexa_UNSTR.msh
