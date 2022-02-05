@@ -36,18 +36,15 @@
 
 int BUILD_CONN(void)
 {
-  if( !strncmp(problem[2],"HEXA",4) )
-    GRID2CONNhex(0, 0, nnodesx, nnodesy, nnodesz, CONN, ELTYPE, 1);
-  else if( !strncmp(problem[2],"WEDGE", 4) )
-    GRID2CONNwedge(0, 0, nnodesx, nnodesy, nnodesz, CONN, ELTYPE, 1);
-    else{
-    printf(" \n");
-    printf(" !!! ERROR in input: 'Element_types' can only be HEXA or WEDGE\n" );
-    printf(" !!! ERROR in input: HEXA will be set by default\n");
-    GRID2CONNhex(0, 0, nnodesx, nnodesy, nnodesz, CONN, ELTYPE, 1);
-  }
-  
-  return 0;
+    /* called by main.c
+     *
+     * Notice: this function is not used when the grid is read
+     *         from an external file, in which case, CONN[][] is 
+     *         populated there automatically.
+     */
+    GRID2CONNhex(0, ELTYPE, 1);
+    
+    return 0;
 }
 
 /*--------------------------------------------------------------------------
@@ -288,7 +285,6 @@ int BUILD_EDGES(int **CONN, int nelem)
 	}
 	//printf("\n");
     }
-    
     /*
      * 2) Append the internal faces to CONN_FACE(NCONN_BDY_FACES+1:NFACES, 1:4)
      *
@@ -640,17 +636,18 @@ int ADD_HIGH_ORDER_NODES(void)
     int iface_g = 1;
     int iconn = 0;
     
-    int CONN_HO[nelem][ngl][ngl][ngl];
-    int CONN_HO1D[nelem][ngl*ngl*ngl];
-
+    int CONN_HO2D[nelem][ngl][ngl][ngl];
+    
+    MEMORY_ALLOCATE(12); //MAPL2G[nelem][ngl*ngl*ngl];
+    
     //Initialize conn_ho to -1:
     for (int iel=0; iel<nelem; iel++) {
 	iconn = 0;
 	for(int i=0; i<ngl; i++) {	    
 	    for(int j=0; j<ngl; j++) {
 		for(int k=0; k<ngl; k++) {
-		    CONN_HO[iel][i][j][k] = -1;
-		    CONN_HO1D[iel][iconn] = -1;
+		    CONN_HO2D[iel][i][j][k] = -1;
+		    MAPL2G[iel][iconn] = -1;
 		    iconn = iconn + 1;
 		}
 	    }
@@ -658,14 +655,15 @@ int ADD_HIGH_ORDER_NODES(void)
     }
 
     for (int iel=0; iel<nelem; iel++) {
-	CONN_HO1D[iel][0] = CONN[iel][0];
-	CONN_HO1D[iel][1] = CONN[iel][1];
-	CONN_HO1D[iel][2] = CONN[iel][2];
-	CONN_HO1D[iel][3] = CONN[iel][3];
-	CONN_HO1D[iel][4] = CONN[iel][4];
-	CONN_HO1D[iel][5] = CONN[iel][5];
-	CONN_HO1D[iel][6] = CONN[iel][6];
-	CONN_HO1D[iel][7] = CONN[iel][7];
+	//CONN comes from reading the grid
+	MAPL2G[iel][0] = CONN[iel][0];
+	MAPL2G[iel][1] = CONN[iel][1];
+	MAPL2G[iel][2] = CONN[iel][2];
+	MAPL2G[iel][3] = CONN[iel][3];
+	MAPL2G[iel][4] = CONN[iel][4];
+	MAPL2G[iel][5] = CONN[iel][5];
+	MAPL2G[iel][6] = CONN[iel][6];
+	MAPL2G[iel][7] = CONN[iel][7];
     }
     
     //Update nnodes to total nnodes for high order grids
@@ -693,6 +691,7 @@ int ADD_HIGH_ORDER_NODES(void)
      * 3. Reeallocate COORDS[1:nnodes] where nnodes is the new nnodes for the HO grid
      */
     MEMORY_ALLOCATE(11);
+    printf(" nnodes_linea = %d\n", nnodes_linear);
     for(int ip = 0; ip<nnodes_linear; ip++) {
 	COORDS_HO[ip][0] = COORDS[ip][0];
 	COORDS_HO[ip][1] = COORDS[ip][1];
@@ -713,7 +712,6 @@ int ADD_HIGH_ORDER_NODES(void)
     int ip1, ip2;
     
     int ip = nnodes_linear; //we start populating from the low order numbering
-    iconn = 8;
     for(int iedge_g = 0; iedge_g<nedges; iedge_g++) {
 
 	ip1 = min(CONN_EDGE[iedge_g][0], CONN_EDGE[iedge_g][1]) - 1;
@@ -758,43 +756,43 @@ int ADD_HIGH_ORDER_NODES(void)
 		ip = EDGE_POINT_CONN[iedge_g][l] + 1;
 
 		if (iedg_el+1 == 1) {
-		    CONN_HO[iel][ngl-1][0][l] = ip;
+		    CONN_HO2D[iel][ngl-1][0][l] = ip;
 	    
 		} else if (iedg_el+1 == 2) {
-		    CONN_HO[iel][l][0][0] = ip;
+		    CONN_HO2D[iel][l][0][0] = ip;
 		
 		} else if (iedg_el+1 == 3) {
-		    CONN_HO[iel][0][0][l] = ip;
-		    //printf(" CONN_HO[%d][0][0][%d] = %d", iel, l, CONN_HO[iel][0][0][l]+1);
+		    CONN_HO2D[iel][0][0][l] = ip;
+		    //printf(" CONN_HO2D[%d][0][0][%d] = %d", iel, l, CONN_HO2D[iel][0][0][l]+1);
 		} else if (iedg_el+1 == 4) {
-		    CONN_HO[iel][l][0][ngl-1] = ip;
+		    CONN_HO2D[iel][l][0][ngl-1] = ip;
 		
 		} else if (iedg_el+1 == 5) {
-		    CONN_HO[iel][ngl-1][ngl-1][l] = ip;
+		    CONN_HO2D[iel][ngl-1][ngl-1][l] = ip;
 		
 		} else if (iedg_el+1 == 6) {
-		    CONN_HO[iel][l][ngl-1][0] = ip;
+		    CONN_HO2D[iel][l][ngl-1][0] = ip;
 
 		} else if (iedg_el+1 == 7) {
-		    CONN_HO[iel][0][ngl-1][l] = ip;
+		    CONN_HO2D[iel][0][ngl-1][l] = ip;
 		
 		} else if (iedg_el+1 == 8) {
-		    CONN_HO[iel][l][ngl-1][ngl-1] = ip;
+		    CONN_HO2D[iel][l][ngl-1][ngl-1] = ip;
 		
 		} else if (iedg_el+1 == 9) {
-		    CONN_HO[iel][ngl-1][l][ngl-1] = ip;
+		    CONN_HO2D[iel][ngl-1][l][ngl-1] = ip;
 		
 		} else if (iedg_el+1 == 10) {
-		    CONN_HO[iel][ngl-1][l][0] = ip;
+		    CONN_HO2D[iel][ngl-1][l][0] = ip;
 		
 		} else if (iedg_el+1 == 11) {
-		    CONN_HO[iel][0][l][0] = ip;
+		    CONN_HO2D[iel][0][l][0] = ip;
 		
 		} else if (iedg_el+1 == 12) {
-		    CONN_HO[iel][0][l][ngl-1] = ip;
+		    CONN_HO2D[iel][0][l][ngl-1] = ip;
 		}
 
-		CONN_HO1D[iel][iconn] = ip;
+		MAPL2G[iel][iconn] = ip;
 		iconn = iconn + 1;
 	    }
 	}
@@ -814,7 +812,8 @@ int ADD_HIGH_ORDER_NODES(void)
         
     int iconn_face_internal;
     int ip3, ip4;  
-    
+
+    ip = nnodes_linear + tot_edges_internal_nodes;
     for(int iface=0; iface<nfaces; iface++) {
 	    	
 	/*--------------------------------------------------------------------------
@@ -875,7 +874,7 @@ int ADD_HIGH_ORDER_NODES(void)
 	exit(1);
     }
     for(int iel=0; iel<nelem; iel++) {
-	iconn = 8 + (ngl-2)*12;	
+	iconn = 8 + (ngl-2)*12;
 	for(int ifac_el=0; ifac_el<NELFACES; ifac_el++) {
 	    iface_g = FACE_LtoG[iel][ifac_el];
 
@@ -888,29 +887,29 @@ int ADD_HIGH_ORDER_NODES(void)
 		    ip = FACE_POINT_CONN[iface_g][l][m]+1;
 		    
 		    if (ifac_el+1 == 1) {
-			CONN_HO[iel][ngl-1][l][m] = ip;
+			CONN_HO2D[iel][ngl-1][l][m] = ip;
 	    
 		    } else if (ifac_el+1 == 2) {
-			CONN_HO[iel][l][m][0] = ip;
+			CONN_HO2D[iel][l][m][0] = ip;
 		    
 		    } else if (ifac_el+1 == 3) {
-			CONN_HO[iel][0][l][m] = ip;
-			//	printf(" - CONN_HO[%d][0][%d][%d] = %d", iel, l, m, CONN_HO[iel][ngl-1][l][m]+1);
+			CONN_HO2D[iel][0][l][m] = ip;
+			//	printf(" - CONN_HO2D[%d][0][%d][%d] = %d", iel, l, m, CONN_HO2D[iel][ngl-1][l][m]+1);
 		    } else if (ifac_el+1 == 4) {
-			CONN_HO[iel][l][m][ngl-1] = ip;
+			CONN_HO2D[iel][l][m][ngl-1] = ip;
 		
 		    } else if (ifac_el+1 == 5) {
-			CONN_HO[iel][l][0][m] = ip;
+			CONN_HO2D[iel][l][0][m] = ip;
 		
 		    } else if (ifac_el+1 == 6) {
-			CONN_HO[iel][l][ngl-1][m] = ip;
+			CONN_HO2D[iel][l][ngl-1][m] = ip;
 		    }
 
-		    CONN_HO1D[iel][iconn] = ip;
+		    MAPL2G[iel][iconn] = ip;
 		    iconn = iconn + 1;
 		}
 	    }
-	printf(" \n");
+	    //printf(" \n");
 	}
     }
 
@@ -929,7 +928,7 @@ int ADD_HIGH_ORDER_NODES(void)
 	printf(" !!!! ERROR in BUILD_CONN: face nodes.\n");
 	exit(1);
     }
-    ip = nnodes_linear + tot_edges_internal_nodes + tot_faces_internal_nodes;
+    ip = nnodes_linear + tot_edges_internal_nodes + tot_faces_internal_nodes + 1;
     for (int iel=0; iel<nelem; iel++) {
 	
 	/*printf(" CONN[%d] = (%d %d %d %d %d %d %d %d)\n", iel, CONN[iel][0],CONN[iel][1],CONN[iel][2],CONN[iel][3],CONN[iel][4], \
@@ -952,15 +951,15 @@ int ADD_HIGH_ORDER_NODES(void)
 	xg = COORDS[ip7][0]; yg = COORDS[ip7][1]; zg = COORDS[ip7][2];
 	xh = COORDS[ip8][0]; yh = COORDS[ip8][1]; zh = COORDS[ip8][2];
 	
-	CONN_HO[iel][0][0][0]         = ip1;
-	CONN_HO[iel][ngl-1][0][0]     = ip2;
-	CONN_HO[iel][ngl-1][ngl-1][0] = ip3;
-	CONN_HO[iel][0][ngl-1][0]     = ip4;
+	CONN_HO2D[iel][0][0][0]             = ip1;
+	CONN_HO2D[iel][ngl-1][0][0]         = ip2;
+	CONN_HO2D[iel][ngl-1][ngl-1][0]     = ip3;
+	CONN_HO2D[iel][0][ngl-1][0]         = ip4;
 	
-	CONN_HO[iel][0][0][ngl-1]         = ip5;
-	CONN_HO[iel][ngl-1][0][ngl-1]     = ip6;
-	CONN_HO[iel][ngl-1][ngl-1][ngl-1] = ip7;
-	CONN_HO[iel][0][ngl-1][ngl-1]     = ip8; //CHECK THESE VALUES AND THEIR ORDER against GMSH
+	CONN_HO2D[iel][0][0][ngl-1]         = ip5;
+	CONN_HO2D[iel][ngl-1][0][ngl-1]     = ip6;
+	CONN_HO2D[iel][ngl-1][ngl-1][ngl-1] = ip7;
+	CONN_HO2D[iel][0][ngl-1][ngl-1]     = ip8; //CHECK THESE VALUES AND THEIR ORDER against GMSH
 
 	iconn = 8 + (ngl-2)*12 + (ngl-2)*(ngl-2)*6;
 	for(int i=1; i<ngl-1; i++) {
@@ -999,8 +998,8 @@ int ADD_HIGH_ORDER_NODES(void)
 		    
 		    fprintf(fileidHO_vol, " %f %f %f %d\n", COORDS_HO[ip][0], COORDS_HO[ip][1], COORDS_HO[ip][2], ip);
 
-		    CONN_HO[iel][i][j][k] = ip;
-		    CONN_HO1D[iel][iconn] = ip;
+		    CONN_HO2D[iel][i][j][k] = ip;
+		    MAPL2G[iel][iconn] = ip;
 		    
 		    ip = ip + 1;
 		    iconn = iconn + 1;
@@ -1016,8 +1015,7 @@ int ADD_HIGH_ORDER_NODES(void)
 	for(int j=0; j<ngl; j++) {
 	    for(int i=0; i<ngl; i++) {
 		for(int k=0; k<ngl; k++) {
-		    //printf(" %d  " , CONN_HO[iel][i][j][k]+1);
-		    printf(" %d  " , CONN_HO1D[iel][iconn]);
+		    printf(" %d  " , MAPL2G[iel][iconn]);
 		    iconn = iconn + 1;
 		}
 	    }

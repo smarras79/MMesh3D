@@ -34,14 +34,14 @@ void wrt2VTK(double **COORDS, int **CONN, int *ELTYPE, int nelem, int nnodes,
     if( nsd == 2 )
       {
 	fprintf(file_id, "POINTS %d double\n", nnodes);
-	for(i=1; i<=nnodes; i++)
+	for(i=0; i<nnodes; i++)
 	  {
 	    fprintf(file_id, " %lf %lf %lf\n", COORDS[i][1], COORDS[i][2], 0.0);
 	  }
 	
 	//Write coonectivity
 	fprintf(file_id, "CELLS %d %d\n", nelem,nsize);
-	for(ie=1; ie<=nelem; ie++)
+	for(ie=0; ie<nelem; ie++)
 	  {
 	    fprintf(file_id, " %d %d %d %d %d\n", ELTYPE[ie], CONN[ie][2]-1, CONN[ie][3]-1, CONN[ie][4]-1, CONN[ie][5]-1);
 	  }
@@ -54,20 +54,20 @@ void wrt2VTK(double **COORDS, int **CONN, int *ELTYPE, int nelem, int nnodes,
     else if( nsd == 3 )
       {
 	fprintf(file_id, "POINTS %d double\n", nnodes);
-	for(i=1; i<=nnodes; i++)
+	for(i=0; i<nnodes; i++)
 	  {
 	    fprintf(file_id, " %lf %lf %lf\n", COORDS[i][1], COORDS[i][2], COORDS[i][3]);
 	  }
 	
 	//Write coonectivity
 	fprintf(file_id, "CELLS %d %d\n", nelem,nsize);
-	for(ie=1; ie<=nelem; ie++)
+	for(ie=0; ie<nelem; ie++)
 	  {
 	    fprintf(file_id, " %d %d %d %d %d\n", ELTYPE[ie], CONN[ie][2]-1, CONN[ie][3]-1, CONN[ie][4]-1, CONN[ie][5]-1);
 	  }
 	
 	fprintf(file_id, "CELL_TYPES %d\n", nelem);
-	for(ie=1; ie<=nelem; ie++)
+	for(ie=0; ie<nelem; ie++)
 	  {
 	    if( ELTYPE[ie] == 8 ) //HEXA
 	      fprintf(file_id, " %d\n", 12);
@@ -80,4 +80,5 @@ void wrt2VTK(double **COORDS, int **CONN, int *ELTYPE, int nelem, int nnodes,
   }
   return;
 }
+
 

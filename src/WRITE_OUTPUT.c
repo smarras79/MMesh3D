@@ -25,49 +25,21 @@ int WRITE_OUTPUT(int rank)
     sprintf(elorder,"%d", nop);
     sprintf(nel,"%d", nelem);
     sprintf(mpiprocess,"%d", rank);
-  
-    if( !strcmp(print_alya, "yes") || !strcmp(print_alya,"y") || !strcmp(print_alya,"alya"))
-	{
-      
-	    //Mesh ALYA output file:
-	    strcpy(outfile_msh_alya, "3D_mesh_");
-	    strcat(outfile_msh_alya,problem[2]);
-	    strcat(outfile_msh_alya,"_");
-	    strcat(outfile_msh_alya,mpiprocess);
-	    strcat(outfile_msh_alya,"_");
-	    strcat(outfile_msh_alya,nodesx);
-	    strcat(outfile_msh_alya,"x");
-	    strcat(outfile_msh_alya,nodesy);
-	    strcat(outfile_msh_alya,"x");
-	    strcat(outfile_msh_alya,nodesz);
-	    strcat(outfile_msh_alya,"x");
-	    strcat(outfile_msh_alya,elorder);
-	    strcat(outfile_msh_alya, ".dom.dat");
-
-	    dGRID2ALYAFILE(outfile_msh_alya, COORDS, CONN, nnodes, nelem, 0);
-
-	    if(rank == 0){
-		printf(" #\n");
-		printf(" # The following file was created:\n");
-		printf(" # %s:\n", outfile_msh_alya);
-	    }
-      
-	}
+    
   
     /*****************************************************************************************
      * Write the VTK plot file:
      * To do so we need to re-calculate the total nnodes and nelem of the global final grid
      *****************************************************************************************/
-  
     //VTK output file name:
     if( !strcmp(print_vtk, "yes") || !strcmp(print_vtk,"y") || !strcmp(print_vtk,"vtk"))
 	{
-	    strcpy(outfile_msh_vtk,"VTK_mesh_");
-	    strcat(outfile_msh_vtk,problem[2]);
-	    strcat(outfile_msh_vtk,"_");
+	    strcpy(outfile_msh_vtk,"VTK_mesh_MPIRANK_");
 	    strcat(outfile_msh_vtk,mpiprocess);
 	    strcat(outfile_msh_vtk,"_npoints_");
 	    strcat(outfile_msh_vtk,nodes);
+	    strcat(outfile_msh_vtk,"_nelem_");
+	    strcat(outfile_msh_vtk,nel);
 	    strcat(outfile_msh_vtk,"_nop_");
 	    strcat(outfile_msh_vtk,elorder);
 	    strcat(outfile_msh_vtk, ".vtk");
@@ -88,9 +60,7 @@ int WRITE_OUTPUT(int rank)
     //GMSH/ABAQUS output file name:
     if( !strcmp(print_gmsh, "yes") || !strcmp(print_gmsh,"y") || !strcmp(print_gmsh,"gmsh"))
 	{
-	    strcpy(outfile_msh_gmsh,"GMSH_mesh_");
-	    strcat(outfile_msh_gmsh,problem[2]);
-	    strcat(outfile_msh_gmsh,"_");
+	    strcpy(outfile_msh_gmsh,"GMSH_mesh_MPIRANK_");
 	    strcat(outfile_msh_gmsh,mpiprocess);
 	    strcat(outfile_msh_gmsh,"_");
 	    strcat(outfile_msh_gmsh,nodesx);
@@ -116,9 +86,7 @@ int WRITE_OUTPUT(int rank)
      * WRITE THE CONNECTIVITY FILE TO BE USED BY METIS (m2gmetis) 
      * that transforms the grid format into the graph that metis needs
      */
-    strcpy(outfile_msh_gmsh,"CONN_mesh_");
-    strcat(outfile_msh_gmsh,problem[2]);
-    strcat(outfile_msh_gmsh,"_");
+    strcpy(outfile_msh_gmsh,"CONN_mesh_MPIRANK_");
     strcat(outfile_msh_gmsh,mpiprocess);
     strcat(outfile_msh_gmsh,"_nelem_");
     strcat(outfile_msh_gmsh,nel);

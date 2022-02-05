@@ -455,7 +455,6 @@ double ***d3tensor(long nrl, long nrh, long ncl, long nch, long ndl, long ndh)
 	return t;
 }
 
-
 void free_vector(float *v, long nl, long nh)
 /* free a float vector allocated with vector() */
 {

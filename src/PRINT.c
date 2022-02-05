@@ -555,240 +555,6 @@ void dPRINT_UNSTRUCT_GRID_CONN(char *grid_name, int array_numb, int coords_ncolu
 }
 
 
-/***************************************************************
- * GRID2ALYAFILE.c
- * this function writes an alya-readable file that contains
- * the connectivity matrix and the nodes coordinates.
- * In case it is periodic, it computes the periodic nodes
- * and write them at the end of the file as well.
- * 
- * simone.marras@gmail.com
- ****************************************************************/
-
-void GRID2ALYAFILE(char *outfile_msh_alya, float **COORDS, int **CONN, int nnodes, int nelem, int nperiodic_nodes)
-{
-	
-    FILE *File_ID;
-    char *alya_file_msh;
-    alya_file_msh = (char *)malloc(32*sizeof(char));
-	
-    strcpy(alya_file_msh, outfile_msh_alya);
-    strtok(alya_file_msh, ".");
-    strcat(alya_file_msh, ".msh");
-	
-    int i, j, k;
-	
-    /* Open file for writing */
-    File_ID = fopen(outfile_msh_alya, "w");
-    if(File_ID == NULL)
-	printf("The file %s could not be open\n", outfile_msh_alya);
-    else{
-
-	fprintf(File_ID, "$------------------------------------------------------------\n");
-	fprintf(File_ID, "DIMENSIONS  \n");
-	fprintf(File_ID, "  NODAL_POINTS=                %d  \n", nnodes);
-
-	fprintf(File_ID, "  ELEMENTS=                    %d  \n", nelem);
-	fprintf(File_ID, "  SPACE_DIMENSIONS=            3  \n");
-	fprintf(File_ID, "  NODES=                       8  \n");
-	fprintf(File_ID, "  BOUNDARIES=           0  \n");
-	fprintf(File_ID, "  SKEW_SYSTEMS=         0  \n");
-	fprintf(File_ID, "  SLAVES=               0  \n");
-	fprintf(File_ID, "  NO_SETS  \n");
-	fprintf(File_ID, "END_DIMENSIONS  \n");
-	fprintf(File_ID, "$------------------------------------------------------------\n");
-	fprintf(File_ID, "STRATEGY  \n");
-	fprintf(File_ID, "  INTEGRATION_RULE:          OPEN  \n");
-	fprintf(File_ID, "  DOMAIN_INTEGRATION_POINTS: 0  \n");
-	fprintf(File_ID, "  OUTPUT_MESH_DATA:          YES  \n");
-	fprintf(File_ID, "END_STRATEGY  \n");
-	fprintf(File_ID, "$------------------------------------------------------------\n");
-	fprintf(File_ID, "GEOMETRY, GID, WALL_DISTANCE= 0.0, ROUGHNESS=0.0  \n");
-	fprintf(File_ID, "ELEMENTS  \n");
-			
-	for(i=1; i<=nelem; i++)
-	    fprintf(File_ID, "  %d   %d   %d   %d   %d   %d   %d   %d   %d  \n", i, \
-		    CONN[i][2], CONN[i][3], CONN[i][4], CONN[i][5], CONN[i][6], CONN[i][7], CONN[i][8], CONN[i][9]);
-	fprintf(File_ID, "END_ELEMENTS  \n");
-	fprintf(File_ID, "COORDINATES  \n");
-	for(i=1; i<=nnodes; i++)
-	    fprintf(File_ID, "        %d %f %f %f   \n", i, COORDS[i][2], COORDS[i][3], COORDS[i][4]);
-	fprintf(File_ID, "END_COORDINATES  \n");
-	fprintf(File_ID, "BOUNDARIES  \n");
-	fprintf(File_ID, "END_BOUNDARIES  \n");
-	fprintf(File_ID, "SKEW_SYSTEMS  \n");
-	fprintf(File_ID, "END_SKEW_SYSTEMS  \n");
-	fprintf(File_ID, "END_GEOMETRY  \n");
-	fprintf(File_ID, "SETS  \n");
-	fprintf(File_ID, "END_SETS  \n");
-	fprintf(File_ID, "BOUNDARIES  \n");
-	fprintf(File_ID, "END_BOUNDARIES  \n");
-    }
-	
-    fclose(File_ID);
-	
-    /* Open file for writing */
-	
-	
-	
-    File_ID = fopen(alya_file_msh, "w");
-    if(File_ID == NULL)
-	printf("The file mesh.dom.dat could not be open\n");
-    else{
-	//fprintf(File_ID, "ELEMENTS  %d\n", nelem);
-	fprintf(File_ID, "ELEMENTS  \n");			
-	for(i=1; i<=nelem; i++)
-	    fprintf(File_ID, "  %d   %d   %d   %d   %d   %d   %d   %d   %d  \n", i, \
-		    CONN[i][2], CONN[i][3], CONN[i][4], CONN[i][5], CONN[i][6], CONN[i][7], CONN[i][8], CONN[i][9]);
-	fprintf(File_ID, "END_ELEMENTS  \n");
-	//fprintf(File_ID, "COORDINATES  %d\n", nnodes);
-	fprintf(File_ID, "COORDINATES  \n");
-
-	for(i=1; i<=nnodes; i++)
-	    fprintf(File_ID, "        %d %f %f %f   \n", i, COORDS[i][2], COORDS[i][3], COORDS[i][4]);
-
-	fprintf(File_ID, "END_COORDINATES  \n");
-    }
-	
-    fclose(File_ID);
-	
-    //Free memory:
-    free(alya_file_msh);
-	
-    return;
-}
-
-//Write the ALYA readable file:
-void dGRID2ALYAFILE(char *outfile_msh_alya, double **COORDS, int **CONN, int nnodes, int nelem, int nperiodic_nodes)
-{
-	
-    FILE *File_ID;
-    char *alya_file_msh, *outfile_geo;
-    alya_file_msh = (char *)malloc(32*sizeof(char));
-	
-    strcpy(alya_file_msh, outfile_msh_alya);
-    strtok(alya_file_msh, ".");
-    strcat(alya_file_msh, ".msh");
-	
-    outfile_geo = (char*) malloc(72 * sizeof(char *));
-	
-    // Define and open the ALYA readable *.dom.dat output file name:
-    strcpy(outfile_geo, outfile_msh_alya);
-    outfile_geo = strtok(outfile_geo, ".");
-    strcat(outfile_geo, "_PERIODIC.geo.dat");
-	
-    int i, j, k;
-	
-    /* Open file for writing */
-    File_ID = fopen(outfile_msh_alya, "w");
-	
-    //printf(" nperiodic nodes = %d\n", nperiodic_nodes);
-
-    if(File_ID == NULL)
-	printf("The file %s could not be open\n", outfile_msh_alya);
-    else{
-	if( nperiodic_nodes == 0)
-	    {
-		fprintf(File_ID, "$------------------------------------------------------------\n");
-		fprintf(File_ID, "DIMENSIONS  \n");
-		fprintf(File_ID, "  NODAL_POINTS=                %d  \n", nnodes);
-
-		fprintf(File_ID, "  ELEMENTS=                    %d  \n", nelem);
-		fprintf(File_ID, "  SPACE_DIMENSIONS=            3  \n");
-		fprintf(File_ID, "  NODES=                       8  \n");
-		fprintf(File_ID, "  BOUNDARIES=           0  \n");
-		fprintf(File_ID, "  SKEW_SYSTEMS=         0  \n");
-		fprintf(File_ID, "  SLAVES=               0  \n");
-		fprintf(File_ID, "  NO_SETS  \n");
-		fprintf(File_ID, "END_DIMENSIONS  \n");
-		fprintf(File_ID, "$------------------------------------------------------------\n");
-		fprintf(File_ID, "STRATEGY  \n");
-		fprintf(File_ID, "  INTEGRATION_RULE:          OPEN  \n");
-		fprintf(File_ID, "  DOMAIN_INTEGRATION_POINTS: 0  \n");
-		fprintf(File_ID, "  OUTPUT_MESH_DATA:          YES  \n");
-		fprintf(File_ID, "END_STRATEGY  \n");
-		fprintf(File_ID, "$------------------------------------------------------------\n");
-		fprintf(File_ID, "GEOMETRY, GID, WALL_DISTANCE= 0.0, ROUGHNESS=0.0  \n");
-		fprintf(File_ID, "ELEMENTS  \n");
-			
-		for(i=1; i<=nelem; i++)
-		    fprintf(File_ID, "  %d   %d   %d   %d   %d   %d   %d   %d   %d  \n", i, \
-			    CONN[i][2], CONN[i][3], CONN[i][4], CONN[i][5], CONN[i][6], CONN[i][7], CONN[i][8], CONN[i][9]);
-		fprintf(File_ID, "END_ELEMENTS  \n");
-		fprintf(File_ID, "COORDINATES  \n");
-		for(i=1; i<=nnodes; i++)
-		    fprintf(File_ID, "        %d %lf %lf %lf   \n", i, COORDS[i][2], COORDS[i][3], COORDS[i][4]);
-		fprintf(File_ID, "END_COORDINATES  \n");
-		fprintf(File_ID, "BOUNDARIES  \n");
-		fprintf(File_ID, "END_BOUNDARIES  \n");
-		fprintf(File_ID, "SKEW_SYSTEMS  \n");
-		fprintf(File_ID, "END_SKEW_SYSTEMS  \n");
-		fprintf(File_ID, "END_GEOMETRY  \n");
-		fprintf(File_ID, "SETS  \n");
-		fprintf(File_ID, "END_SETS  \n");
-		fprintf(File_ID, "BOUNDARIES  \n");
-		fprintf(File_ID, "END_BOUNDARIES  \n");
-	    }
-	else //if nperiodic_nodes != 0
-	    {
-		fprintf(File_ID, "$------------------------------------------------------------\n");
-		fprintf(File_ID, "DIMENSIONS\n");
-		fprintf(File_ID, "  NODAL_POINTS=                %d  \n", nnodes);
-		fprintf(File_ID, "  ELEMENTS=                    %d  \n", nelem);
-		fprintf(File_ID, "  SPACE_DIMENSIONS=            2  \n");
-		fprintf(File_ID, "  TYPES_OF_ELEMENTS=           QUA04  \n");
-		fprintf(File_ID, "  PERIODIC_NODES=              %d  \n", nperiodic_nodes);
-		fprintf(File_ID, "END_DIMENSIONS\n");
-		fprintf(File_ID, "$------------------------------------------------------------\n");
-		fprintf(File_ID, "STRATEGY\n");
-		fprintf(File_ID, "  INTEGRATION_RULE:           Open\n");
-		fprintf(File_ID, "  DOMAIN_INTEGRATION_POINTS:    0 \n");
-		fprintf(File_ID, "  OUTPUT_MESH_DATA:           Yes \n");
-		fprintf(File_ID, "  PERIODICITY_STRATEGY:       Residual\n");
-		fprintf(File_ID, "$  PERIODICITY_STRATEGY:      Matrix\n");
-		fprintf(File_ID, "END_STRATEGY\n");
-		fprintf(File_ID, "$------------------------------------------------------------\n");
-		fprintf(File_ID, "GEOMETRY, GID, WALL_DISTANCE= 0.0, ROUGHNESS=0.0\n");
-		fprintf(File_ID, "  INCLUDE  ./%s\n", outfile_geo);
-		fprintf(File_ID, "END_GEOMETRY\n");
-		fprintf(File_ID, "$-------------------------------------------------------------\n");
-		fprintf(File_ID, "SETS\n");
-		fprintf(File_ID, "END_SETS\n");
-		fprintf(File_ID, "$-------------------------------------------------------------\n");
-		fprintf(File_ID, "BOUNDARY_CONDITIONS\n");
-		fprintf(File_ID, "END_BOUNDARY_CONDITIONS\n");
-		fprintf(File_ID, "$-------------------------------------------------------------\n");
-	    }
-    }
-	
-    fclose(File_ID);
-	
-    /* Open file for writing */
-    File_ID = fopen(alya_file_msh, "w");
-    if(File_ID == NULL)
-	printf("The file mesh.dom.dat could not be open\n");
-    else{
-	//fprintf(File_ID, "ELEMENTS  %d\n", nelem);
-	fprintf(File_ID, "ELEMENTS  \n");			
-	for(i=1; i<=nelem; i++)
-	    fprintf(File_ID, "  %d   %d   %d   %d   %d   %d   %d   %d   %d  \n", i, \
-		    CONN[i][2], CONN[i][3], CONN[i][4], CONN[i][5], CONN[i][6], CONN[i][7], CONN[i][8], CONN[i][9]);
-	fprintf(File_ID, "END_ELEMENTS  \n");
-	fprintf(File_ID, "COORDINATES  \n");
-	for(i=1; i<=nnodes; i++)
-	    fprintf(File_ID, "        %d %lf %lf %lf   \n", i, COORDS[i][2], COORDS[i][3], COORDS[i][4]);
-	fprintf(File_ID, "END_COORDINATES  \n");
-    }
-	
-    fclose(File_ID);
-	
-    //Free memory:
-    free(alya_file_msh);
-    free(outfile_geo);
-	
-    return;
-}
-
 
 void dwrt2VTK_nx_ny_nz(char *file_name)
 {  
@@ -826,9 +592,9 @@ void dwrt2VTK_nx_ny_nz(char *file_name)
 		for(ie=1; ie<=nelem; ie++)
 		    {
 			if( ELTYPE[ie] == VISIT_QUAD )
-			    fprintf(file_id, " %d %d %d %d %d\n", ELTYPE[ie], CONN[ie][2]-1, CONN[ie][3]-1, CONN[ie][4]-1, CONN[ie][5]-1);
+			    fprintf(file_id, " %d %d %d %d %d\n", ELTYPE[ie], MAPL2G[ie][2]-1, MAPL2G[ie][3]-1, MAPL2G[ie][4]-1, MAPL2G[ie][5]-1);
 			else if( ELTYPE[ie] == VISIT_TRIANGLE )
-			    fprintf(file_id, " %d %d %d %d\n", ELTYPE[ie], CONN[ie][2]-1, CONN[ie][3]-1, CONN[ie][4]-1);
+			    fprintf(file_id, " %d %d %d %d\n", ELTYPE[ie], MAPL2G[ie][2]-1, MAPL2G[ie][3]-1, MAPL2G[ie][4]-1);
 		    }
 	
 		fprintf(file_id, "CELL_TYPES %d\n", nelem);
@@ -883,9 +649,9 @@ void dwrt2VTK_nx_ny_nz(char *file_name)
 		for(ie=1; ie<=nelem; ie++)
 		    {
 			if( ELTYPE[ie-1] == VISIT_HEXAHEDRON )
-			    fprintf(file_id, " %d %d %d %d %d %d %d %d %d\n", 8, CONN[ie][2]-1, CONN[ie][3]-1, CONN[ie][4]-1, CONN[ie][5]-1, CONN[ie][6]-1, CONN[ie][7]-1, CONN[ie][8]-1, CONN[ie][9]-1);
+			    fprintf(file_id, " %d %d %d %d %d %d %d %d %d\n", 8, MAPL2G[ie][2]-1, MAPL2G[ie][3]-1, MAPL2G[ie][4]-1, MAPL2G[ie][5]-1, MAPL2G[ie][6]-1, MAPL2G[ie][7]-1, MAPL2G[ie][8]-1, MAPL2G[ie][9]-1);
 			else if( ELTYPE[ie-1] == VISIT_WEDGE )
-			    fprintf(file_id, " %d %d %d %d %d %d %d\n", 6, CONN[ie][2]-1, CONN[ie][3]-1, CONN[ie][4]-1, CONN[ie][5]-1, CONN[ie][6]-1, CONN[ie][7]-1);
+			    fprintf(file_id, " %d %d %d %d %d %d %d\n", 6, MAPL2G[ie][2]-1, MAPL2G[ie][3]-1, MAPL2G[ie][4]-1, MAPL2G[ie][5]-1, MAPL2G[ie][6]-1, MAPL2G[ie][7]-1);
 		    }
 	
 		fprintf(file_id, "CELL_TYPES %d\n", nelem);
@@ -908,7 +674,7 @@ void dwrt2VTK(char *file_name)
     int nsize, nfield_data;
   
     FILE *file_id;
-  	
+    
     file_id = fopen(file_name, "w");
     if(file_id == NULL)
 	printf("The file %s could not be open\n", file_name);
@@ -925,7 +691,7 @@ void dwrt2VTK(char *file_name)
 	    if( nsd == 2 )
 		{
 		    fprintf(file_id, "POINTS %d float\n", nnodes);
-		    for(i=1; i<=nnodes; i++)
+		    for(i=0; i<nnodes; i++)
 			{
 			    fprintf(file_id, " %.12f %.12f %.12f\n", COORDS[i][0], COORDS[i][1], 0.0);
 			}
@@ -933,16 +699,16 @@ void dwrt2VTK(char *file_name)
 		    //Write coonectivity
 		    nsize = 5*nelem;
 		    fprintf(file_id, "CELLS %d %d\n", nelem, nsize);
-		    for(ie=1; ie<=nelem; ie++)
+		    for(ie=0; ie<nelem; ie++)
 			{
 			    if( ELTYPE[ie] == VISIT_QUAD )
-				fprintf(file_id, " %d %d %d %d %d\n", ie, CONN[ie][0]-1, CONN[ie][1]-1, CONN[ie][2]-1, CONN[ie][3]-1);
+				fprintf(file_id, " %d %d %d %d %d\n", ie, MAPL2G[ie][0]-1, MAPL2G[ie][1]-1, MAPL2G[ie][2]-1, MAPL2G[ie][3]-1);
 			    else if( ELTYPE[ie] == VISIT_TRIANGLE )
-				fprintf(file_id, " %d %d %d %d\n", ie, CONN[ie][0]-1, CONN[ie][1]-1, CONN[ie][2]-1);
+				fprintf(file_id, " %d %d %d %d\n", ie, MAPL2G[ie][0]-1, MAPL2G[ie][1]-1, MAPL2G[ie][2]-1);
 			}
         
 		    fprintf(file_id, "CELL_TYPES %d\n", nelem);
-		    for(ie=1; ie<=nelem; ie++)
+		    for(ie=0; ie<nelem; ie++)
 			fprintf(file_id, " %d\n", ELTYPE[ie]);
         
 		}
@@ -972,7 +738,7 @@ void dwrt2VTK(char *file_name)
 		    fprintf(file_id, "CELLS %d %d\n", nelem, nsize);
 		    for(ie=0; ie<nelem; ie++)
 			{
-			    fprintf(file_id, " %d %d %d %d %d %d %d %d %d\n", 8, CONN[ie][0]-1, CONN[ie][1]-1, CONN[ie][2]-1, CONN[ie][3]-1, CONN[ie][4]-1, CONN[ie][5]-1, CONN[ie][6]-1, CONN[ie][7]-1);
+			    fprintf(file_id, " %d %d %d %d %d %d %d %d %d\n", 8, MAPL2G[ie][0]-1, MAPL2G[ie][1]-1, MAPL2G[ie][2]-1, MAPL2G[ie][3]-1, MAPL2G[ie][4]-1, MAPL2G[ie][5]-1, MAPL2G[ie][6]-1, MAPL2G[ie][7]-1);
 			}
               
 		    fprintf(file_id, "CELL_TYPES %d\n", nelem);
@@ -1046,9 +812,9 @@ void dwrt2GMSH(char *file_name)
 		for(ie=1; ie<=nelem; ie++)
 		    {
 			if( ELTYPE[ie-1] == VISIT_HEXAHEDRON )
-			    fprintf(file_id, "%d, %d, %d, %d, %d, %d, %d, %d, %d\n", ie, CONN[ie][2], CONN[ie][3], CONN[ie][4], CONN[ie][5], CONN[ie][6], CONN[ie][7], CONN[ie][8], CONN[ie][9]);
+			    fprintf(file_id, "%d, %d, %d, %d, %d, %d, %d, %d, %d\n", ie, MAPL2G[ie][2], MAPL2G[ie][3], MAPL2G[ie][4], MAPL2G[ie][5], MAPL2G[ie][6], MAPL2G[ie][7], MAPL2G[ie][8], MAPL2G[ie][9]);
 			else if( ELTYPE[ie-1] == VISIT_WEDGE )
-			    fprintf(file_id, " %d %d %d %d %d %d %d\n", 6, CONN[ie][2], CONN[ie][3], CONN[ie][4], CONN[ie][5], CONN[ie][6], CONN[ie][7]);
+			    fprintf(file_id, " %d %d %d %d %d %d %d\n", 6, MAPL2G[ie][2], MAPL2G[ie][3], MAPL2G[ie][4], MAPL2G[ie][5], MAPL2G[ie][6], MAPL2G[ie][7]);
 		    }
 	
 	    }
@@ -1092,9 +858,9 @@ void dwrt2CONN(char *file_name)
 		for(ie=1; ie<=nelem; ie++)
 		    {
 			if( ELTYPE[ie-1] == VISIT_HEXAHEDRON )
-			    fprintf(file_id, "%d %d %d %d %d %d %d %d\n", CONN[ie][2], CONN[ie][3], CONN[ie][4], CONN[ie][5], CONN[ie][6], CONN[ie][7], CONN[ie][8], CONN[ie][9]);
+			    fprintf(file_id, "%d %d %d %d %d %d %d %d\n", MAPL2G[ie][2], MAPL2G[ie][3], MAPL2G[ie][4], MAPL2G[ie][5], MAPL2G[ie][6], MAPL2G[ie][7], MAPL2G[ie][8], MAPL2G[ie][9]);
 			else if( ELTYPE[ie-1] == VISIT_WEDGE )
-			    fprintf(file_id, " %d %d %d %d %d %d\n", CONN[ie][2], CONN[ie][3], CONN[ie][4], CONN[ie][5], CONN[ie][6], CONN[ie][7]);
+			    fprintf(file_id, " %d %d %d %d %d %d\n", MAPL2G[ie][2], MAPL2G[ie][3], MAPL2G[ie][4], MAPL2G[ie][5], MAPL2G[ie][6], MAPL2G[ie][7]);
 		    }
 	
 	    }

@@ -112,55 +112,70 @@ int main(int argc, char** argv) {
 
 	/*************************************************************************************
 	 *COMPUTE HIGH-ORDER NODES and WEIGHTS. Stored in struct: lgl.coords and lgl.weights
-	 *************************************************************************************/
-	//lgl = BUILD_LGL(nop);
-	//BarycentricWeights(lgl, nop);
-	
+	 *************************************************************************************/	
 	if (lread_external_grid == 0){
 	    
 	    /*************************************************************************************
 	     * READ THE TOPOGRAPHY FILE or BUILD THE BOTTOM BOUNDARY BY A USER-DEFINED FUNCTION:
 	     *************************************************************************************/
 	    READ_TOPOGRAPHY();
-
+	    
 	    /*************************************************************************************
 	     * Dynamic memory allocation of COORDS and CONN related arrays
 	     *************************************************************************************/
 	    MEMORY_ALLOCATE(1);
 	    MEMORY_ALLOCATE(10);
-	
+	    
 	    /*************************************************************************************
 	     * Build GRID coordinates and connectivity matrix:
-	     *************************************************************************************/	
-	    BUILD_GRID();
-  
-	    /*************************************************************************************
-	     * Split the initial domain into 'mpiprocs' processors:
 	     *************************************************************************************/
-	    ////DOMAIN_DECOMP(rank);
-  
+	    BUILD_GRID();
+	    
 	    /*************************************************************************************
 	     * Build the Connectivity matrix
 	     *************************************************************************************/
 	    BUILD_CONN();
 
+	    //apply_smoothing();
+	    
+	    /*************************************************************************************
+	     * Split the initial domain into 'mpiprocs' processors:
+	     *************************************************************************************/
+	    ////DOMAIN_DECOMP(rank);
+	    
+	    //Add high order nodes:
+	    if (nop > 1) {
+		printf(" !!! NOP > 1 for native mesh generator is not working yet.\n");
+		printf(" !!! Still missing CONN_BDY_FACES from the grid constraction.\n");
+		/*
+		//CGNS_ORDERING(CONN, nelem);
+		BUILD_EDGES(CONN, nelem);
+		
+		MEMORY_ALLOCATE(11);
+		ADD_HIGH_ORDER_NODES();
+	    	
+		MEMORY_DEALLOCATE(6);
+		*/
+	    }
+	    
 	} else {
 	    GMSH_IO(external_grid_file_name);
+
+	    //apply_smoothing();
 	    
 	    //CGNS_ORDERING(CONN, nelem);
 	    BUILD_EDGES(CONN, nelem);
 	    
 	    MEMORY_ALLOCATE(11);
 	    ADD_HIGH_ORDER_NODES();
-	    
-	    
+	    	    
 	    MEMORY_DEALLOCATE(6);
+
 	} //END reading external grid
 	
 	/*************************************************************************************
 	 * Write output to file (VTK, ALYA, etc.)
 	 *************************************************************************************/
-	//apply_smoothing();
 	WRITE_OUTPUT(irank);	   
 	
 	/*****************************************************
@@ -171,7 +186,8 @@ int main(int argc, char** argv) {
 	MEMORY_DEALLOCATE(10);
 	MEMORY_DEALLOCATE(2);
 	MEMORY_DEALLOCATE(0);
-	if (lread_external_grid == 1){	    
+	if (lread_external_grid == 1){
+	    MEMORY_DEALLOCATE(11);    
 	    MEMORY_DEALLOCATE(7);
 	    MEMORY_DEALLOCATE(5);
 	}
