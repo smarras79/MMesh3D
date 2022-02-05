@@ -145,8 +145,12 @@ int main(int argc, char** argv) {
 	    
 	    //Add high order nodes:
 	    if (nop > 1) {
+		printf(" !!! ERROR in main:!!!\n");
 		printf(" !!! NOP > 1 for native mesh generator is not working yet.\n");
 		printf(" !!! Still missing CONN_BDY_FACES from the grid constraction.\n");
+		printf(" !!! The program will EXIT now.\n");
+		printf(" !!! Set `nop 1` in the input file `%s`\n\n", inputfile);
+		exit(-1);
 		/*
 		//CGNS_ORDERING(CONN, nelem);
 		BUILD_EDGES(CONN, nelem);

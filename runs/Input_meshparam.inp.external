@@ -5,13 +5,16 @@ PROBLEM:
 	name:		topography
 END_PROBLEM
 
+READ_EXTERNAL_GRID
+ read_GMSH          ./gmsh_grids/hexa_oneblock-2x1x1.msh
+END_READ_EXTERNAL_GRID
 
 PROBLEM_DEFINITION:
  Meshing_scheme:      TFI
  nelemx:              2
  nelemy:              1
  nelemz:              1
- nop:                 1
+ nop:                 4
  PERIODICX:           Off
  PERIODICY:           Off
  PERIODICZ:           Off
@@ -50,8 +53,3 @@ END_OUTPUT_FILESs
 
 # read_GMSH          ./gmsh_grids/hexa_oneblock-2x1x1.ms
 # read_GMSH          ./gmsh_grids/hexa_UNSTR.msh
-
-
-#READ_EXTERNAL_GRID
-# read_GMSH          ./gmsh_grids/hexa_oneblock-2x1x1.msh
-#END_READ_EXTERNAL_GRID
