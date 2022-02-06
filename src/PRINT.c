@@ -816,7 +816,6 @@ void dwrt2GMSH(char *file_name)
 			else if( ELTYPE[ie-1] == VISIT_WEDGE )
 			    fprintf(file_id, " %d %d %d %d %d %d %d\n", 6, MAPL2G[ie][2], MAPL2G[ie][3], MAPL2G[ie][4], MAPL2G[ie][5], MAPL2G[ie][6], MAPL2G[ie][7]);
 		    }
-	
 	    }
     }
     fclose(file_id);

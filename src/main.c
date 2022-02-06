@@ -36,17 +36,6 @@
 #include "TOPOfromTXT.h"
 #include "TOPO_USER_FUNCTION.h"
 
-//#include "BUILD_GRID_SPHERE.h"
-
-//#include "linspace.h"
-//#include "parabola.h"
-//#include "GAUSSJ.h"
-//#include "MINMAXVAL.h"
-//#include "elliptic_solver.h"
-//#include "mympi_init.h"
-//#include "DOMAIN_DECOMP.h"
-//#include "visit_writer.h"
-
 
 int main(int argc, char** argv) {
 

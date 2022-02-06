@@ -1,2 +1,2 @@
-mpirun -np 1 ./MMesh3D.a Input_meshparam.inp
+mpirun -np 1 ./MMesh3D.a Input_meshparam.inp.external
 python plotnodes.py &
