@@ -886,36 +886,37 @@ int PRINT_INFO(void)
 { 
     printf(" #------------------------------------------------------------------#\n #\n");
     printf(" # Input Entries from input file: %s\n", inputfile);
-    printf(" # problem name:     %s\n", problem[0]);
-    if (external_grid_file_name !=  NULL)
-    	    printf(" # External grid:   %s\n", external_grid_file_name);
-    printf(" # meshing scheme:   %s %lf %lf\n", problem[1], parameters[7], parameters[8]);
-    printf(" # element types:    %s\n", problem[2]);
-    printf(" # nelx:             %d  %d\n", INPUTVariables[1], INPUTVariables[2]);
-    printf(" # nely:             %d  %d\n", INPUTVariables[3], INPUTVariables[4]);
-    printf(" # nelz:             %d  %d\n", INPUTVariables[5], INPUTVariables[6]);
-    printf(" # nop:              %d\n", INPUTVariables[8]);
-    printf(" # Periodicity x:    %s\n", problem[3]);
-    printf(" # Periodicity y:    %s\n", problem[4]);
-    printf(" # Periodicity z:    %s\n", problem[8]);
-    printf(" # BDY NODES: (x,y,z)\n");
-    for(i=1; i<=NBDY_NODES; i++)
-	printf(" #               %lf %lf %lf\n", BDY_COORDS[i][1],BDY_COORDS[i][2],BDY_COORDS[i][3]);
-    printf(" # Topography:       %s %s %s\n", problem[9],problem[5],problem[11]);
-    if( !strncmp(problem[9],"FUNCTION", 4) || !strncmp(problem[9],"function", 4) || !strncmp(problem[9],"Function", 4) || \
-	!strncmp(problem[9],"user", 4)     || !strncmp(problem[9],"USER", 4)     || !strncmp(problem[9],"User", 4))
-	{
-	    printf(" #   -Hmount:        %f\n", parameters[4]);
-	    printf(" #   -1/2 width x:   %f\n", parameters[5]);
-	    printf(" #   -1/2 width y:   %f\n", parameters[9]);
-	    printf(" #   -Lambda:        %f\n", parameters[6]);
-	}
-    printf(" #\n");
-  
-    printf(" # VTK OUTPUT:   %s\n", problem[7]);
-    printf(" # GMSH OUTPUT:  %s\n", problem[13]);
-    printf(" # BDY FILE:     %s\n", problem[12]);
-    printf(" # ALYA OUTPUT:  %s\n", problem[6]);
+    if (lread_external_grid !=  0) {
+	printf(" # Read GMSH external grid:   %s\n", external_grid_file_name);
+    } else {
+	printf(" # problem name:     %s\n", problem[0]);
+	printf(" # meshing scheme:   %s %lf %lf\n", problem[1], parameters[7], parameters[8]);
+	printf(" # element types:    %s\n", problem[2]);
+	printf(" # nelx:             %d  %d\n", INPUTVariables[1], INPUTVariables[2]);
+	printf(" # nely:             %d  %d\n", INPUTVariables[3], INPUTVariables[4]);
+	printf(" # nelz:             %d  %d\n", INPUTVariables[5], INPUTVariables[6]);
+	printf(" # nop:              %d\n", INPUTVariables[8]);
+	printf(" # Periodicity x:    %s\n", problem[3]);
+	printf(" # Periodicity y:    %s\n", problem[4]);
+	printf(" # Periodicity z:    %s\n", problem[8]);
+	printf(" # BDY NODES: (x,y,z)\n");
+	for(i=1; i<=NBDY_NODES; i++)
+	    printf(" #               %lf %lf %lf\n", BDY_COORDS[i][1],BDY_COORDS[i][2],BDY_COORDS[i][3]);
+	printf(" # Topography:       %s %s %s\n", problem[9],problem[5],problem[11]);
+	if( !strncmp(problem[9],"FUNCTION", 4) || !strncmp(problem[9],"function", 4) || !strncmp(problem[9],"Function", 4) || \
+	    !strncmp(problem[9],"user", 4)     || !strncmp(problem[9],"USER", 4)     || !strncmp(problem[9],"User", 4))
+	    {
+		printf(" #   -Hmount:        %f\n", parameters[4]);
+		printf(" #   -1/2 width x:   %f\n", parameters[5]);
+		printf(" #   -1/2 width y:   %f\n", parameters[9]);
+		printf(" #   -Lambda:        %f\n", parameters[6]);
+	    }
+	printf(" #\n");
+    }
+    printf(" # VTK OUTPUT:   \t %s\n", problem[7]);
+    //printf(" # GMSH OUTPUT:  %s\n", problem[13]);
+    //printf(" # BDY FILE:     %s\n", problem[12]);
+    //printf(" # ALYA OUTPUT:  %s\n", problem[6]);
     printf(" #\n # End review of input entries \n");
 
     return 0;

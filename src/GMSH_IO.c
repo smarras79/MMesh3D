@@ -33,7 +33,10 @@ int GMSH_IO(char *inputfile) {
     gmsh_data_read(inputfile, node_dim, nnodes, -1, nelem);
 
     printf(" #------------------------------------------------------\n");
-    printf(" # GMSH grid read successfully from %s :\n #   number of nodes = %d\n #   number of elem = %d\n #   nsd = %d\n", inputfile,  nnodes, nelem, node_dim);
+    printf(" #\n");
+    //printf(" # GMSH grid read successfully from %s :\n #   number of nodes = %d\n #   number of elem = %d\n #   nbdy_faces = %d\n #   nsd = %d\n", inputfile,  nnodes, nelem, nbdy_faces, node_dim);
+    printf(" # GMSH grid `%s` was read successfully\n", inputfile);
+    printf(" #\n");
     printf(" #------------------------------------------------------\n");
     
     return 0;
@@ -671,12 +674,13 @@ void gmsh_size_read ( char *gmsh_filename, int *node_num, int *node_dim, int *el
     nbdy_edges = ibdy_edge;
     nbdy_faces = ibdy_face;
 
-    printf(" #------------------------------------------------------\n");
+    /*printf(" #------------------------------------------------------\n");
     printf(" # The GMSH external grid has: \n");
     printf(" # nelem      = %d\n",  nelem);
     printf(" # nbdy_faces = %d\n",  nbdy_faces);
     //printf(" # nbdy_face %d\n",  nbdy_edges);
     printf(" #------------------------------------------------------\n");
+    */
     
     return;
 }

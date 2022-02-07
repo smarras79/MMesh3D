@@ -169,14 +169,14 @@ char								    	\
  * Static arrays (used for small arrays only) 
  */
 char									\
-nodes  [6],								\
-    nodesx [6],								\
-    nodesy [6],								\
-    nodesz [6],								\
+nodes  [10],								\
+    nodesx [10],							\
+    nodesy [10],							\
+    nodesz [10],							\
     elorder[3],								\
-    nel[5],								\
+    nel[10],								\
 //NOTE: if you want to store 3 digits, you need 4 spaces because C stores "/0" as last. If you don't, you will get the Abort Trap error! 
-    mpiprocess[5];
+    mpiprocess[10];
 
 int						\
 INPUTVariables[MAX_INPUTS],			\

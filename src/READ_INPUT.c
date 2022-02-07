@@ -97,25 +97,37 @@ int READ_INPUT(char *input_file)
 	//END_PROBLEM
     
 
-	//READ_EXTERNAL_GRID:
-	fscanf(file_ID, "%s\n", header);
-	if (!strcmp(header, "READ_EXTERNAL_GRID")) {
-	    fscanf(file_ID, "%s %s\n", header, header); //External mesh name
-	    strcpy(external_grid_file_name, header);
-	    fscanf(file_ID, "%s\n", header);
-	    fscanf(file_ID, "%s\n", header);
-	    lread_external_grid = 1;
-	} else {lread_external_grid = 0;}
-	//END_READ_EXTERNAL_GRID
-
-	//PROBLEM_DEFINITION:    
+	//READ_EXTERNAL_GRID: external_grid_file_name  
 	count = 0;
+	fscanf(file_ID, "%s\n", header);
+	lread_external_grid = 0;
+	if (!strcmp(header, "READ_EXTERNAL_GRID")) {
+	    fscanf(file_ID, "%s\n", header); //External mesh name
+	    strcpy(external_grid_file_name, header);
+	    lread_external_grid = 1; 
+	    count++;
+
+	    //read next header for problem definition
+	    fscanf(file_ID, "%s\n", header);
+	} else 	if (!strcmp(header, "#READ_EXTERNAL_GRID")) {
+	    //Read the line but force lread_external_grid to 0
+	    fscanf(file_ID, "%s\n", header); //External mesh name
+	    strcpy(external_grid_file_name, header);
+	    lread_external_grid = 0;	    
+	    count++;
+	    
+	    //read next header for problem definition
+	    fscanf(file_ID, "%s\n", header);
+	}
+	
+	//PROBLEM_DEFINITION:  
 	fscanf(file_ID, "%s %s %lf %lf\n", header, header, &parameters[7], &parameters[8]);
 	strcpy(problem[1], header);                             //Meshing_scheme and scheme parameters s1, s2 (used for sleve and hybrid)
 	count++;
-	/*fscanf(file_ID, "%s %s\n", header, header);             //Element types
+	/*
+	fscanf(file_ID, "%s %s\n", header, header);             //Element types
 	  strcpy(problem[2], header);
-    
+	  
 	  fscanf(file_ID, "%s %d\n", header, &INPUTVariables[0]); //number of blocks
 	  count++;
 	*/
@@ -228,7 +240,7 @@ int READ_INPUT(char *input_file)
     nely = INPUTVariables[3];
     nelz = INPUTVariables[5];
     nop  = INPUTVariables[8];
-  
+    
     /* For now, the polynomial order is set to be the same in all directions */
     nopx = nop;
     nopy = nop;
@@ -572,5 +584,4 @@ void load_input_ivect(char *file_name, int *input_vect)
   
     return;
 }
-
 

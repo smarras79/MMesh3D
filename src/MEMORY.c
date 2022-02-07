@@ -80,7 +80,7 @@ int MEMORY_ALLOCATE(int flag)
 	    COORDS   = dmatrix(0,nnodes,0,nsd);
 	    COORDS1d = dvector(0,nnodes*nsd);
       
-	    printf(" # Memory allocated (flag 10):\n");
+	    printf(" # Memory allocated (flag 10): %d %d\n", nnodes, nsd);
 	    printf(" # \t\t COORDS[nnodes][nsd]\n");
 	    printf(" # \t\t COORDS1d[nnodes*nsd]\n");
 	}
