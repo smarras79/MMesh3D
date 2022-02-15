@@ -5,7 +5,7 @@ PROBLEM:
 	name:		topography
 END_PROBLEM
 
-READ_EXTERNAL_GRID ./gmsh_grids/hexa_oneblock-2x1x1.msh
+READ_EXTERNAL_GRID ./gmsh_grids/hexa_oneblock-1x1x1.msh
 
 PROBLEM_DEFINITION:
  Meshing_scheme:      TFI

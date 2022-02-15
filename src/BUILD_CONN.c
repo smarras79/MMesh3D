@@ -662,6 +662,19 @@ int ADD_HIGH_ORDER_NODES(void)
 	MAPL2G[iel][5] = CONN[iel][5];
 	MAPL2G[iel][6] = CONN[iel][6];
 	MAPL2G[iel][7] = CONN[iel][7];
+	
+	CONN_HO2D[iel][0][0][0]             = CONN[iel][2];
+	CONN_HO2D[iel][ngl-1][0][0]         = CONN[iel][1];
+	CONN_HO2D[iel][ngl-1][0][ngl-1]     = CONN[iel][0];
+	CONN_HO2D[iel][0][0][ngl-1]         = CONN[iel][3];
+	
+	CONN_HO2D[iel][0][ngl-1][0]         = CONN[iel][6];
+	CONN_HO2D[iel][ngl-1][ngl-1][0]     = CONN[iel][5];
+	CONN_HO2D[iel][ngl-1][ngl-1][ngl-1] = CONN[iel][4];
+	CONN_HO2D[iel][0][ngl-1][ngl-1]     = CONN[iel][7];
+
+	/*printf(" %d %d %d %d %d %d %d %d\n", CONN_HO2D[iel][0][0][0], CONN_HO2D[iel][ngl-1][0][0], CONN_HO2D[iel][ngl-1][0][ngl-1], CONN_HO2D[iel][0][0][ngl-1], \
+	  CONN_HO2D[iel][0][ngl-1][0], CONN_HO2D[iel][ngl-1][ngl-1][0], CONN_HO2D[iel][ngl-1][ngl-1][ngl-1], CONN_HO2D[iel][0][ngl-1][ngl-1]);*/
     }
     
     //Update nnodes to total nnodes for high order grids
@@ -745,55 +758,95 @@ int ADD_HIGH_ORDER_NODES(void)
 	}
     }
 
+    int ii, jj, kk;
     for(int iel=0; iel<nelem; iel++) {
 	iconn = 8;
 	for(int iedg_el=0; iedg_el<12; iedg_el++) {
-
+	    printf("IEDGE %d:\n", iedg_el+1);
 	    iedge_g = EDGE_LtoG[iel][iedg_el];
 	    for(int l=1; l<ngl-1; l++) {
 		ip = EDGE_POINT_CONN[iedge_g][l] + 1;
-
+		
 		if (iedg_el+1 == 1) {
-		    CONN_HO2D[iel][ngl-1][0][l] = ip;
-	    
+		    ii = ngl-1;
+		    jj = 0;
+		    kk = l;
+		    CONN_HO2D[iel][ii][jj][kk] = ip;
+		    
 		} else if (iedg_el+1 == 2) {
-		    CONN_HO2D[iel][l][0][0] = ip;
+		    //CONN_HO2D[iel][l][0][0] = ip;
+		    ii = l;
+		    jj = 0;
+		    kk = 0;
+		    CONN_HO2D[iel][ii][jj][kk] = ip;
 		
 		} else if (iedg_el+1 == 3) {
-		    CONN_HO2D[iel][0][0][l] = ip;
-		    //printf(" CONN_HO2D[%d][0][0][%d] = %d", iel, l, CONN_HO2D[iel][0][0][l]+1);
+		    ii = 0;
+		    jj = 0;
+		    kk = l;
+		    CONN_HO2D[iel][ii][jj][kk] = ip;
+		    
 		} else if (iedg_el+1 == 4) {
-		    CONN_HO2D[iel][l][0][ngl-1] = ip;
+		    ii = l;
+		    jj = 0;
+		    kk = ngl-1;
+		    CONN_HO2D[iel][ii][jj][kk] = ip;
 		
 		} else if (iedg_el+1 == 5) {
-		    CONN_HO2D[iel][ngl-1][ngl-1][l] = ip;
+		    ii = ngl-1;
+		    jj = ngl-1;
+		    kk = l;
+		    CONN_HO2D[iel][ii][jj][kk] = ip;
 		
 		} else if (iedg_el+1 == 6) {
-		    CONN_HO2D[iel][l][ngl-1][0] = ip;
+		    ii = l;
+		    jj = ngl-1;
+		    kk = 0;
+		    CONN_HO2D[iel][ii][jj][kk] = ip;
 
 		} else if (iedg_el+1 == 7) {
-		    CONN_HO2D[iel][0][ngl-1][l] = ip;
+		    ii = 0;
+		    jj = ngl-1;
+		    kk = l;
+		    CONN_HO2D[iel][ii][jj][kk] = ip;
 		
 		} else if (iedg_el+1 == 8) {
-		    CONN_HO2D[iel][l][ngl-1][ngl-1] = ip;
+		    ii = l;
+		    jj = ngl-1;
+		    kk = ngl-1;
+		    CONN_HO2D[iel][ii][jj][kk] = ip;
 		
 		} else if (iedg_el+1 == 9) {
-		    CONN_HO2D[iel][ngl-1][l][ngl-1] = ip;
+		    ii = ngl-1;
+		    jj = l;
+		    kk = ngl-1;
+		    CONN_HO2D[iel][ii][jj][kk] = ip;
 		
 		} else if (iedg_el+1 == 10) {
-		    CONN_HO2D[iel][ngl-1][l][0] = ip;
+		    ii = ngl-1;
+		    jj = l;
+		    kk = 0;
+		    CONN_HO2D[iel][ii][jj][kk] = ip;
 		
 		} else if (iedg_el+1 == 11) {
-		    CONN_HO2D[iel][0][l][0] = ip;
+		    ii = 0;
+		    jj = l;
+		    kk = 0;
+		    CONN_HO2D[iel][ii][jj][kk] = ip;
 		
 		} else if (iedg_el+1 == 12) {
-		    CONN_HO2D[iel][0][l][ngl-1] = ip;
+		    ii = 0;
+		    jj = l;
+		    kk = ngl-1;
+		    CONN_HO2D[iel][ii][jj][kk] = ip;
 		}
-
+		
+		printf(" %d ", CONN_HO2D[iel][ii][jj][kk]);
+	    
 		MAPL2G[iel][iconn] = ip;
 		iconn = iconn + 1;
-	    }
-	}
+	    }printf("\n");     
+	} 
     }
     
     /*--------------------------------------------------------------------------
@@ -875,42 +928,60 @@ int ADD_HIGH_ORDER_NODES(void)
 	iconn = 8 + (ngl-2)*12;
 	for(int ifac_el=0; ifac_el<NELFACES; ifac_el++) {
 	    iface_g = FACE_LtoG[iel][ifac_el];
-
-	    //printf(" ifac_el = %d ", ifac_el);
-	    //printf(" (%d %d %d %d) -  " , CONN_FACE[iface_g][0], CONN_FACE[iface_g][1], CONN_FACE[iface_g][2], CONN_FACE[iface_g][3]);
 	    
+	    printf(" ifac_el = %d ", ifac_el);
 	    for(int l=1; l<ngl-1; l++) {
 		for(int m=1; m<ngl-1; m++) {
 		
 		    ip = FACE_POINT_CONN[iface_g][l][m]+1;
 		    
 		    if (ifac_el+1 == 1) {
-			CONN_HO2D[iel][ngl-1][l][m] = ip;
+			ii = ngl-1;
+			jj = l;
+			kk = m;
+			//CONN_HO2D[iel][ngl-1][l][m] = ip;
 	    
 		    } else if (ifac_el+1 == 2) {
-			CONN_HO2D[iel][l][m][0] = ip;
+			ii = l;
+			jj = m;
+			kk = 0;
+			//CONN_HO2D[iel][l][m][0] = ip;
 		    
 		    } else if (ifac_el+1 == 3) {
-			CONN_HO2D[iel][0][l][m] = ip;
-			//	printf(" - CONN_HO2D[%d][0][%d][%d] = %d", iel, l, m, CONN_HO2D[iel][ngl-1][l][m]+1);
+			ii = 0;
+			jj = l;
+			kk = m;
+			//CONN_HO2D[iel][0][l][m] = ip;
+			
 		    } else if (ifac_el+1 == 4) {
-			CONN_HO2D[iel][l][m][ngl-1] = ip;
+			ii = l;
+			jj = m;
+			kk = ngl-1;
+			//CONN_HO2D[iel][l][m][ngl-1] = ip;
 		
 		    } else if (ifac_el+1 == 5) {
-			CONN_HO2D[iel][l][0][m] = ip;
+			ii = l;
+			jj = 0;
+			kk = m;
+			//CONN_HO2D[iel][l][0][m] = ip;
 		
 		    } else if (ifac_el+1 == 6) {
-			CONN_HO2D[iel][l][ngl-1][m] = ip;
+			ii = l;
+			jj = ngl-1;
+			kk = m;
+			//CONN_HO2D[iel][l][ngl-1][m] = ip;
 		    }
-
+		    
+		    CONN_HO2D[iel][ii][jj][kk] = ip;
 		    MAPL2G[iel][iconn] = ip;
 		    iconn = iconn + 1;
+
+		    printf(" - %d", CONN_HO2D[iel][ii][jj][kk]);
 		}
-	    }
-	    //printf(" \n");
+	    } printf(" \n");
 	}
     }
-
+    return 0; HERE
     /*--------------------------------------------------------------------------
      * Populate internal/Volume high-order points:
      *--------------------------------------------------------------------------*/

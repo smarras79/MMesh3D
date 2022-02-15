@@ -7,7 +7,7 @@ from numpy.random import rand
 print_lables=True
 #print_lables=False
 
-plot_edge_nodes = False
+plot_edge_nodes = True
 plot_face_nodes = True
 plot_vol_nodes = False
 
