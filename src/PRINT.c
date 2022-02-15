@@ -267,9 +267,6 @@ void PRINT(float **u, float **v, float **P, int imax, int jmax)
 /****************************************/
 /**PRINT_VECT_VTK.c**********************/
 /****************************************/
-/*PRINT_VECT_VTK.c*/
-//N.B. RECTILINEAR_GRID != STRUCTURED_GRID! If you want a structured grid displayed, DON'T USE THIS FUNCTION; you need to use 
-// the function PRINT_STRUCT_GRID_VTK
 void PRINT_VECT_VTK(int imax, int jmax, int kmax, char *vector_field_name, float **U, float **V, float **W, float *x, float *y, float *z)
 {
     int i,j,k;
@@ -312,51 +309,8 @@ void PRINT_VECT_VTK(int imax, int jmax, int kmax, char *vector_field_name, float
 
 
 /****************************************/
-/**PRINT_PRESS_VTK.c**********************/
-/****************************************/
-
-
-/*WRONG*/
-void PRINT_PRESS_VTK(int imax, int jmax, char *press_field_name, float **P)
-{
-    int i,j,k;
-    int nx,ny,nz,np;
-    float z = 0.0;
-	
-    FILE *press;
-	
-    nx = imax+1;
-    ny = jmax+1;
-    nz = 1;
-    np = imax*jmax;
-	
-    /* File press.vtk*/
-    if((press = fopen(press_field_name, "w")) == NULL)
-	printf("The grid file could not be open\n");
-    else{
-	fprintf(press, "# vtk DataFile Version 2.0\n");
-	fprintf(press, "Sample rectilinear grid\n");
-	fprintf(press, "ASCII\n");
-	fprintf(press, "DATASET RECTILINEAR_GRID\n");
-	fprintf(press, "DIMENSIONS %d %d %d\n", ny, nx, nz);
-	for(j=0; j<=ny-1; j++){
-	    for(i=0; i<=nx-1; i++)
-		fprintf(press, "%f ", P[j][i]);
-	    fprintf(press, " \n");
-	}
-    }
-    fclose(press);
-
-    return;
-}
-
-
-
-/****************************************/
 /**PRINT_GRID_VTK.c**********************/
 /****************************************/
-
-/*PRINT_GRID_VTK.c*/
 void PRINT_GRID_VTK(char *grid_name, int imax, int jmax, int kmax, float *x, float *y, float *z)
 {
     int i,j,k;
@@ -403,10 +357,8 @@ void PRINT_GRID_VTK(char *grid_name, int imax, int jmax, int kmax, float *x, flo
 }
 
 /****************************************/
-/**PRINT_STRUCT_GRID_VTK.c**********************/
+/**PRINT_STRUCT_GRID_VTK.c***************/
 /****************************************/
-/*PRINT_STRUCT_GRID_VTK.c*/
-
 void PRINT_STRUCT_GRID_VTK(char *grid_name, int imax, int jmax, int kmax, float *x, float *y, float *z)
 {
     int i,j,k,id=0;
@@ -458,7 +410,6 @@ void PRINT_STRUCT_GRID_VTK(char *grid_name, int imax, int jmax, int kmax, float 
  * See the visit_writer.h for the copyright issues of the library.
  * simone.marras@gmail.com
  ****************************************************************/
-//As above but in double precision:
 void dPRINT_UNSTRUCT_GRID_VTK(char *grid_name, int array_numb, int coords_ncolumns)
 
 {
@@ -484,9 +435,9 @@ void dPRINT_UNSTRUCT_GRID_VTK(char *grid_name, int array_numb, int coords_ncolum
 	}
     }
     
-    /* Pass the mesh and data to visit_writer. */
+    /* Pass the mesh and data to visit_writer. */    
     dwrt2VTK(grid_name);
-
+        
     return;
 }
 
@@ -668,11 +619,13 @@ void dwrt2VTK_nx_ny_nz(char *file_name)
 
 void dwrt2VTK(char *file_name)
 {  
-    int i,j,ie,inode;
-    int u,v,w;
-    int elu,elv,elw, iel;
+    int i, j, ie, inode;
+    int ii, jj, kk;
+    int u, v, w;
+    int elu, elv, elw, iel;
     int nsize, nfield_data;
-  
+    int ncells;
+    
     FILE *file_id;
     
     file_id = fopen(file_name, "w");
@@ -682,76 +635,107 @@ void dwrt2VTK(char *file_name)
     
 	//Open VTK file
 	fprintf(file_id, "# vtk DataFile Version 2.0\n");
-	fprintf(file_id, "INIT data\n");
+	fprintf(file_id, "MESH data\n");
 	fprintf(file_id, "ASCII\n");
 	fprintf(file_id, "DATASET UNSTRUCTURED_GRID\n");
 
 	if (nop < 2) {
 	    //Write coordinates
-	    if( nsd == 2 )
-		{
-		    fprintf(file_id, "POINTS %d float\n", nnodes);
-		    for(i=0; i<nnodes; i++)
-			{
-			    fprintf(file_id, " %.12f %.12f %.12f\n", COORDS[i][0], COORDS[i][1], 0.0);
-			}
-    
-		    //Write coonectivity
-		    nsize = 5*nelem;
-		    fprintf(file_id, "CELLS %d %d\n", nelem, nsize);
-		    for(ie=0; ie<nelem; ie++)
-			{
-			    if( ELTYPE[ie] == VISIT_QUAD )
-				fprintf(file_id, " %d %d %d %d %d\n", ie, MAPL2G[ie][0]-1, MAPL2G[ie][1]-1, MAPL2G[ie][2]-1, MAPL2G[ie][3]-1);
-			    else if( ELTYPE[ie] == VISIT_TRIANGLE )
-				fprintf(file_id, " %d %d %d %d\n", ie, MAPL2G[ie][0]-1, MAPL2G[ie][1]-1, MAPL2G[ie][2]-1);
-			}
-        
-		    fprintf(file_id, "CELL_TYPES %d\n", nelem);
-		    for(ie=0; ie<nelem; ie++)
-			fprintf(file_id, " %d\n", ELTYPE[ie]);
-        
+	    if( nsd == 2 ) {
+		fprintf(file_id, "POINTS %d float\n", nnodes);
+		for(i=0; i<nnodes; i++) {
+		    fprintf(file_id, " %.12f %.12f %.12f\n", COORDS[i][0], COORDS[i][1], 0.0);
 		}
-	    else if( nsd == 3 )
-		{
-		    fprintf(file_id, "POINTS %d double\n", nnodes);
-		    for (i=0; i<nnodes; i++){
-			fprintf(file_id, " %.12f %.12f %.12f\n", COORDS[i][0], COORDS[i][1], COORDS[i][2]);
-		    }
+		
+		//Write coonectivity
+		nsize = 5*nelem;
+		fprintf(file_id, "CELLS %d %d\n", nelem, nsize);
+		for(ie=0; ie<nelem; ie++) {
+		    if( ELTYPE[ie] == VISIT_QUAD )
+			fprintf(file_id, " %d %d %d %d %d\n", ie, MAPL2G[ie][0]-1, MAPL2G[ie][1]-1, MAPL2G[ie][2]-1, MAPL2G[ie][3]-1);
+		    else if( ELTYPE[ie] == VISIT_TRIANGLE )
+			fprintf(file_id, " %d %d %d %d\n", ie, MAPL2G[ie][0]-1, MAPL2G[ie][1]-1, MAPL2G[ie][2]-1);
+		}
+        
+		fprintf(file_id, "CELL_TYPES %d\n", nelem);
+		for(ie=0; ie<nelem; ie++)
+		    fprintf(file_id, " %d\n", ELTYPE[ie]);
+        
+	    } else if( nsd == 3 ) {
+		fprintf(file_id, "POINTS %d double\n", nnodes);
+		for (i=0; i<nnodes; i++){
+		    fprintf(file_id, " %.12f %.12f %.12f\n", COORDS[i][0], COORDS[i][1], COORDS[i][2]);
+		}
             
-		    /*//COORDS --> COORDS1d:
-		      j=1;
-		      for (i=0; i<nnodes; i++){
+		/*//COORDS --> COORDS1d:
+		  j=1;
+		  for (i=0; i<nnodes; i++){
                     
-		      COORDS1d[j]   = COORDS[i][2];
-		      COORDS1d[j+1] = COORDS[i][3];
-		      COORDS1d[j+2] = COORDS[i][4];
-		      j=j+3;
-		      }
+		  COORDS1d[j]   = COORDS[i][2];
+		  COORDS1d[j+1] = COORDS[i][3];
+		  COORDS1d[j+2] = COORDS[i][4];
+		  j=j+3;
+		  }
               
-		      // Write the Coordinates 1D array to file
-		      VECT2F_dVECT("COORDS1d.dat", COORDS1d, 1,nnodes*3);
-		    */
+		  // Write the Coordinates 1D array to file
+		  VECT2F_dVECT("COORDS1d.dat", COORDS1d, 1,nnodes*3);
+		*/
 
-		    //Write coonectivity
-		    nsize = 9*nelem; //this is valid for hexa only
-		    fprintf(file_id, "CELLS %d %d\n", nelem, nsize);
-		    for(ie=0; ie<nelem; ie++)
-			{
-			    fprintf(file_id, " %d %d %d %d %d %d %d %d %d\n", 8, MAPL2G[ie][0]-1, MAPL2G[ie][1]-1, MAPL2G[ie][2]-1, MAPL2G[ie][3]-1, MAPL2G[ie][4]-1, MAPL2G[ie][5]-1, MAPL2G[ie][6]-1, MAPL2G[ie][7]-1);
-			}
-              
-		    fprintf(file_id, "CELL_TYPES %d\n", nelem);
-		    for(ie=0; ie<nelem; ie++)
-			fprintf(file_id, " %d\n", VISIT_HEXAHEDRON);
-                
+		//Write coonectivity
+		nsize = 9*nelem; //this is valid for hexa only
+		fprintf(file_id, "CELLS %d %d\n", nelem, nsize);
+		for(ie=0; ie<nelem; ie++) {
+		    fprintf(file_id, " %d %d %d %d %d %d %d %d %d\n", 8, MAPL2G[ie][0]-1, MAPL2G[ie][1]-1, MAPL2G[ie][2]-1, MAPL2G[ie][3]-1, MAPL2G[ie][4]-1, MAPL2G[ie][5]-1, MAPL2G[ie][6]-1, MAPL2G[ie][7]-1);
 		}
-	}	
+		
+		fprintf(file_id, "CELL_TYPES %d\n", nelem);
+		for(ie=0; ie<nelem; ie++)
+		    fprintf(file_id, " %d\n", VISIT_HEXAHEDRON);
+                
+	    }
+	} else {
+	    /*
+	     * Hight order grid by means of linear sub-elements
+	     */
+	    ncells = nelem*nop*nop*nop; //Total number of cells
+	    fprintf(file_id, "POINTS %d double\n", nnodes);
+	    for (i=0; i<nnodes; i++){
+		fprintf(file_id, " %.12f %.12f %.12f\n", COORDS_HO[i][0], COORDS_HO[i][1], COORDS_HO[i][2]);
+	    }
+	   
+	    nsize = 9*ncells;
+	    fprintf(file_id, "CELLS %d %d\n", ncells, nsize);
+	    for (int iel=0; iel<nelem; iel++) {
+		for (int i=0; i<nop; i++) {
+		    for (int j=0; j<nop; j++) {
+			for (int k=0; k<nop; k++) {
+			    
+			    ii = min(i+1,nop-1);
+			    jj = min(j+1,nop-1);
+			    kk = min(k+1,nop-1);
+
+			    fprintf(file_id, " 8 %d %d %d %d %d %d %d %d\n", \
+				    CONN_HO2D[iel][ i][ j][ k],		\
+				    CONN_HO2D[iel][ii][ j][ k],		\
+				    CONN_HO2D[iel][ii][jj][ k],		\
+				    CONN_HO2D[iel][ i][jj][ k],		\
+				    CONN_HO2D[iel][ i][ j][kk],		\
+				    CONN_HO2D[iel][ii][ j][kk],		\
+				    CONN_HO2D[iel][ii][jj][kk],		\
+				    CONN_HO2D[iel][ i][jj][kk]);
+			    
+			}
+		    }
+		}
+	    }
+	    
+	}
     }
     fclose(file_id);
   
     return;
 }
+
 void dwrt2GMSH(char *file_name)
 {  
     int i,j,ie,inode;

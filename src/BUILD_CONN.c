@@ -636,9 +636,7 @@ int ADD_HIGH_ORDER_NODES(void)
     int iface_g = 1;
     int iconn = 0;
     
-    int CONN_HO2D[nelem][ngl][ngl][ngl];
-    
-    MEMORY_ALLOCATE(12); //MAPL2G[nelem][ngl*ngl*ngl];
+    //int CONN_HO2D[nelem][ngl][ngl][ngl];
     
     //Initialize conn_ho to -1:
     for (int iel=0; iel<nelem; iel++) {
@@ -1016,6 +1014,7 @@ int ADD_HIGH_ORDER_NODES(void)
 	    for(int i=0; i<ngl; i++) {
 		for(int k=0; k<ngl; k++) {
 		    printf(" %d  " , MAPL2G[iel][iconn]);
+		    //printf(" %d  " , CONN_HO2D[iel][i][j][k]);
 		    iconn = iconn + 1;
 		}
 	    }

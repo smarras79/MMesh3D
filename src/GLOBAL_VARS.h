@@ -139,6 +139,7 @@ double						\
 int								\
 **CONN,								\
     **CONN_HO,							\
+    ****CONN_HO2D,						\
     **MAPL2G,							\
     **CONN_FACE,						\
     **CONN_EDGE,						\

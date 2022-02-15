@@ -88,6 +88,12 @@ void polint(float xa[], float ya[], int n, float x, float *y, float *dy);
 void polin2(float x1a[], float x2a[], float **ya, int m, int n, float x1,
 	float x2, float *y, float *dy);
 
+/* 4D tensor from Cboard */
+void *my_malloc ( char *expr, int size );
+int ****i4tensor ( int min_x, int max_x, int min_y, int max_y, int min_r, int max_r, int min_c, int max_c );
+void my_free( void *ptr );
+void free_i4tensor ( int ****tensor);
+
 #else /* ANSI */
 /* traditional - K&R */
 

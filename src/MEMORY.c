@@ -55,6 +55,8 @@ int MEMORY_ALLOCATE(int flag)
 	{
 	    /*coonectivity*/
 	    MAPL2G = imatrix(0,nelem-1, 0, ngl*ngl*ngl-1);
+	    CONN_HO2D = i4tensor(0,nelem, 0,ngl, 0,ngl, 0,ngl);
+	    
 	    CONN = imatrix(0,nelem,0,ngl*ngl*ngl); //For hexa only for now
 	    for(iel=0; iel<=nelem; iel++){
 		for(inode=0; inode<ngl*ngl*ngl; inode++){
@@ -70,6 +72,7 @@ int MEMORY_ALLOCATE(int flag)
 
 	    printf(" # Memory allocated (flag 1):\n");
 	    printf(" # \t\t CONN[nelem+1][EL_NODES+1]\n");
+	    printf(" # \t\t MAPL2G[nelem][ngl*ngl*ngl]\n");
 	    printf(" # \t\t ELTYPE[nelem+1]\n");
 	    printf(" # \t\t BDYFLAG[nnodes+1][nsd+1]\n");
 	}
@@ -93,13 +96,6 @@ int MEMORY_ALLOCATE(int flag)
 	    printf(" # Memory allocated (flag 11):\n");
 	    printf(" # \t\t COORDS_HO[nnodes][nsd]\n");
 	    printf(" # \t\t COORDS1d_HO[nnodes*nsd]\n");
-	}
-    
-    if(flag == 12)
-	{
-	    // MAPL2G = imatrix(0,nelem-1, 0, ngl*ngl*ngl-1);
-	    printf(" # Memory allocated (flag 12):\n");
-	    printf(" # \t\t MAPL2G[nelem][ngl*ngl*ngl]\n");
 	}
     
     if(flag == 2)
@@ -212,6 +208,10 @@ int MEMORY_DEALLOCATE(int flag)
 	    free_imatrix(CONN,    0, nelem, 0, EL_NODES+1);
 	    free_ivector(ELTYPE,  0, nelem+1);
 	    free_dmatrix(BDYFLAG, 0, nnodes,0, nsd+1);
+
+	    /* free i4tensor */
+	    free_i4tensor(CONN_HO2D);
+	    /* End free i4tensor*/
 	    
 	    printf(" # Freed memory (flag 1):\n");
 	    printf(" # \t\t free(CONN)\n");
@@ -236,13 +236,6 @@ int MEMORY_DEALLOCATE(int flag)
 	    printf(" # \t\t free(COORDS_HO)\n");
 	    printf(" # \t\t free(COORDS1d_HO)\n");
 	}
-    if(flag == 12)
-	{
-	    //free_imatrix(MAPL2G, 0,nelem-1, 0, ngl*ngl*ngl-1);
-	    printf(" # Freed memory (flag 12):\n");
-	    printf(" # \t\t free(MAPL2G)\n");
-	}
-    
     if(flag == 2)
 	{     
 	    free_dmatrix(BDY_COORDS, 0,NBDY_NODES, 0,nsd);

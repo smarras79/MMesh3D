@@ -455,6 +455,57 @@ double ***d3tensor(long nrl, long nrh, long ncl, long nch, long ndl, long ndh)
 	return t;
 }
 
+
+
+
+/* 
+ * 4D allocation from:
+ * From https://cboard.cprogramming.com/c-programming/61578-4-dimensional-array-contiguous-allocation.html#post438210
+ */
+void *my_malloc ( char *expr, int size ) {
+    void *result = malloc( size );
+    //printf( "Malloc(%s) is size %lu, returning %p\n", expr, (unsigned long)size, result );
+    return result;
+}
+void my_free( void *ptr ) {
+    //printf( "Free(%p)\n", ptr );
+    free( ptr );
+}
+#define MY_MALLOC(x)    my_malloc( #x, x )
+#define MY_FREE(x)      my_free(x)
+
+
+/* create int [x][y][r][c] */
+int ****i4tensor ( int min_x, int max_x, int min_y, int max_y, int min_r, int max_r, int min_c, int max_c ) {
+    int ****all_x = MY_MALLOC( max_x * sizeof *all_x );
+    int  ***all_y = MY_MALLOC( max_x * max_y * sizeof *all_y );
+    int   **all_r = MY_MALLOC( max_x * max_y * max_r * sizeof *all_r );
+    int    *all_c = MY_MALLOC( max_x * max_y * max_r * max_c * sizeof *all_c );
+    int ****result = all_x;
+    int x, y, r;
+
+    for ( x = min_x ; x < max_x ; x++, all_y += max_y ) {
+        result[x] = all_y;
+        for ( y = min_y ; y < max_y ; y++, all_r += max_r ) {
+            result[x][y] = all_r;
+            for ( r = min_r ; r < max_r ; r++, all_c += max_c ) {
+                result[x][y][r] = all_c;
+            }
+        }
+    }
+
+    return result;
+}
+
+void free_i4tensor ( int ****tensor) {
+    MY_FREE( tensor[0][0][0] );
+    MY_FREE( tensor[0][0] );
+    MY_FREE( tensor[0] );
+    MY_FREE( tensor );
+}
+/* END 4D allocation from: */
+
+
 void free_vector(float *v, long nl, long nh)
 /* free a float vector allocated with vector() */
 {
@@ -1034,6 +1085,7 @@ long nch,ncl,ndh,ndl,nrh,nrl;
 	free((FREE_ARG) (t[nrl]+ncl-NR_END));
 	free((FREE_ARG) (t+nrl-NR_END));
 }
+
 
 
 #endif /* ANSI */
