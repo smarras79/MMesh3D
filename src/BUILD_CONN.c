@@ -771,81 +771,58 @@ int ADD_HIGH_ORDER_NODES(void)
 		    ii = ngl-1;
 		    jj = 0;
 		    kk = l;
-		    CONN_HO2D[iel][ii][jj][kk] = ip;
-		    
 		} else if (iedg_el+1 == 2) {
-		    //CONN_HO2D[iel][l][0][0] = ip;
 		    ii = l;
 		    jj = 0;
 		    kk = 0;
-		    CONN_HO2D[iel][ii][jj][kk] = ip;
-		
 		} else if (iedg_el+1 == 3) {
 		    ii = 0;
 		    jj = 0;
 		    kk = l;
-		    CONN_HO2D[iel][ii][jj][kk] = ip;
-		    
 		} else if (iedg_el+1 == 4) {
 		    ii = l;
 		    jj = 0;
 		    kk = ngl-1;
-		    CONN_HO2D[iel][ii][jj][kk] = ip;
-		
 		} else if (iedg_el+1 == 5) {
 		    ii = ngl-1;
 		    jj = ngl-1;
 		    kk = l;
-		    CONN_HO2D[iel][ii][jj][kk] = ip;
-		
 		} else if (iedg_el+1 == 6) {
 		    ii = l;
 		    jj = ngl-1;
 		    kk = 0;
-		    CONN_HO2D[iel][ii][jj][kk] = ip;
-
 		} else if (iedg_el+1 == 7) {
 		    ii = 0;
 		    jj = ngl-1;
 		    kk = l;
-		    CONN_HO2D[iel][ii][jj][kk] = ip;
-		
 		} else if (iedg_el+1 == 8) {
 		    ii = l;
 		    jj = ngl-1;
 		    kk = ngl-1;
-		    CONN_HO2D[iel][ii][jj][kk] = ip;
-		
 		} else if (iedg_el+1 == 9) {
 		    ii = ngl-1;
 		    jj = l;
 		    kk = ngl-1;
-		    CONN_HO2D[iel][ii][jj][kk] = ip;
-		
 		} else if (iedg_el+1 == 10) {
 		    ii = ngl-1;
 		    jj = l;
 		    kk = 0;
-		    CONN_HO2D[iel][ii][jj][kk] = ip;
-		
 		} else if (iedg_el+1 == 11) {
 		    ii = 0;
 		    jj = l;
 		    kk = 0;
-		    CONN_HO2D[iel][ii][jj][kk] = ip;
-		
 		} else if (iedg_el+1 == 12) {
 		    ii = 0;
 		    jj = l;
 		    kk = ngl-1;
-		    CONN_HO2D[iel][ii][jj][kk] = ip;
 		}
 		
-		printf(" %d ", CONN_HO2D[iel][ii][jj][kk]);
-	    
+		CONN_HO2D[iel][ii][jj][kk] = ip;
 		MAPL2G[iel][iconn] = ip;
 		iconn = iconn + 1;
-	    }printf("\n");     
+		
+		printf(" %d ", CONN_HO2D[iel][ii][jj][kk]);
+	    } printf("\n");     
 	} 
     }
     
@@ -939,49 +916,41 @@ int ADD_HIGH_ORDER_NODES(void)
 			ii = ngl-1;
 			jj = l;
 			kk = m;
-			//CONN_HO2D[iel][ngl-1][l][m] = ip;
 	    
 		    } else if (ifac_el+1 == 2) {
 			ii = l;
 			jj = m;
 			kk = 0;
-			//CONN_HO2D[iel][l][m][0] = ip;
 		    
 		    } else if (ifac_el+1 == 3) {
 			ii = 0;
 			jj = l;
 			kk = m;
-			//CONN_HO2D[iel][0][l][m] = ip;
 			
 		    } else if (ifac_el+1 == 4) {
 			ii = l;
 			jj = m;
 			kk = ngl-1;
-			//CONN_HO2D[iel][l][m][ngl-1] = ip;
 		
 		    } else if (ifac_el+1 == 5) {
 			ii = l;
 			jj = 0;
 			kk = m;
-			//CONN_HO2D[iel][l][0][m] = ip;
 		
 		    } else if (ifac_el+1 == 6) {
 			ii = l;
 			jj = ngl-1;
 			kk = m;
-			//CONN_HO2D[iel][l][ngl-1][m] = ip;
 		    }
 		    
 		    CONN_HO2D[iel][ii][jj][kk] = ip;
 		    MAPL2G[iel][iconn] = ip;
 		    iconn = iconn + 1;
-
 		    printf(" - %d", CONN_HO2D[iel][ii][jj][kk]);
 		}
 	    } printf(" \n");
 	}
     }
-    return 0; HERE
     /*--------------------------------------------------------------------------
      * Populate internal/Volume high-order points:
      *--------------------------------------------------------------------------*/
@@ -1005,11 +974,12 @@ int ADD_HIGH_ORDER_NODES(void)
 	
 	/*--------------------------------------------------------------------------
 	 * Volume:
-	 *--------------------------------------------------------------------------*/
-	//iconn  = iconn_volume_index + 1;
-
-	ip1 = CONN[iel][0]-1; ip2 = CONN[iel][1]-1; ip3 = CONN[iel][2]-1; ip4 = CONN[iel][3]-1;
-	ip5 = CONN[iel][4]-1; ip6 = CONN[iel][5]-1; ip7 = CONN[iel][6]-1; ip8 = CONN[iel][7]-1;
+	 *--------------------------------------------------------------------------*/	
+	ip1 = CONN_HO2D[iel][0][0][0]-1; ip2 = CONN_HO2D[iel][ngl-1][0][0]-1; ip3 = CONN_HO2D[iel][ngl-1][0][ngl-1]-1; ip4 = CONN_HO2D[iel][0][0][ngl-1]-1;
+	ip5 = CONN_HO2D[iel][0][ngl-1][0]-1; ip6 = CONN_HO2D[iel][ngl-1][ngl-1][0]-1; ip7 = CONN_HO2D[iel][ngl-1][ngl-1][ngl-1]-1; ip8 = CONN_HO2D[iel][0][ngl-1][ngl-1]-1;
+	
+	//ip1 = CONN[iel][0]-1; ip2 = CONN[iel][1]-1; ip3 = CONN[iel][2]-1; ip4 = CONN[iel][3]-1;
+	//ip5 = CONN[iel][4]-1; ip6 = CONN[iel][5]-1; ip7 = CONN[iel][6]-1; ip8 = CONN[iel][7]-1;
 
 	xa = COORDS[ip1][0]; ya = COORDS[ip1][1]; za = COORDS[ip1][2];
 	xb = COORDS[ip2][0]; yb = COORDS[ip2][1]; zb = COORDS[ip2][2];
@@ -1020,16 +990,6 @@ int ADD_HIGH_ORDER_NODES(void)
 	xg = COORDS[ip7][0]; yg = COORDS[ip7][1]; zg = COORDS[ip7][2];
 	xh = COORDS[ip8][0]; yh = COORDS[ip8][1]; zh = COORDS[ip8][2];
 	
-	CONN_HO2D[iel][0][0][0]             = ip1;
-	CONN_HO2D[iel][ngl-1][0][0]         = ip2;
-	CONN_HO2D[iel][ngl-1][ngl-1][0]     = ip3;
-	CONN_HO2D[iel][0][ngl-1][0]         = ip4;
-	
-	CONN_HO2D[iel][0][0][ngl-1]         = ip5;
-	CONN_HO2D[iel][ngl-1][0][ngl-1]     = ip6;
-	CONN_HO2D[iel][ngl-1][ngl-1][ngl-1] = ip7;
-	CONN_HO2D[iel][0][ngl-1][ngl-1]     = ip8; //CHECK THESE VALUES AND THEIR ORDER against GMSH
-
 	iconn = 8 + (ngl-2)*12 + (ngl-2)*(ngl-2)*6;
 	for(int i=1; i<ngl-1; i++) {
 	    xi = lgl.ksi[i];
@@ -1067,7 +1027,7 @@ int ADD_HIGH_ORDER_NODES(void)
 		    
 		    fprintf(fileidHO_vol, " %f %f %f %d\n", COORDS_HO[ip][0], COORDS_HO[ip][1], COORDS_HO[ip][2], ip);
 
-		    CONN_HO2D[iel][i][j][k] = ip;
+		    //CONN_HO2D[iel][i][j][k] = ip;
 		    MAPL2G[iel][iconn] = ip;
 		    
 		    ip = ip + 1;
@@ -1081,11 +1041,11 @@ int ADD_HIGH_ORDER_NODES(void)
     for (int iel=0; iel<nelem; iel++) {
 	printf(" IEL = %d\n", iel);
 	iconn = 0;
-	for(int j=0; j<ngl; j++) {
-	    for(int i=0; i<ngl; i++) {
+	for(int i=0; i<ngl; i++) {
+	    for(int j=0; j<ngl; j++) {
 		for(int k=0; k<ngl; k++) {
-		    printf(" %d  " , MAPL2G[iel][iconn]);
-		    //printf(" %d  " , CONN_HO2D[iel][i][j][k]);
+		    //printf(" %d  " , MAPL2G[iel][iconn]);
+		    printf(" %d  " , CONN_HO2D[iel][i][j][k]);
 		    iconn = iconn + 1;
 		}
 	    }
@@ -1107,24 +1067,4 @@ int ADD_HIGH_ORDER_NODES(void)
     
     return 0;
     
-}
-
-// C program to check if an array is a subset of another array
-bool isSubset(int *arr1, int *arr2, int m, int n)
-{
-    int i = 0;
-    int j = 0;
-    for (i = 0; i < n; i++)
-	{
-	    for (j = 0; j < m; j++)
-		{
-		    if(arr2[i] == arr1[j])
-			break;
-		}
-
-	    if (j == m)
-		return 0;
-	}
-    
-    return 1;
 }
