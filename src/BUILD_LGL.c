@@ -333,7 +333,7 @@ int LegendreGaussLobattoNodesAndWeights(st_lgl lgl, size_t p)
 	lgl.weights[p] = wP;
 	
 	for (int j=1; j<(int)(p + 1)/2 + 1; j++)
-	    {		
+	    {
 		xj            = -cos((j + 0.25)*PI/p - 3.0/(8.0*p*PI*(j + 0.25)));
 		lgl.ksi[j] = xj;
 		
@@ -352,6 +352,8 @@ int LegendreGaussLobattoNodesAndWeights(st_lgl lgl, size_t p)
 		L2                 = Legendre.legendre*Legendre.legendre;
 		lgl.weights[j]     = 2/(p*(p + 1)*L2);
 		lgl.weights[p - j] = lgl.weights[j];
+		
+		printf(" p = %ld, J = %d, xj = %f\n", p, j, xj);
 	    }
     }
     

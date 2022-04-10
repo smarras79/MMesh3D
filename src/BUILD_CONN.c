@@ -97,7 +97,7 @@ int BUILD_EDGES(int **CONN, int nelem)
 
     //VIEW_i2DMAT("CONN", CONN, 0,nelem-1, 0,7);
     
-    for (iel = 0; iel<nelem; iel++)
+    for (iel = 0; iel<1; iel++)
 	{
 	/*
 	 * Edges bottom face:
@@ -141,6 +141,11 @@ int BUILD_EDGES(int **CONN, int nelem)
 	iedg_el = 11;
 	conn_edge_el[iel][iedg_el][0] = CONN[iel][3];
 	conn_edge_el[iel][iedg_el][1] = CONN[iel][7];
+
+	/*for (int iedg=0; iedg<12; iedg++){
+	    printf(" iel =%d (%d, %d) \n", iel, conn_edge_el[iel][iedg][0]+1,conn_edge_el[iel][iedg][1]+1);
+	    }*/
+
 	
 	/*
 	 * Local faces node connectivity:
